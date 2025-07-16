@@ -8,7 +8,7 @@ export class LocalBackend {
   db: AsyncDuckDB;
 
   // should be passed during initialisation
-  filePath = 'http://localhost:3000/step1_merge_all_v7.parquet';
+  filePath = 'https://amr-portal.s3.eu-west-2.amazonaws.com/step1_merge_all_v7.parquet'
 
   constructor ({ db }: { db: AsyncDuckDB }) {
     this.db = db
@@ -80,8 +80,6 @@ export class LocalBackend {
       FROM '${this.filePath}'
       WHERE ${speciesQueryString}
       LIMIT 1000`;
-
-    console.log('sqlString', sqlString);
 
     const dbRecords: BiosampleDBRecord[] = await this.#readFromDb(sqlString);
 

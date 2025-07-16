@@ -1,3 +1,5 @@
+List of components that this project seems to share with the new Ensembl site
+
 - Checkbox
 - Table
 - TextButton
@@ -5,4 +7,7 @@
 - Input
   - ShadedInput
 - Pager
-- FloatingPanel 
+- FloatingPanel
+- ExternalLink
+- DeleteButton (with trashcan icon)
+- DownloadButton (with an icon)
