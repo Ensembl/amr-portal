@@ -1,10 +1,9 @@
 import { html, css, LitElement, type PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
-import type { LocalBackend } from '../../../../data-provider/dataProvider';
-import type { AntibioticFilter } from '../../../../types/filters/antibioticFilter';
-import type { SpeciesFilter } from '../../../../types/filters/speciesFilter';
-import type { SelectionMode } from '../selection-modes/selection-modes';
+import type { SelectedFiltersState } from '../../../index';
+import type { FiltersConfig } from '../../../../types/filters/filtersConfig';
+import type { FilterChangeEventPayload } from '../../../../types/events/filterChangeEvent';
 
 type QueryParams = {
   mode: 'antibiotics';
@@ -16,123 +15,127 @@ type QueryParams = {
 
 // height: 100%;
 // column-width: 14em;
-      
+
+
+      // display: flex;
+      // flex-direction: column;
+      // flex-wrap: wrap;
+      // column-gap: 1rem;
 
 
 @customElement('filters-area')
 export class FiltersArea extends LitElement {
   static styles = css`
     :host {
+      display: block;
+      height: 100%;
+      /* background-color: green; */
+      overflow-x: scroll;
+    }
+
+    .filters-category {
       display: flex;
       flex-direction: column;
       flex-wrap: wrap;
       column-gap: 1rem;
-      height: 200px;
+      height: 100%;
     }
   `;
 
   @property({ type: String })
-  selectionMode: SelectionMode;
+  viewMode: string;
+
+  @property({ type: String })
+  activeFiltersGroup: string | null;
 
   @property({ type: Object })
-  dataProvider: LocalBackend;
+  filtersConfig: FiltersConfig;
 
-  @state()
-  antibioticFilters: AntibioticFilter[] = [];
+  @property({ type: Object })
+  selectedFilters: SelectedFiltersState;
 
-
-  @state()
-  speciesFilters: SpeciesFilter[] = [];
-
-  #selectedAntibioticFilters: string[] = [];
-  #selectedSpeciesFilters: SpeciesFilter[] = [];
-
-  protected willUpdate(changedProperties: PropertyValues) {
-    if (changedProperties.has('selectionMode')) {
-      this.fetchData();
-    }
-  }
-
-  onAntibioticChanged = (name: string, event: Event) => {
+  #onFilterChange = ({
+    name,
+    value,
+    event
+  }: {
+    name: string,
+    value: string,
+    event: Event
+  }) => {
     const eventTarget = event.target as HTMLInputElement;
     const isChecked = eventTarget.checked;
 
-    if (isChecked) {
-      this.#selectedAntibioticFilters.push(name);
-    } else {
-      this.#selectedAntibioticFilters = this.#selectedAntibioticFilters.filter(antibiotic => antibiotic !== name);
-    }
-
-    const eventPayload = {
-      mode: 'antibiotics',
-      filters: this.#selectedAntibioticFilters
+    const eventPayload: FilterChangeEventPayload = {
+      category: name,
+      value,
+      isSelected: isChecked
     };
 
-    this.dispatchEvent(new CustomEvent('query-changed', {
-      detail: eventPayload
+    this.dispatchEvent(new CustomEvent('filter-changed', {
+      detail: eventPayload,
+      composed: true,
+      bubbles: true
     }));
   }
 
-  onSpeciesChanged = (params: { genus: string, species: string | null, event: Event }) => {
-    const { genus, species, event } = params;
-    const eventTarget = event.target as HTMLInputElement;
-    const isChecked = eventTarget.checked;
+  #getFilterGroup = () => {
+    const filterView = this.filtersConfig.filterViews.find(view => view.name === this.viewMode);
 
-    if (isChecked) {
-      this.#selectedSpeciesFilters.push({ genus, species });
+    if (this.activeFiltersGroup) {
+      return filterView.otherCategoryGroups.find(group => group.name === this.activeFiltersGroup);
     } else {
-      this.#selectedSpeciesFilters = this.#selectedSpeciesFilters.filter(filter => {
-        return filter.genus !== genus && filter.species !== species
-      });
+      return filterView.categoryGroups[0]; // FIXME: it seems that we only ever need one
     }
-
-    const eventPayload = {
-      mode: 'species',
-      filters: this.#selectedSpeciesFilters
-    };
-
-    this.dispatchEvent(new CustomEvent('query-changed', {
-      detail: eventPayload
-    }));
   }
 
-  fetchData = async() => {
-    if (this.selectionMode === 'antibiotics') {
-      this.antibioticFilters = await this.dataProvider.getAntibioticFilters();
-    } else if (this.selectionMode === 'species') {
-      this.speciesFilters = await this.dataProvider.getSpeciesFilters();
-    }
+  #getSelectedFilters = () => {
+    return this.selectedFilters[this.viewMode] ?? [];
   }
  
   render() {
-    if (this.selectionMode === 'antibiotics') {
-      return this.renderAntibioticFilters();
-    } else if (this.selectionMode === 'species') {
-      return this.renderSpeciesFilters();
-    }
+    const filterGroup = this.#getFilterGroup();
+    const filterCategoryIds = filterGroup.categories;
+
+    const filterCategoryBlocks = filterCategoryIds.map(id => {
+      const filterCategory = this.filtersConfig.filterCategories[id];
+
+      return html`
+        <div class="filters-category">
+          ${this.renderFiltersInCategory(id)}
+        </div>  
+      `
+    });
+
+    return html`
+      ${filterCategoryBlocks}
+    `;
   }
 
-  renderAntibioticFilters() {
-    return this.antibioticFilters.map(filter => html`
-      <label>
-        <input type="checkbox" @change=${event => this.onAntibioticChanged(filter.name, event)} />
-        ${filter.name} ${filter.abbreviation}
-      </label>
-    `);
-  }
+  renderFiltersInCategory(categoryId: string) {
+    const category = this.filtersConfig.filterCategories[categoryId];
+    const selectedFilters = this.#getSelectedFilters();
 
-  renderSpeciesFilters() {
-    return this.speciesFilters.map(filter => html`
-      <label>
-        <input type="checkbox" @change=${(event: Event) => this.onSpeciesChanged({
-          genus: filter.genus,
-          species: filter.species,
-          event
-        })} />
-        ${filter.genus} ${filter.species}
-      </label>
-    `);
-  }
+    return category.filters.map(filter => {
+      const isSelected = !!selectedFilters.find(selectedFilter => {
+        return selectedFilter.category === categoryId && selectedFilter.value === filter.value;
+      })
 
+      return html`
+        <label>
+          <input
+            type="checkbox"
+            @change=${(event: Event) => this.#onFilterChange({
+              name: category.id,
+              value: filter.value,
+              event
+            })}
+            ?checked=${isSelected}
+          />
+          ${filter.label}
+        </label>
+      `
+    });
+  }
 
 }

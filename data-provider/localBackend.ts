@@ -1,3 +1,5 @@
+import { filtersConfig } from './filtersConfig';
+
 import type { AsyncDuckDB } from "@duckdb/duckdb-wasm"; '@duckdb/duckdb-wasm';
 
 import type { AntibioticFilter } from '../types/filters/antibioticFilter';
@@ -38,6 +40,12 @@ export class LocalBackend {
       'Study_ID'
     ].join(', ');
   }
+
+  getFiltersConfig = async () => {
+    // making this async to pretend that we fetched this from some remote source
+    return filtersConfig;
+  }
+
 
   getAntibioticFilters = async () => {
     const sqlString = `SELECT DISTINCT Antibiotic_name, Antibiotic_abbreviation FROM '${this.filePath}' ORDER BY Antibiotic_name`;

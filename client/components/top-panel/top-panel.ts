@@ -1,11 +1,11 @@
 import { html, css, LitElement, type PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
-import './selection-modes/selection-modes';
+import './top-panel-navigation/topPanelNavigation';
 import './filters-area/filters-area';
 
-import type { SelectionMode } from './selection-modes/selection-modes';
-import type { LocalBackend } from '../../../data-provider/dataProvider';
+import type { FiltersConfig } from '../../../types/filters/filtersConfig';
+import type { SelectedFiltersState } from '../../index';
 
 type QueryParams = {
   mode: 'antibiotics';
@@ -24,40 +24,52 @@ export class TopPanel extends LitElement {
       height: 100%;
       display: grid;
       grid-template-columns: 100px 1fr;
+      column-gap: 1rem;
     }
   `;
 
   @property({ type: Object })
-  dataProvider: LocalBackend;
+  filtersConfig: FiltersConfig;
+
+  @property({ type: String })
+  viewMode: string;
+
+  @property({ type: Object })
+  selectedFilters: SelectedFiltersState;
 
   @state()
-  selectionMode: SelectionMode;
+  activeFiltersGroupForView: Record<string, string | null> = {};
 
-  onSelectionModeChanged = (event: CustomEvent) => {
-    const newEvent = new CustomEvent(event.type, {
-      detail: event.detail
-    });
-    this.dispatchEvent(newEvent);
+  #getActiveFiltersGroup = (): string | null => {
+    return this.activeFiltersGroupForView[this.viewMode] ?? null;
   }
 
-  onQueryChanged = (event: CustomEvent) => {
-    const newEvent = new CustomEvent('query-changed', {
-      detail: event.detail
-    });
-    this.dispatchEvent(newEvent);
+  #onViewModeChange = () => {
+    // reset active filter group for given view
+    this.activeFiltersGroupForView[this.viewMode] = null;
+  }
+
+  #onFiltersGroupChange = (event: CustomEvent<string>) => {
+    const filtersGroupName = event.detail;
+    this.activeFiltersGroupForView[this.viewMode] = filtersGroupName;
   }
 
   render() {
+    const activeFiltersGroup = this.#getActiveFiltersGroup();
+    console.log('this.filtersConfig', this.filtersConfig);
+
     return html`
-      <selection-modes
-        .currentMode=${this.selectionMode}
-        @selection-mode-change=${this.onSelectionModeChanged}
+      <top-panel-navigation
+        .currentViewMode=${this.viewMode}
+        .activeFiltersGroup=${activeFiltersGroup}
+        .filtersConfig=${this.filtersConfig}
       >
-      </selection-modes>
+      </top-panel-navigation>
       <filters-area
-        .dataProvider=${this.dataProvider}
-        .selectionMode=${this.selectionMode}
-        @query-changed=${this.onQueryChanged}
+        .viewMode=${this.viewMode}
+        .activeFiltersGroup=${activeFiltersGroup}
+        .filtersConfig=${this.filtersConfig}
+        .selectedFilters=${this.selectedFilters}
       ></filters-area>
     `;
   }
