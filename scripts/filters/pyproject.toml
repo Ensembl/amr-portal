@@ -1,0 +1,10 @@
+[project]
+name = "generate_filters"
+version = "0.0.1"
+dependencies = [
+    "duckdb"
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
