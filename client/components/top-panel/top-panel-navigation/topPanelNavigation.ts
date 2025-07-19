@@ -1,5 +1,5 @@
-import { html, css, LitElement, type PropertyValues } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { html, css, LitElement } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 
 import type { FiltersConfig } from '../../../../types/filters/filtersConfig';
 
@@ -13,6 +13,9 @@ export class TopPanelNavigation extends LitElement {
   @property({ type: Object })
   filtersConfig: FiltersConfig;
 
+  @property({ type: Boolean })
+  isViewingExtraFilters: boolean;
+
   onViewModeChange = (mode: string) => {
     const event = new CustomEvent('view-mode-change', {
       detail: mode,
@@ -23,15 +26,34 @@ export class TopPanelNavigation extends LitElement {
     this.dispatchEvent(event);
   }
 
+  onFiltersClick = () => {
+    const event = new Event('extra-filters-click', {
+      bubbles: true,
+      composed: true
+    });
+    this.dispatchEvent(event);
+  }
+
+
   render() {
-    return this.filtersConfig.filterViews.map(view => html`
+    const viewModeButtons = this.filtersConfig.filterViews.map(view => html`
       <button
         @click=${() => this.onViewModeChange(view.name)}
-        ?disabled=${this.currentViewMode === view.name}
+        ?disabled=${this.currentViewMode === view.name && !this.isViewingExtraFilters}
       >
         ${view.name}
       </button>        
     `);
+
+
+    return html`
+      <div>
+        ${viewModeButtons}
+        <button style="margin-top: 1.5rem;" @click=${this.onFiltersClick}>
+          Filters
+        </button>
+      </div>
+    `;
   }
 
 }

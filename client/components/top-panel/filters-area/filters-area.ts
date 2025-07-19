@@ -1,17 +1,12 @@
-import { html, css, LitElement, type PropertyValues } from 'lit';
+import { html, css, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import { repeat } from 'lit/directives/repeat.js';
+
+import './filters-area-top';
 
 import type { SelectedFiltersState } from '../../../index';
 import type { FiltersConfig } from '../../../../types/filters/filtersConfig';
 import type { FilterChangeEventPayload } from '../../../../types/events/filterChangeEvent';
-
-type QueryParams = {
-  mode: 'antibiotics';
-  filters: string[];
-} | {
-  mode: 'species';
-  filters: Array<{ genus: string; species: string | null }>;
-};
 
 // height: 100%;
 // column-width: 14em;
@@ -27,10 +22,17 @@ type QueryParams = {
 export class FiltersArea extends LitElement {
   static styles = css`
     :host {
-      display: block;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      row-gap: 35px;
       height: 100%;
-      /* background-color: green; */
-      overflow-x: scroll;
+      overflow: hidden;
+    }
+
+    .main {
+      height: 100%;
+      overflow-x: auto;
+      display: flex;
     }
 
     .filters-category {
@@ -44,6 +46,9 @@ export class FiltersArea extends LitElement {
 
   @property({ type: String })
   viewMode: string;
+
+  @property({ type: Boolean })
+  isViewingExtraFilters: boolean;
 
   @property({ type: String })
   activeFiltersGroup: string | null;
@@ -108,7 +113,16 @@ export class FiltersArea extends LitElement {
     });
 
     return html`
-      ${filterCategoryBlocks}
+      <filters-area-top
+        .viewMode=${this.viewMode}
+        .activeFiltersGroup=${this.activeFiltersGroup}
+        .filtersConfig=${this.filtersConfig}
+        .isViewingExtraFilters=${this.isViewingExtraFilters}
+      >
+      </filters-area-top>
+      <div class="main">
+        ${filterCategoryBlocks}
+      </div>
     `;
   }
 
@@ -116,10 +130,10 @@ export class FiltersArea extends LitElement {
     const category = this.filtersConfig.filterCategories[categoryId];
     const selectedFilters = this.#getSelectedFilters();
 
-    return category.filters.map(filter => {
+    return repeat(category.filters, (filter) => filter.value, ( filter ) => {
       const isSelected = !!selectedFilters.find(selectedFilter => {
         return selectedFilter.category === categoryId && selectedFilter.value === filter.value;
-      })
+      });
 
       return html`
         <label>

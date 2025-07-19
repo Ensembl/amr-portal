@@ -7,15 +7,6 @@ import './filters-area/filters-area';
 import type { FiltersConfig } from '../../../types/filters/filtersConfig';
 import type { SelectedFiltersState } from '../../index';
 
-type QueryParams = {
-  mode: 'antibiotics';
-  filters: string[];
-} | {
-  mode: 'species';
-  filters: Array<{ genus: string; species: string | null }>;
-};
-
-
 
 @customElement('top-panel')
 export class TopPanel extends LitElement {
@@ -40,29 +31,41 @@ export class TopPanel extends LitElement {
   @state()
   activeFiltersGroupForView: Record<string, string | null> = {};
 
+  @state()
+  isViewingExtraFilters: boolean = false;
+
   #getActiveFiltersGroup = (): string | null => {
     return this.activeFiltersGroupForView[this.viewMode] ?? null;
   }
 
+  #onExtraFiltersViewToggle = () => {
+    if (this.isViewingExtraFilters && this.activeFiltersGroupForView[this.viewMode]) {
+      this.activeFiltersGroupForView[this.viewMode] = null;
+    }
+    this.isViewingExtraFilters = !this.isViewingExtraFilters;
+  }
+
   #onViewModeChange = () => {
-    // reset active filter group for given view
-    this.activeFiltersGroupForView[this.viewMode] = null;
+    this.isViewingExtraFilters = false;
   }
 
   #onFiltersGroupChange = (event: CustomEvent<string>) => {
     const filtersGroupName = event.detail;
-    this.activeFiltersGroupForView[this.viewMode] = filtersGroupName;
+    const newActiveFilterGroupsState = { ...this.activeFiltersGroupForView };
+    newActiveFilterGroupsState[this.viewMode] = filtersGroupName;
+    this.activeFiltersGroupForView = newActiveFilterGroupsState;
   }
 
   render() {
     const activeFiltersGroup = this.#getActiveFiltersGroup();
-    console.log('this.filtersConfig', this.filtersConfig);
 
     return html`
       <top-panel-navigation
         .currentViewMode=${this.viewMode}
-        .activeFiltersGroup=${activeFiltersGroup}
         .filtersConfig=${this.filtersConfig}
+        .isViewingExtraFilters=${this.isViewingExtraFilters}
+        @view-mode-change=${this.#onViewModeChange}
+        @extra-filters-click=${this.#onExtraFiltersViewToggle}
       >
       </top-panel-navigation>
       <filters-area
@@ -70,6 +73,8 @@ export class TopPanel extends LitElement {
         .activeFiltersGroup=${activeFiltersGroup}
         .filtersConfig=${this.filtersConfig}
         .selectedFilters=${this.selectedFilters}
+        .isViewingExtraFilters=${this.isViewingExtraFilters}
+        @filters-group-change=${this.#onFiltersGroupChange}
       ></filters-area>
     `;
   }

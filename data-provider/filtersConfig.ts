@@ -7,384 +7,64 @@ export const filtersConfig = {
       "label": "Antibiotic",
       "filters": [
         {
-          "value": "BDQ",
-          "label": "Bedaquiline BDQ"
-        },
-        {
-          "value": "ETI1",
-          "label": "Ethionamide ETI1"
-        },
-        {
-          "value": "MFX",
-          "label": "Moxifloxacin MFX"
-        },
-        {
-          "value": "PTH",
-          "label": "Prothionamide PTH"
-        },
-        {
-          "value": "CFM",
-          "label": "Cefixime CFM"
-        },
-        {
-          "value": "FEP",
-          "label": "Cefepime FEP"
-        },
-        {
-          "value": "CAZ",
-          "label": "Ceftazidime CAZ"
-        },
-        {
-          "value": "IPM",
-          "label": "Imipenem IPM"
-        },
-        {
-          "value": "CZO",
-          "label": "Cefazolin CZO"
-        },
-        {
-          "value": "TCC",
-          "label": "Ticarcillin/clavulanic acid TCC"
-        },
-        {
-          "value": "PLB",
-          "label": "Polymyxin B PLB"
-        },
-        {
-          "value": "DAP",
-          "label": "Daptomycin DAP"
-        },
-        {
-          "value": "DIC",
-          "label": "Dicloxacillin DIC"
-        },
-        {
-          "value": "TVA",
-          "label": "Trovafloxacin TVA"
-        },
-        {
-          "value": "TET",
-          "label": "Tetroxoprim TET"
-        },
-        {
-          "value": "DFX",
-          "label": "Delafloxacin DFX"
-        },
-        {
-          "value": "DAL",
-          "label": "Dalbavancin DAL"
-        },
-        {
-          "value": "CTB",
-          "label": "Ceftibuten CTB"
-        },
-        {
-          "value": "KAN",
-          "label": "Kanamycin KAN"
-        },
-        {
-          "value": "RIB",
-          "label": "Rifabutin RIB"
-        },
-        {
-          "value": "LNZ",
-          "label": "Linezolid LNZ"
-        },
-        {
-          "value": "RIF",
-          "label": "Rifampicin RIF"
-        },
-        {
-          "value": "ETP",
-          "label": "Ertapenem ETP"
-        },
-        {
-          "value": "CTC",
-          "label": "Cefotaxime/clavulanic acid CTC"
-        },
-        {
-          "value": "CHL",
-          "label": "Chloramphenicol CHL"
-        },
-        {
-          "value": "PIP",
-          "label": "Piperacillin PIP"
-        },
-        {
-          "value": "TZP",
-          "label": "Piperacillin/tazobactam TZP"
-        },
-        {
-          "value": "VAN",
-          "label": "Vancomycin VAN"
-        },
-        {
-          "value": "SUD",
-          "label": "Sulfadimethoxine SUD"
-        },
-        {
-          "value": "TIL",
-          "label": "Tilmicosin TIL"
-        },
-        {
-          "value": "TYL",
-          "label": "Tylosin TYL"
-        },
-        {
-          "value": "SUT",
-          "label": "Sulfathiazole SUT"
-        },
-        {
-          "value": "TZD",
-          "label": "Tedizolid TZD"
-        },
-        {
-          "value": "BIA",
-          "label": "Biapenem BIA"
-        },
-        {
-          "value": "STR",
-          "label": "Streptoduocin STR"
-        },
-        {
-          "value": "SLF",
-          "label": "Sulfafurazole SLF"
-        },
-        {
-          "value": "CTR",
-          "label": "Clotrimazole CTR"
-        },
-        {
-          "value": "MEZ",
-          "label": "Mezlocillin MEZ"
-        },
-        {
-          "value": "ERV",
-          "label": "Eravacycline ERV"
-        },
-        {
-          "value": "CEQ",
-          "label": "Cefquinome CEQ"
-        },
-        {
-          "value": "LEX",
-          "label": "Cephalexin LEX"
-        },
-        {
-          "value": "IPE",
-          "label": "Imipenem/EDTA IPE"
-        },
-        {
-          "value": "INH",
-          "label": "Isoniazid INH"
-        },
-        {
-          "value": "LVX",
-          "label": "Levofloxacin LVX"
-        },
-        {
-          "value": "PZA",
-          "label": "Pyrazinamide PZA"
-        },
-        {
-          "value": "CLR",
-          "label": "Clarithromycin CLR"
-        },
-        {
-          "value": "AZM",
-          "label": "Azithromycin AZM"
-        },
-        {
-          "value": "CMZ",
-          "label": "Cefmetazole CMZ"
-        },
-        {
-          "value": "ZOP",
-          "label": "Cefozopran ZOP"
-        },
-        {
-          "value": "SXT",
-          "label": "Trimethoprim/sulfamethoxazole SXT"
-        },
-        {
-          "value": "NIT",
-          "label": "Nitrofurantoin NIT"
-        },
-        {
-          "value": "CZT",
-          "label": "Ceftolozane/tazobactam CZT"
-        },
-        {
-          "value": "TIO",
-          "label": "Ceftiofur TIO"
-        },
-        {
-          "value": "TUL",
-          "label": "Tulathromycin TUL"
-        },
-        {
-          "value": "SOX",
-          "label": "Sulfisoxazole SOX"
-        },
-        {
-          "value": "APR",
-          "label": "Apramycin APR"
-        },
-        {
-          "value": "MEV",
-          "label": "Meropenem/vaborbactam MEV"
-        },
-        {
-          "value": "ERY",
-          "label": "Erythromycin ERY"
-        },
-        {
-          "value": "CTX",
-          "label": "Cefotaxime CTX"
-        },
-        {
-          "value": "ATM",
-          "label": "Aztreonam ATM"
-        },
-        {
-          "value": "CXM",
-          "label": "Cefuroxime CXM"
-        },
-        {
-          "value": "DOR",
-          "label": "Doripenem DOR"
-        },
-        {
-          "value": "IMR",
-          "label": "Imipenem/relebactam IMR"
-        },
-        {
-          "value": "MTR",
-          "label": "Metronidazole MTR"
-        },
-        {
-          "value": "CDC",
-          "label": "Cefpodoxime/clavulanic acid CDC"
-        },
-        {
-          "value": "FDC",
-          "label": "Cefiderocol FDC"
-        },
-        {
-          "value": "CTE",
-          "label": "Chlortetracycline CTE"
-        },
-        {
-          "value": "OXY",
-          "label": "Oxytetracycline OXY"
-        },
-        {
-          "value": "TEM",
-          "label": "Temocillin TEM"
-        },
-        {
-          "value": "CPO",
-          "label": "Cefpirome CPO"
-        },
-        {
-          "value": "NOR",
-          "label": "Norfloxacin NOR"
-        },
-        {
-          "value": "MET",
-          "label": "Methicillin MET"
-        },
-        {
-          "value": "SPX",
-          "label": "Sparfloxacin SPX"
-        },
-        {
-          "value": "SUL",
-          "label": "Sulbactam SUL"
-        },
-        {
-          "value": "RFX",
-          "label": "Rifaximin RFX"
-        },
-        {
-          "value": "SUR",
-          "label": "Surotomycin SUR"
-        },
-        {
-          "value": "LIN",
-          "label": "Lincomycin LIN"
-        },
-        {
           "value": "AMK",
           "label": "Amikacin AMK"
-        },
-        {
-          "value": "CLF",
-          "label": "Clofazimine CLF"
         },
         {
           "value": "AMX",
           "label": "Amoxicillin AMX"
         },
         {
-          "value": "CYC",
-          "label": "Cycloserine CYC"
+          "value": "AMC",
+          "label": "Amoxicillin/clavulanic acid AMC"
         },
         {
-          "value": "PEN",
-          "label": "Penicillin PEN"
+          "value": "AMP",
+          "label": "Ampicillin AMP"
         },
         {
-          "value": "GEN",
-          "label": "Gentamicin GEN"
+          "value": "SAM",
+          "label": "Ampicillin/sulbactam SAM"
         },
         {
-          "value": "DOX",
-          "label": "Doxycycline DOX"
+          "value": "APR",
+          "label": "Apramycin APR"
         },
         {
-          "value": "CPD",
-          "label": "Cefpodoxime CPD"
+          "value": "ARB",
+          "label": "Arbekacin ARB"
         },
         {
-          "value": "MEM",
-          "label": "Meropenem MEM"
+          "value": "AVI",
+          "label": "Avilamycin AVI"
         },
         {
-          "value": "TOB",
-          "label": "Tobramycin TOB"
+          "value": "AZM",
+          "label": "Azithromycin AZM"
         },
         {
-          "value": "FOX",
-          "label": "Cefoxitin FOX"
+          "value": "ATM",
+          "label": "Aztreonam ATM"
         },
         {
-          "value": "CEP",
-          "label": "Cephalothin CEP"
+          "value": "BAC",
+          "label": "Bacitracin zinc BAC"
         },
         {
-          "value": "NAL",
-          "label": "Nalidixic acid NAL"
+          "value": "BDQ",
+          "label": "Bedaquiline BDQ"
         },
         {
-          "value": "CPT",
-          "label": "Ceftaroline CPT"
+          "value": "BIA",
+          "label": "Biapenem BIA"
         },
         {
-          "value": "CLI",
-          "label": "Clindamycin CLI"
+          "value": "CAP",
+          "label": "Capreomycin CAP"
         },
         {
-          "value": "FLR",
-          "label": "Florfenicol FLR"
-        },
-        {
-          "value": "MUP",
-          "label": "Mupirocin MUP"
-        },
-        {
-          "value": "NAF",
-          "label": "Nafcillin NAF"
+          "value": "CRB",
+          "label": "Carbenicillin CRB"
         },
         {
           "value": "CEC",
@@ -395,258 +75,838 @@ export const filtersConfig = {
           "label": "Cefatrizine CTZ"
         },
         {
-          "value": "PTZ",
-          "label": "Pentizidone PTZ"
+          "value": "CZO",
+          "label": "Cefazolin CZO"
         },
         {
-          "value": "CFZ",
-          "label": "Cefpimizole CFZ"
-        },
-        {
-          "value": "FDX",
-          "label": "Fidaxomicin FDX"
-        },
-        {
-          "value": "BAC",
-          "label": "Bacitracin zinc BAC"
-        },
-        {
-          "value": "CAP",
-          "label": "Capreomycin CAP"
-        },
-        {
-          "value": "COL",
-          "label": "Colistin COL"
-        },
-        {
-          "value": "NEO",
-          "label": "Neomycin NEO"
-        },
-        {
-          "value": "AMC",
-          "label": "Amoxicillin/clavulanic acid AMC"
-        },
-        {
-          "value": "ENR",
-          "label": "Enrofloxacin ENR"
-        },
-        {
-          "value": "TIA",
-          "label": "Tiamulin TIA"
-        },
-        {
-          "value": "PEF",
-          "label": "Pefloxacin PEF"
-        },
-        {
-          "value": "NET",
-          "label": "Netilmicin NET"
-        },
-        {
-          "value": "FUS",
-          "label": "Fusidic acid FUS"
-        },
-        {
-          "value": "ARB",
-          "label": "Arbekacin ARB"
-        },
-        {
-          "value": "SSS",
-          "label": "Sulfonamide SSS"
-        },
-        {
-          "value": "SPI",
-          "label": "Spiramycin SPI"
-        },
-        {
-          "value": "ETH",
-          "label": "Ethambutol ETH"
-        },
-        {
-          "value": "OFX",
-          "label": "Ofloxacin OFX"
-        },
-        {
-          "value": "SPT",
-          "label": "Spectinomycin SPT"
-        },
-        {
-          "value": "FOS",
-          "label": "Fosfomycin FOS"
-        },
-        {
-          "value": "CCV",
-          "label": "Ceftazidime/clavulanic acid CCV"
-        },
-        {
-          "value": "AMP",
-          "label": "Ampicillin AMP"
-        },
-        {
-          "value": "SMX",
-          "label": "Sulfamethoxazole SMX"
-        },
-        {
-          "value": "FRZ",
-          "label": "Furazolidone FRZ"
-        },
-        {
-          "value": "TLV",
-          "label": "Telavancin TLV"
-        },
-        {
-          "value": "PLZ",
-          "label": "Plazomicin PLZ"
-        },
-        {
-          "value": "DLM",
-          "label": "Delamanid DLM"
-        },
-        {
-          "value": "STR1",
-          "label": "Streptomycin STR1"
-        },
-        {
-          "value": "PAS",
-          "label": "P-aminosalicylic acid PAS"
-        },
-        {
-          "value": "PMD",
-          "label": "Pretomanid PMD"
-        },
-        {
-          "value": "CIP",
-          "label": "Ciprofloxacin CIP"
-        },
-        {
-          "value": "CRO",
-          "label": "Ceftriaxone CRO"
-        },
-        {
-          "value": "TCY",
-          "label": "Tetracycline TCY"
-        },
-        {
-          "value": "GEM",
-          "label": "Gemifloxacin GEM"
-        },
-        {
-          "value": "SAM",
-          "label": "Ampicillin/sulbactam SAM"
-        },
-        {
-          "value": "CSL",
-          "label": "Cefoperazone/sulbactam CSL"
-        },
-        {
-          "value": "CTT",
-          "label": "Cefotetan CTT"
-        },
-        {
-          "value": "MNO",
-          "label": "Minocycline MNO"
-        },
-        {
-          "value": "TGC",
-          "label": "Tigecycline TGC"
-        },
-        {
-          "value": "CZA",
-          "label": "Ceftazidime/avibactam CZA"
-        },
-        {
-          "value": "CRB",
-          "label": "Carbenicillin CRB"
-        },
-        {
-          "value": "TEC",
-          "label": "Teicoplanin TEC"
-        },
-        {
-          "value": "DAN",
-          "label": "Danofloxacin DAN"
-        },
-        {
-          "value": "TMP",
-          "label": "Trimethoprim TMP"
-        },
-        {
-          "value": "GAT",
-          "label": "Gatifloxacin GAT"
-        },
-        {
-          "value": "CFP",
-          "label": "Cefoperazone CFP"
-        },
-        {
-          "value": "TIC",
-          "label": "Ticarcillin TIC"
-        },
-        {
-          "value": "OXA",
-          "label": "Oxacillin OXA"
-        },
-        {
-          "value": "QDA",
-          "label": "Quinupristin/dalfopristin QDA"
-        },
-        {
-          "value": "TLT",
-          "label": "Telithromycin TLT"
-        },
-        {
-          "value": "OMC",
-          "label": "Omadacycline OMC"
+          "value": "FEP",
+          "label": "Cefepime FEP"
         },
         {
           "value": "FPZ",
           "label": "Cefepime/zidebactam FPZ"
         },
         {
-          "value": "AVI",
-          "label": "Avilamycin AVI"
+          "value": "FDC",
+          "label": "Cefiderocol FDC"
+        },
+        {
+          "value": "CFM",
+          "label": "Cefixime CFM"
+        },
+        {
+          "value": "CMZ",
+          "label": "Cefmetazole CMZ"
+        },
+        {
+          "value": "CFP",
+          "label": "Cefoperazone CFP"
+        },
+        {
+          "value": "CSL",
+          "label": "Cefoperazone/sulbactam CSL"
+        },
+        {
+          "value": "CTX",
+          "label": "Cefotaxime CTX"
+        },
+        {
+          "value": "CTC",
+          "label": "Cefotaxime/clavulanic acid CTC"
+        },
+        {
+          "value": "CTT",
+          "label": "Cefotetan CTT"
+        },
+        {
+          "value": "FOX",
+          "label": "Cefoxitin FOX"
+        },
+        {
+          "value": "ZOP",
+          "label": "Cefozopran ZOP"
+        },
+        {
+          "value": "CFZ",
+          "label": "Cefpimizole CFZ"
+        },
+        {
+          "value": "CPO",
+          "label": "Cefpirome CPO"
+        },
+        {
+          "value": "CPD",
+          "label": "Cefpodoxime CPD"
+        },
+        {
+          "value": "CDC",
+          "label": "Cefpodoxime/clavulanic acid CDC"
+        },
+        {
+          "value": "CEQ",
+          "label": "Cefquinome CEQ"
+        },
+        {
+          "value": "CPT",
+          "label": "Ceftaroline CPT"
+        },
+        {
+          "value": "CAZ",
+          "label": "Ceftazidime CAZ"
+        },
+        {
+          "value": "CZA",
+          "label": "Ceftazidime/avibactam CZA"
+        },
+        {
+          "value": "CCV",
+          "label": "Ceftazidime/clavulanic acid CCV"
+        },
+        {
+          "value": "CTB",
+          "label": "Ceftibuten CTB"
+        },
+        {
+          "value": "TIO",
+          "label": "Ceftiofur TIO"
+        },
+        {
+          "value": "CZT",
+          "label": "Ceftolozane/tazobactam CZT"
+        },
+        {
+          "value": "CRO",
+          "label": "Ceftriaxone CRO"
+        },
+        {
+          "value": "CXM",
+          "label": "Cefuroxime CXM"
+        },
+        {
+          "value": "LEX",
+          "label": "Cephalexin LEX"
+        },
+        {
+          "value": "CEP",
+          "label": "Cephalothin CEP"
+        },
+        {
+          "value": "CHL",
+          "label": "Chloramphenicol CHL"
+        },
+        {
+          "value": "CTE",
+          "label": "Chlortetracycline CTE"
+        },
+        {
+          "value": "CIP",
+          "label": "Ciprofloxacin CIP"
+        },
+        {
+          "value": "CLR",
+          "label": "Clarithromycin CLR"
+        },
+        {
+          "value": "CLI",
+          "label": "Clindamycin CLI"
+        },
+        {
+          "value": "CLF",
+          "label": "Clofazimine CLF"
+        },
+        {
+          "value": "CTR",
+          "label": "Clotrimazole CTR"
+        },
+        {
+          "value": "COL",
+          "label": "Colistin COL"
+        },
+        {
+          "value": "CYC",
+          "label": "Cycloserine CYC"
+        },
+        {
+          "value": "DAL",
+          "label": "Dalbavancin DAL"
+        },
+        {
+          "value": "DAN",
+          "label": "Danofloxacin DAN"
+        },
+        {
+          "value": "DAP",
+          "label": "Daptomycin DAP"
+        },
+        {
+          "value": "DFX",
+          "label": "Delafloxacin DFX"
+        },
+        {
+          "value": "DLM",
+          "label": "Delamanid DLM"
+        },
+        {
+          "value": "DIC",
+          "label": "Dicloxacillin DIC"
+        },
+        {
+          "value": "DOR",
+          "label": "Doripenem DOR"
+        },
+        {
+          "value": "DOX",
+          "label": "Doxycycline DOX"
+        },
+        {
+          "value": "ENR",
+          "label": "Enrofloxacin ENR"
+        },
+        {
+          "value": "ERV",
+          "label": "Eravacycline ERV"
+        },
+        {
+          "value": "ETP",
+          "label": "Ertapenem ETP"
+        },
+        {
+          "value": "ERY",
+          "label": "Erythromycin ERY"
+        },
+        {
+          "value": "ETH",
+          "label": "Ethambutol ETH"
+        },
+        {
+          "value": "ETI1",
+          "label": "Ethionamide ETI1"
+        },
+        {
+          "value": "FDX",
+          "label": "Fidaxomicin FDX"
+        },
+        {
+          "value": "FLR",
+          "label": "Florfenicol FLR"
+        },
+        {
+          "value": "FOS",
+          "label": "Fosfomycin FOS"
+        },
+        {
+          "value": "FRZ",
+          "label": "Furazolidone FRZ"
+        },
+        {
+          "value": "FUS",
+          "label": "Fusidic acid FUS"
+        },
+        {
+          "value": "GAT",
+          "label": "Gatifloxacin GAT"
+        },
+        {
+          "value": "GEM",
+          "label": "Gemifloxacin GEM"
+        },
+        {
+          "value": "GEN",
+          "label": "Gentamicin GEN"
+        },
+        {
+          "value": "IPM",
+          "label": "Imipenem IPM"
+        },
+        {
+          "value": "IPE",
+          "label": "Imipenem/EDTA IPE"
+        },
+        {
+          "value": "IMR",
+          "label": "Imipenem/relebactam IMR"
+        },
+        {
+          "value": "INH",
+          "label": "Isoniazid INH"
+        },
+        {
+          "value": "KAN",
+          "label": "Kanamycin KAN"
+        },
+        {
+          "value": "LVX",
+          "label": "Levofloxacin LVX"
+        },
+        {
+          "value": "LIN",
+          "label": "Lincomycin LIN"
+        },
+        {
+          "value": "LNZ",
+          "label": "Linezolid LNZ"
+        },
+        {
+          "value": "MEM",
+          "label": "Meropenem MEM"
+        },
+        {
+          "value": "MEV",
+          "label": "Meropenem/vaborbactam MEV"
+        },
+        {
+          "value": "MET",
+          "label": "Methicillin MET"
+        },
+        {
+          "value": "MTR",
+          "label": "Metronidazole MTR"
+        },
+        {
+          "value": "MEZ",
+          "label": "Mezlocillin MEZ"
+        },
+        {
+          "value": "MNO",
+          "label": "Minocycline MNO"
+        },
+        {
+          "value": "MFX",
+          "label": "Moxifloxacin MFX"
+        },
+        {
+          "value": "MUP",
+          "label": "Mupirocin MUP"
+        },
+        {
+          "value": "NAF",
+          "label": "Nafcillin NAF"
+        },
+        {
+          "value": "NAL",
+          "label": "Nalidixic acid NAL"
+        },
+        {
+          "value": "NEO",
+          "label": "Neomycin NEO"
+        },
+        {
+          "value": "NET",
+          "label": "Netilmicin NET"
+        },
+        {
+          "value": "NIT",
+          "label": "Nitrofurantoin NIT"
+        },
+        {
+          "value": "NOR",
+          "label": "Norfloxacin NOR"
+        },
+        {
+          "value": "OFX",
+          "label": "Ofloxacin OFX"
+        },
+        {
+          "value": "OMC",
+          "label": "Omadacycline OMC"
+        },
+        {
+          "value": "OXA",
+          "label": "Oxacillin OXA"
+        },
+        {
+          "value": "OXY",
+          "label": "Oxytetracycline OXY"
+        },
+        {
+          "value": "PAS",
+          "label": "P-aminosalicylic acid PAS"
+        },
+        {
+          "value": "PEF",
+          "label": "Pefloxacin PEF"
+        },
+        {
+          "value": "PEN",
+          "label": "Penicillin PEN"
+        },
+        {
+          "value": "PTZ",
+          "label": "Pentizidone PTZ"
+        },
+        {
+          "value": "PIP",
+          "label": "Piperacillin PIP"
+        },
+        {
+          "value": "TZP",
+          "label": "Piperacillin/tazobactam TZP"
+        },
+        {
+          "value": "PLZ",
+          "label": "Plazomicin PLZ"
+        },
+        {
+          "value": "PLB",
+          "label": "Polymyxin B PLB"
+        },
+        {
+          "value": "PMD",
+          "label": "Pretomanid PMD"
+        },
+        {
+          "value": "PTH",
+          "label": "Prothionamide PTH"
+        },
+        {
+          "value": "PZA",
+          "label": "Pyrazinamide PZA"
+        },
+        {
+          "value": "QDA",
+          "label": "Quinupristin/dalfopristin QDA"
+        },
+        {
+          "value": "RIB",
+          "label": "Rifabutin RIB"
+        },
+        {
+          "value": "RIF",
+          "label": "Rifampicin RIF"
+        },
+        {
+          "value": "RFX",
+          "label": "Rifaximin RFX"
+        },
+        {
+          "value": "SPX",
+          "label": "Sparfloxacin SPX"
+        },
+        {
+          "value": "SPT",
+          "label": "Spectinomycin SPT"
+        },
+        {
+          "value": "SPI",
+          "label": "Spiramycin SPI"
+        },
+        {
+          "value": "STR",
+          "label": "Streptoduocin STR"
+        },
+        {
+          "value": "STR1",
+          "label": "Streptomycin STR1"
+        },
+        {
+          "value": "SUL",
+          "label": "Sulbactam SUL"
+        },
+        {
+          "value": "SUD",
+          "label": "Sulfadimethoxine SUD"
+        },
+        {
+          "value": "SLF",
+          "label": "Sulfafurazole SLF"
+        },
+        {
+          "value": "SMX",
+          "label": "Sulfamethoxazole SMX"
+        },
+        {
+          "value": "SUT",
+          "label": "Sulfathiazole SUT"
+        },
+        {
+          "value": "SOX",
+          "label": "Sulfisoxazole SOX"
+        },
+        {
+          "value": "SSS",
+          "label": "Sulfonamide SSS"
+        },
+        {
+          "value": "SUR",
+          "label": "Surotomycin SUR"
+        },
+        {
+          "value": "TZD",
+          "label": "Tedizolid TZD"
+        },
+        {
+          "value": "TEC",
+          "label": "Teicoplanin TEC"
+        },
+        {
+          "value": "TLV",
+          "label": "Telavancin TLV"
+        },
+        {
+          "value": "TLT",
+          "label": "Telithromycin TLT"
+        },
+        {
+          "value": "TEM",
+          "label": "Temocillin TEM"
+        },
+        {
+          "value": "TCY",
+          "label": "Tetracycline TCY"
+        },
+        {
+          "value": "TET",
+          "label": "Tetroxoprim TET"
+        },
+        {
+          "value": "TIA",
+          "label": "Tiamulin TIA"
+        },
+        {
+          "value": "TIC",
+          "label": "Ticarcillin TIC"
+        },
+        {
+          "value": "TCC",
+          "label": "Ticarcillin/clavulanic acid TCC"
+        },
+        {
+          "value": "TGC",
+          "label": "Tigecycline TGC"
+        },
+        {
+          "value": "TIL",
+          "label": "Tilmicosin TIL"
+        },
+        {
+          "value": "TOB",
+          "label": "Tobramycin TOB"
+        },
+        {
+          "value": "TMP",
+          "label": "Trimethoprim TMP"
+        },
+        {
+          "value": "SXT",
+          "label": "Trimethoprim/sulfamethoxazole SXT"
+        },
+        {
+          "value": "TVA",
+          "label": "Trovafloxacin TVA"
+        },
+        {
+          "value": "TUL",
+          "label": "Tulathromycin TUL"
+        },
+        {
+          "value": "TYL",
+          "label": "Tylosin TYL"
+        },
+        {
+          "value": "VAN",
+          "label": "Vancomycin VAN"
         }
       ]
     },
-    "Phenotype": {
-      "id": "Phenotype",
+    "species": {
+      "id": "species",
+      "label": "Genome",
+      "filters": [
+        {
+          "value": "baumannii",
+          "label": "Acinetobacter baumannii"
+        },
+        {
+          "value": "coli",
+          "label": "Campylobacter coli"
+        },
+        {
+          "value": "jejuni",
+          "label": "Campylobacter jejuni"
+        },
+        {
+          "value": "lari",
+          "label": "Campylobacter lari"
+        },
+        {
+          "value": "difficile",
+          "label": "Clostridioides difficile"
+        },
+        {
+          "value": "aerogenes",
+          "label": "Enterobacter aerogenes"
+        },
+        {
+          "value": "asburiae",
+          "label": "Enterobacter asburiae"
+        },
+        {
+          "value": "bugandensis",
+          "label": "Enterobacter bugandensis"
+        },
+        {
+          "value": "cancerogenus",
+          "label": "Enterobacter cancerogenus"
+        },
+        {
+          "value": "chengduensis",
+          "label": "Enterobacter chengduensis"
+        },
+        {
+          "value": "cloacae",
+          "label": "Enterobacter cloacae"
+        },
+        {
+          "value": "cloacae complex",
+          "label": "Enterobacter cloacae complex"
+        },
+        {
+          "value": "cloacae group",
+          "label": "Enterobacter cloacae group"
+        },
+        {
+          "value": "hormaechei",
+          "label": "Enterobacter hormaechei"
+        },
+        {
+          "value": "kobei",
+          "label": "Enterobacter kobei"
+        },
+        {
+          "value": "ludwigii",
+          "label": "Enterobacter ludwigii"
+        },
+        {
+          "value": "roggenkampii",
+          "label": "Enterobacter roggenkampii"
+        },
+        {
+          "value": "sichuanensis",
+          "label": "Enterobacter sichuanensis"
+        },
+        {
+          "value": "soli",
+          "label": "Enterobacter soli"
+        },
+        {
+          "value": "sp.",
+          "label": "Enterobacter sp."
+        },
+        {
+          "value": "faecium",
+          "label": "Enterococcus faecium"
+        },
+        {
+          "value": "coli",
+          "label": "Escherichia coli"
+        },
+        {
+          "value": "influenzae",
+          "label": "Haemophilus influenzae"
+        },
+        {
+          "value": "pylori",
+          "label": "Helicobacter pylori"
+        },
+        {
+          "value": "pneumoniae",
+          "label": "Klebsiella pneumoniae"
+        },
+        {
+          "value": "quasipneumoniae",
+          "label": "Klebsiella quasipneumoniae"
+        },
+        {
+          "value": "morganii",
+          "label": "Morganella morganii"
+        },
+        {
+          "value": "tuberculosis",
+          "label": "Mycobacterium tuberculosis"
+        },
+        {
+          "value": "gonorrhoeae",
+          "label": "Neisseria gonorrhoeae"
+        },
+        {
+          "value": "meningitidis",
+          "label": "Neisseria meningitidis"
+        },
+        {
+          "value": "alimentorum",
+          "label": "Proteus alimentorum"
+        },
+        {
+          "value": "columbae",
+          "label": "Proteus columbae"
+        },
+        {
+          "value": "mirabilis",
+          "label": "Proteus mirabilis"
+        },
+        {
+          "value": "terrae",
+          "label": "Proteus terrae"
+        },
+        {
+          "value": "vulgaris",
+          "label": "Proteus vulgaris"
+        },
+        {
+          "value": "alcalifaciens",
+          "label": "Providencia alcalifaciens"
+        },
+        {
+          "value": "rettgeri",
+          "label": "Providencia rettgeri"
+        },
+        {
+          "value": "species",
+          "label": "Providencia species"
+        },
+        {
+          "value": "stuartii",
+          "label": "Providencia stuartii"
+        },
+        {
+          "value": "aeruginosa",
+          "label": "Pseudomonas aeruginosa"
+        },
+        {
+          "value": "Infantis",
+          "label": "Salmonella Infantis"
+        },
+        {
+          "value": "Senftenberg",
+          "label": "Salmonella Senftenberg"
+        },
+        {
+          "value": "Typhimurium",
+          "label": "Salmonella Typhimurium"
+        },
+        {
+          "value": "enterica",
+          "label": "Salmonella enterica"
+        },
+        {
+          "value": "enterica subsp. enterica serovar Kentucky",
+          "label": "Salmonella enterica subsp. enterica serovar Kentucky"
+        },
+        {
+          "value": "sp.",
+          "label": "Salmonella sp."
+        },
+        {
+          "value": "liquefaciens",
+          "label": "Serratia liquefaciens"
+        },
+        {
+          "value": "marcescens",
+          "label": "Serratia marcescens"
+        },
+        {
+          "value": "nematodiphila",
+          "label": "Serratia nematodiphila"
+        },
+        {
+          "value": "rubidaea",
+          "label": "Serratia rubidaea"
+        },
+        {
+          "value": "sp.",
+          "label": "Serratia sp."
+        },
+        {
+          "value": "ureilytica",
+          "label": "Serratia ureilytica"
+        },
+        {
+          "value": "boydii",
+          "label": "Shigella boydii"
+        },
+        {
+          "value": "dysenteriae",
+          "label": "Shigella dysenteriae"
+        },
+        {
+          "value": "flexneri",
+          "label": "Shigella flexneri"
+        },
+        {
+          "value": "sonnei",
+          "label": "Shigella sonnei"
+        },
+        {
+          "value": "aureus",
+          "label": "Staphylococcus aureus"
+        },
+        {
+          "value": "pneumoniae",
+          "label": "Streptococcus pneumoniae"
+        }
+      ]
+    },
+    "isolation_context": {
+      "id": "isolation_context",
+      "label": "Isolation Host",
+      "filters": [
+        {
+          "value": "animal",
+          "label": "animal"
+        },
+        {
+          "value": "environmental",
+          "label": "environmental"
+        },
+        {
+          "value": "food",
+          "label": "food"
+        },
+        {
+          "value": "human",
+          "label": "human"
+        }
+      ]
+    },
+    "phenotype": {
+      "id": "phenotype",
       "label": "Phenotype",
       "filters": [
         {
-          "value": "intermediate",
-          "label": "intermediate"
-        },
-        {
-          "value": "SYN-S",
-          "label": "SYN-S"
-        },
-        {
-          "value": "high level resistance",
-          "label": "high level resistance"
-        },
-        {
-          "value": "susceptible",
-          "label": "susceptible"
-        },
-        {
           "value": "Nonsusceptible",
           "label": "Nonsusceptible"
-        },
-        {
-          "value": "decreased susceptibility",
-          "label": "decreased susceptibility"
         },
         {
           "value": "SYN-R",
           "label": "SYN-R"
         },
         {
-          "value": "susceptible dose dependent",
-          "label": "susceptible dose dependent"
+          "value": "SYN-S",
+          "label": "SYN-S"
+        },
+        {
+          "value": "decreased susceptibility",
+          "label": "decreased susceptibility"
+        },
+        {
+          "value": "high level resistance",
+          "label": "high level resistance"
+        },
+        {
+          "value": "intermediate",
+          "label": "intermediate"
         },
         {
           "value": "resistant",
           "label": "resistant"
+        },
+        {
+          "value": "susceptible",
+          "label": "susceptible"
+        },
+        {
+          "value": "susceptible dose dependent",
+          "label": "susceptible dose dependent"
         }
       ]
     },
@@ -655,582 +915,474 @@ export const filtersConfig = {
       "label": "Host Sex",
       "filters": [
         {
-          "value": "male",
-          "label": "male"
-        },
-        {
           "value": "female",
           "label": "female"
+        },
+        {
+          "value": "male",
+          "label": "male"
         }
       ]
     },
     "isolation_country": {
       "id": "isolation_country",
-      "label": "Isolation Country",
+      "label": "Isolation Location",
       "filters": [
         {
-          "value": "NLD",
-          "label": "NLD"
-        },
-        {
-          "value": "AUT",
-          "label": "AUT"
-        },
-        {
-          "value": "NZL",
-          "label": "NZL"
-        },
-        {
-          "value": "BRA",
-          "label": "BRA"
-        },
-        {
-          "value": "ARE",
-          "label": "ARE"
-        },
-        {
-          "value": "ZAF",
-          "label": "ZAF"
-        },
-        {
-          "value": "TTO",
-          "label": "TTO"
-        },
-        {
-          "value": "TUR",
-          "label": "TUR"
-        },
-        {
-          "value": "COG",
-          "label": "COG"
-        },
-        {
-          "value": "VNM",
-          "label": "VNM"
-        },
-        {
-          "value": "DZA",
-          "label": "DZA"
-        },
-        {
-          "value": "TGO",
-          "label": "TGO"
-        },
-        {
-          "value": "DOM",
-          "label": "DOM"
-        },
-        {
-          "value": "KEN|TZA",
-          "label": "KEN|TZA"
-        },
-        {
-          "value": "LCA",
-          "label": "LCA"
-        },
-        {
-          "value": "BLZ",
-          "label": "BLZ"
-        },
-        {
-          "value": "NOR",
-          "label": "NOR"
-        },
-        {
-          "value": "USA",
-          "label": "USA"
-        },
-        {
-          "value": "RUS",
-          "label": "RUS"
-        },
-        {
-          "value": "ISR",
-          "label": "ISR"
-        },
-        {
-          "value": "LTU",
-          "label": "LTU"
-        },
-        {
-          "value": "PER",
-          "label": "PER"
-        },
-        {
-          "value": "UGA",
-          "label": "UGA"
-        },
-        {
-          "value": "KHM",
-          "label": "KHM"
-        },
-        {
-          "value": "MLI",
-          "label": "MLI"
-        },
-        {
-          "value": "IRN",
-          "label": "IRN"
-        },
-        {
-          "value": "COD",
-          "label": "COD"
-        },
-        {
-          "value": "BDI",
-          "label": "BDI"
-        },
-        {
-          "value": "NER",
-          "label": "NER"
-        },
-        {
-          "value": "CAF",
-          "label": "CAF"
-        },
-        {
-          "value": "NAM",
-          "label": "NAM"
-        },
-        {
-          "value": "SOM",
-          "label": "SOM"
-        },
-        {
-          "value": "LBY",
-          "label": "LBY"
-        },
-        {
-          "value": "KWT",
-          "label": "KWT"
-        },
-        {
-          "value": "GRD",
-          "label": "GRD"
-        },
-        {
-          "value": "BEL",
-          "label": "BEL"
-        },
-        {
-          "value": "SVN",
-          "label": "SVN"
-        },
-        {
-          "value": "CAN",
-          "label": "CAN"
-        },
-        {
-          "value": "AUS",
-          "label": "AUS"
-        },
-        {
-          "value": "CHN",
-          "label": "CHN"
-        },
-        {
-          "value": "HKG",
-          "label": "HKG"
-        },
-        {
-          "value": "COL",
-          "label": "COL"
-        },
-        {
-          "value": "LVA",
-          "label": "LVA"
-        },
-        {
-          "value": "TWN",
-          "label": "TWN"
-        },
-        {
-          "value": "KAZ",
-          "label": "KAZ"
-        },
-        {
-          "value": "SAU",
-          "label": "SAU"
-        },
-        {
-          "value": "CUB",
-          "label": "CUB"
+          "value": "AFG",
+          "label": "AFG"
         },
         {
           "value": "AGO",
           "label": "AGO"
         },
         {
-          "value": "GNB",
-          "label": "GNB"
-        },
-        {
-          "value": "GUM",
-          "label": "GUM"
-        },
-        {
-          "value": "inp",
-          "label": "inp"
-        },
-        {
-          "value": "QAT",
-          "label": "QAT"
-        },
-        {
-          "value": "THA",
-          "label": "THA"
-        },
-        {
-          "value": "GBR",
-          "label": "GBR"
-        },
-        {
-          "value": "DEU",
-          "label": "DEU"
-        },
-        {
-          "value": "DNK",
-          "label": "DNK"
-        },
-        {
-          "value": "PHL",
-          "label": "PHL"
-        },
-        {
-          "value": "MMR",
-          "label": "MMR"
-        },
-        {
-          "value": "BLR",
-          "label": "BLR"
+          "value": "ARE",
+          "label": "ARE"
         },
         {
           "value": "ARG",
           "label": "ARG"
         },
         {
-          "value": "CHL",
-          "label": "CHL"
+          "value": "ARM",
+          "label": "ARM"
         },
         {
-          "value": "PRI",
-          "label": "PRI"
+          "value": "AUS",
+          "label": "AUS"
         },
         {
-          "value": "KEN",
-          "label": "KEN"
+          "value": "AUT",
+          "label": "AUT"
         },
         {
-          "value": "NGA",
-          "label": "NGA"
+          "value": "AZE",
+          "label": "AZE"
         },
         {
-          "value": "IDN",
-          "label": "IDN"
+          "value": "BDI",
+          "label": "BDI"
         },
         {
-          "value": "BTN",
-          "label": "BTN"
-        },
-        {
-          "value": "CIV",
-          "label": "CIV"
-        },
-        {
-          "value": "DJI",
-          "label": "DJI"
-        },
-        {
-          "value": "GUF",
-          "label": "GUF"
-        },
-        {
-          "value": "DMA",
-          "label": "DMA"
-        },
-        {
-          "value": "CZE",
-          "label": "CZE"
-        },
-        {
-          "value": "HRV",
-          "label": "HRV"
-        },
-        {
-          "value": "ITA",
-          "label": "ITA"
-        },
-        {
-          "value": "BGD",
-          "label": "BGD"
-        },
-        {
-          "value": "IND",
-          "label": "IND"
-        },
-        {
-          "value": "MKD",
-          "label": "MKD"
-        },
-        {
-          "value": "MNE",
-          "label": "MNE"
-        },
-        {
-          "value": "MLT",
-          "label": "MLT"
-        },
-        {
-          "value": "MWI",
-          "label": "MWI"
-        },
-        {
-          "value": "GTM",
-          "label": "GTM"
-        },
-        {
-          "value": "TUN",
-          "label": "TUN"
-        },
-        {
-          "value": "RWA",
-          "label": "RWA"
-        },
-        {
-          "value": "GEO",
-          "label": "GEO"
-        },
-        {
-          "value": "MDA",
-          "label": "MDA"
-        },
-        {
-          "value": "GMB",
-          "label": "GMB"
-        },
-        {
-          "value": "MDG",
-          "label": "MDG"
-        },
-        {
-          "value": "HTI",
-          "label": "HTI"
-        },
-        {
-          "value": "IRAN",
-          "label": "IRAN"
-        },
-        {
-          "value": "CYM",
-          "label": "CYM"
-        },
-        {
-          "value": "BMU",
-          "label": "BMU"
-        },
-        {
-          "value": "BGR",
-          "label": "BGR"
-        },
-        {
-          "value": "FIN",
-          "label": "FIN"
-        },
-        {
-          "value": "GRC",
-          "label": "GRC"
-        },
-        {
-          "value": "MEX",
-          "label": "MEX"
-        },
-        {
-          "value": "MYS",
-          "label": "MYS"
-        },
-        {
-          "value": "EST",
-          "label": "EST"
-        },
-        {
-          "value": "SVK",
-          "label": "SVK"
-        },
-        {
-          "value": "IRL",
-          "label": "IRL"
-        },
-        {
-          "value": "EGY",
-          "label": "EGY"
-        },
-        {
-          "value": "SWZ",
-          "label": "SWZ"
-        },
-        {
-          "value": "ETH",
-          "label": "ETH"
-        },
-        {
-          "value": "ECU",
-          "label": "ECU"
+          "value": "BEL",
+          "label": "BEL"
         },
         {
           "value": "BEN",
           "label": "BEN"
         },
         {
-          "value": "CHE",
-          "label": "CHE"
-        },
-        {
-          "value": "GIN",
-          "label": "GIN"
-        },
-        {
-          "value": "ERI",
-          "label": "ERI"
-        },
-        {
-          "value": "ISL",
-          "label": "ISL"
-        },
-        {
-          "value": "SEN",
-          "label": "SEN"
-        },
-        {
           "value": "BFA",
           "label": "BFA"
         },
         {
-          "value": "MOZ",
-          "label": "MOZ"
+          "value": "BGD",
+          "label": "BGD"
         },
         {
-          "value": "URY",
-          "label": "URY"
+          "value": "BGR",
+          "label": "BGR"
         },
         {
-          "value": "GLP",
-          "label": "GLP"
+          "value": "BLR",
+          "label": "BLR"
         },
         {
-          "value": "SWE",
-          "label": "SWE"
+          "value": "BLZ",
+          "label": "BLZ"
         },
         {
-          "value": "ESP",
-          "label": "ESP"
+          "value": "BMU",
+          "label": "BMU"
         },
         {
-          "value": "JPN",
-          "label": "JPN"
+          "value": "BRA",
+          "label": "BRA"
         },
         {
-          "value": "KOR",
-          "label": "KOR"
+          "value": "BRB",
+          "label": "BRB"
         },
         {
-          "value": "AFG",
-          "label": "AFG"
+          "value": "BTN",
+          "label": "BTN"
         },
         {
-          "value": "SGP",
-          "label": "SGP"
+          "value": "CAF",
+          "label": "CAF"
         },
         {
-          "value": "HUN",
-          "label": "HUN"
+          "value": "CAN",
+          "label": "CAN"
         },
         {
-          "value": "LUX",
-          "label": "LUX"
+          "value": "CHE",
+          "label": "CHE"
         },
         {
-          "value": "MAR",
-          "label": "MAR"
+          "value": "CHL",
+          "label": "CHL"
         },
         {
-          "value": "TKM",
-          "label": "TKM"
+          "value": "CHN",
+          "label": "CHN"
         },
         {
-          "value": "SDN",
-          "label": "SDN"
+          "value": "CIV",
+          "label": "CIV"
         },
         {
-          "value": "JAM",
-          "label": "JAM"
+          "value": "CMR",
+          "label": "CMR"
         },
         {
-          "value": "TZA",
-          "label": "TZA"
+          "value": "COD",
+          "label": "COD"
         },
         {
-          "value": "GHA",
-          "label": "GHA"
+          "value": "COG",
+          "label": "COG"
         },
         {
-          "value": "LKA",
-          "label": "LKA"
+          "value": "COL",
+          "label": "COL"
         },
         {
-          "value": "MUS",
-          "label": "MUS"
+          "value": "CPV",
+          "label": "CPV"
         },
         {
           "value": "CRI",
           "label": "CRI"
         },
         {
-          "value": "IDN|THA",
-          "label": "IDN|THA"
+          "value": "CUB",
+          "label": "CUB"
         },
         {
-          "value": "JOR",
-          "label": "JOR"
-        },
-        {
-          "value": "outpatient",
-          "label": "outpatient"
-        },
-        {
-          "value": "FRA",
-          "label": "FRA"
-        },
-        {
-          "value": "PRT",
-          "label": "PRT"
-        },
-        {
-          "value": "POL",
-          "label": "POL"
+          "value": "CYM",
+          "label": "CYM"
         },
         {
           "value": "CYP",
           "label": "CYP"
         },
         {
-          "value": "NPL",
-          "label": "NPL"
+          "value": "CZE",
+          "label": "CZE"
         },
         {
-          "value": "SRB",
-          "label": "SRB"
+          "value": "DEU",
+          "label": "DEU"
+        },
+        {
+          "value": "DJI",
+          "label": "DJI"
+        },
+        {
+          "value": "DMA",
+          "label": "DMA"
+        },
+        {
+          "value": "DNK",
+          "label": "DNK"
+        },
+        {
+          "value": "DOM",
+          "label": "DOM"
+        },
+        {
+          "value": "DZA",
+          "label": "DZA"
+        },
+        {
+          "value": "ECU",
+          "label": "ECU"
+        },
+        {
+          "value": "EGY",
+          "label": "EGY"
+        },
+        {
+          "value": "ERI",
+          "label": "ERI"
+        },
+        {
+          "value": "ESP",
+          "label": "ESP"
+        },
+        {
+          "value": "EST",
+          "label": "EST"
+        },
+        {
+          "value": "ETH",
+          "label": "ETH"
+        },
+        {
+          "value": "FIN",
+          "label": "FIN"
+        },
+        {
+          "value": "FRA",
+          "label": "FRA"
+        },
+        {
+          "value": "GBR",
+          "label": "GBR"
+        },
+        {
+          "value": "GEO",
+          "label": "GEO"
+        },
+        {
+          "value": "GHA",
+          "label": "GHA"
+        },
+        {
+          "value": "GIN",
+          "label": "GIN"
+        },
+        {
+          "value": "GLP",
+          "label": "GLP"
+        },
+        {
+          "value": "GMB",
+          "label": "GMB"
+        },
+        {
+          "value": "GNB",
+          "label": "GNB"
+        },
+        {
+          "value": "GRC",
+          "label": "GRC"
+        },
+        {
+          "value": "GRD",
+          "label": "GRD"
+        },
+        {
+          "value": "GTM",
+          "label": "GTM"
+        },
+        {
+          "value": "GUF",
+          "label": "GUF"
+        },
+        {
+          "value": "GUM",
+          "label": "GUM"
+        },
+        {
+          "value": "HKG",
+          "label": "HKG"
         },
         {
           "value": "HND",
           "label": "HND"
         },
         {
-          "value": "VEN",
-          "label": "VEN"
+          "value": "HRV",
+          "label": "HRV"
         },
         {
-          "value": "ROU",
-          "label": "ROU"
+          "value": "HTI",
+          "label": "HTI"
+        },
+        {
+          "value": "HUN",
+          "label": "HUN"
+        },
+        {
+          "value": "IDN",
+          "label": "IDN"
+        },
+        {
+          "value": "IDN|THA",
+          "label": "IDN|THA"
+        },
+        {
+          "value": "IND",
+          "label": "IND"
+        },
+        {
+          "value": "IRAN",
+          "label": "IRAN"
+        },
+        {
+          "value": "IRL",
+          "label": "IRL"
+        },
+        {
+          "value": "IRN",
+          "label": "IRN"
+        },
+        {
+          "value": "IRQ",
+          "label": "IRQ"
+        },
+        {
+          "value": "ISL",
+          "label": "ISL"
+        },
+        {
+          "value": "ISR",
+          "label": "ISR"
+        },
+        {
+          "value": "ITA",
+          "label": "ITA"
+        },
+        {
+          "value": "JAM",
+          "label": "JAM"
+        },
+        {
+          "value": "JOR",
+          "label": "JOR"
+        },
+        {
+          "value": "JPN",
+          "label": "JPN"
+        },
+        {
+          "value": "KAZ",
+          "label": "KAZ"
+        },
+        {
+          "value": "KEN",
+          "label": "KEN"
+        },
+        {
+          "value": "KEN|TZA",
+          "label": "KEN|TZA"
+        },
+        {
+          "value": "KHM",
+          "label": "KHM"
+        },
+        {
+          "value": "KOR",
+          "label": "KOR"
+        },
+        {
+          "value": "KWT",
+          "label": "KWT"
+        },
+        {
+          "value": "LBN",
+          "label": "LBN"
+        },
+        {
+          "value": "LBY",
+          "label": "LBY"
+        },
+        {
+          "value": "LCA",
+          "label": "LCA"
+        },
+        {
+          "value": "LKA",
+          "label": "LKA"
+        },
+        {
+          "value": "LTU",
+          "label": "LTU"
+        },
+        {
+          "value": "LUX",
+          "label": "LUX"
+        },
+        {
+          "value": "LVA",
+          "label": "LVA"
+        },
+        {
+          "value": "MAR",
+          "label": "MAR"
+        },
+        {
+          "value": "MDA",
+          "label": "MDA"
+        },
+        {
+          "value": "MDG",
+          "label": "MDG"
+        },
+        {
+          "value": "MEX",
+          "label": "MEX"
+        },
+        {
+          "value": "MKD",
+          "label": "MKD"
+        },
+        {
+          "value": "MLI",
+          "label": "MLI"
+        },
+        {
+          "value": "MLT",
+          "label": "MLT"
+        },
+        {
+          "value": "MMR",
+          "label": "MMR"
+        },
+        {
+          "value": "MNE",
+          "label": "MNE"
+        },
+        {
+          "value": "MOZ",
+          "label": "MOZ"
+        },
+        {
+          "value": "MUS",
+          "label": "MUS"
+        },
+        {
+          "value": "MWI",
+          "label": "MWI"
+        },
+        {
+          "value": "MYS",
+          "label": "MYS"
+        },
+        {
+          "value": "NAM",
+          "label": "NAM"
+        },
+        {
+          "value": "NER",
+          "label": "NER"
+        },
+        {
+          "value": "NGA",
+          "label": "NGA"
+        },
+        {
+          "value": "NLD",
+          "label": "NLD"
+        },
+        {
+          "value": "NOR",
+          "label": "NOR"
+        },
+        {
+          "value": "NPL",
+          "label": "NPL"
+        },
+        {
+          "value": "NZL",
+          "label": "NZL"
+        },
+        {
+          "value": "OMN",
+          "label": "OMN"
         },
         {
           "value": "PAK",
@@ -1241,56 +1393,210 @@ export const filtersConfig = {
           "label": "PAN"
         },
         {
-          "value": "UKR",
-          "label": "UKR"
+          "value": "PER",
+          "label": "PER"
         },
         {
-          "value": "UZB",
-          "label": "UZB"
-        },
-        {
-          "value": "SLE",
-          "label": "SLE"
+          "value": "PHL",
+          "label": "PHL"
         },
         {
           "value": "PNG",
           "label": "PNG"
         },
         {
+          "value": "POL",
+          "label": "POL"
+        },
+        {
+          "value": "PRI",
+          "label": "PRI"
+        },
+        {
+          "value": "PRT",
+          "label": "PRT"
+        },
+        {
+          "value": "QAT",
+          "label": "QAT"
+        },
+        {
+          "value": "ROU",
+          "label": "ROU"
+        },
+        {
+          "value": "RUS",
+          "label": "RUS"
+        },
+        {
+          "value": "RWA",
+          "label": "RWA"
+        },
+        {
+          "value": "SAU",
+          "label": "SAU"
+        },
+        {
+          "value": "SDN",
+          "label": "SDN"
+        },
+        {
+          "value": "SEN",
+          "label": "SEN"
+        },
+        {
+          "value": "SGP",
+          "label": "SGP"
+        },
+        {
+          "value": "SLE",
+          "label": "SLE"
+        },
+        {
+          "value": "SOM",
+          "label": "SOM"
+        },
+        {
+          "value": "SRB",
+          "label": "SRB"
+        },
+        {
+          "value": "SVK",
+          "label": "SVK"
+        },
+        {
+          "value": "SVN",
+          "label": "SVN"
+        },
+        {
+          "value": "SWE",
+          "label": "SWE"
+        },
+        {
+          "value": "SWZ",
+          "label": "SWZ"
+        },
+        {
+          "value": "TGO",
+          "label": "TGO"
+        },
+        {
+          "value": "THA",
+          "label": "THA"
+        },
+        {
+          "value": "TKM",
+          "label": "TKM"
+        },
+        {
+          "value": "TTO",
+          "label": "TTO"
+        },
+        {
+          "value": "TUN",
+          "label": "TUN"
+        },
+        {
+          "value": "TUR",
+          "label": "TUR"
+        },
+        {
+          "value": "TWN",
+          "label": "TWN"
+        },
+        {
+          "value": "TZA",
+          "label": "TZA"
+        },
+        {
+          "value": "UGA",
+          "label": "UGA"
+        },
+        {
+          "value": "UKR",
+          "label": "UKR"
+        },
+        {
+          "value": "URY",
+          "label": "URY"
+        },
+        {
+          "value": "USA",
+          "label": "USA"
+        },
+        {
+          "value": "UZB",
+          "label": "UZB"
+        },
+        {
+          "value": "VEN",
+          "label": "VEN"
+        },
+        {
+          "value": "VNM",
+          "label": "VNM"
+        },
+        {
+          "value": "ZAF",
+          "label": "ZAF"
+        },
+        {
           "value": "ZWE",
           "label": "ZWE"
         },
         {
-          "value": "AZE",
-          "label": "AZE"
+          "value": "inp",
+          "label": "inp"
         },
         {
-          "value": "ARM",
-          "label": "ARM"
+          "value": "outpatient",
+          "label": "outpatient"
+        }
+      ]
+    },
+    "laboratory_typing_method": {
+      "id": "laboratory_typing_method",
+      "label": "Testing method",
+      "filters": [
+        {
+          "value": "CLSI",
+          "label": "CLSI"
         },
         {
-          "value": "CPV",
-          "label": "CPV"
+          "value": "E-test",
+          "label": "E-test"
         },
         {
-          "value": "CMR",
-          "label": "CMR"
+          "value": "EUCAST",
+          "label": "EUCAST"
         },
         {
-          "value": "IRQ",
-          "label": "IRQ"
+          "value": "MGIT960",
+          "label": "MGIT960"
         },
         {
-          "value": "LBN",
-          "label": "LBN"
+          "value": "Microbroth dilution",
+          "label": "Microbroth dilution"
         },
         {
-          "value": "OMN",
-          "label": "OMN"
+          "value": "NARMS",
+          "label": "NARMS"
         },
         {
-          "value": "BRB",
-          "label": "BRB"
+          "value": "agar dilution",
+          "label": "agar dilution"
+        },
+        {
+          "value": "broth dilution",
+          "label": "broth dilution"
+        },
+        {
+          "value": "broth microdilution",
+          "label": "broth microdilution"
+        },
+        {
+          "value": "disk diffusion",
+          "label": "disk diffusion"
         }
       ]
     }
@@ -1311,6 +1617,112 @@ export const filtersConfig = {
           "name": "Phenotype",
           "categories": [
             "phenotype"
+          ]
+        },
+        {
+          "name": "Genome",
+          "categories": [
+            "species"
+          ]
+        },
+        {
+          "name": "Testing method",
+          "categories": [
+            "laboratory_typing_method"
+          ]
+        },
+        {
+          "name": "Isolate Host",
+          "categories": [
+            "isolation_context"
+          ]
+        },
+        {
+          "name": "Isolate attributes",
+          "categories": [
+            "host_sex",
+            "isolation_country"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "AMR genomes",
+      "categoryGroups": [
+        {
+          "name": "",
+          "categories": [
+            "species"
+          ]
+        }
+      ],
+      "otherCategoryGroups": [
+        {
+          "name": "Antibiotic",
+          "categories": [
+            "Antibiotic_abbreviation"
+          ]
+        },
+        {
+          "name": "Phenotype",
+          "categories": [
+            "phenotype"
+          ]
+        },
+        {
+          "name": "Testing method",
+          "categories": [
+            "laboratory_typing_method"
+          ]
+        },
+        {
+          "name": "Isolate Host",
+          "categories": [
+            "isolation_context"
+          ]
+        },
+        {
+          "name": "Isolate attributes",
+          "categories": [
+            "host_sex",
+            "isolation_country"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "AMR isolates",
+      "categoryGroups": [
+        {
+          "name": "",
+          "categories": [
+            "isolation_context"
+          ]
+        }
+      ],
+      "otherCategoryGroups": [
+        {
+          "name": "Antibiotic",
+          "categories": [
+            "Antibiotic_abbreviation"
+          ]
+        },
+        {
+          "name": "Phenotype",
+          "categories": [
+            "phenotype"
+          ]
+        },
+        {
+          "name": "Genome",
+          "categories": [
+            "species"
+          ]
+        },
+        {
+          "name": "Testing method",
+          "categories": [
+            "laboratory_typing_method"
           ]
         },
         {

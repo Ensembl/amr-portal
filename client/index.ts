@@ -1,5 +1,5 @@
 import { html, css, LitElement, type PropertyValues } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { customElement, state } from 'lit/decorators.js';
 
 import { getDataProvider, type LocalBackend } from '../data-provider/dataProvider';
 
@@ -8,14 +8,6 @@ import './components/bottom-panel/bottom-panel';
 
 import type { FiltersConfig } from '../types/filters/filtersConfig';
 import type { FilterChangeEventPayload } from '../types/events/filterChangeEvent';
-
-type QueryParams = {
-  mode: 'antibiotics';
-  filters: string[];
-} | {
-  mode: 'species';
-  filters: Array<{ genus: string; species: string | null }>;
-};
 
 export type SelectedFilter = {
   category: string;
@@ -85,7 +77,7 @@ export class AMRApp extends LitElement {
       if (!selectedFilters) {
         this.selectedFilters[viewMode] = [newFilter];
       } else {
-        selectedFilters.push(newFilter);
+        this.selectedFilters[viewMode] = [...selectedFilters, newFilter];
       }
     } else {
       // remove filter from state
@@ -98,17 +90,20 @@ export class AMRApp extends LitElement {
     this.requestUpdate();
   };
 
-  onViewModeChanged = (event: CustomEvent<string>) => {
+  onViewModeChange = (event: CustomEvent<string>) => {
     this.viewMode = event.detail;
   }
   
 
   render() {
-    if (!this.filtersConfig) {
+    console.log('re-rendering index component')
+    if (!this.dataProvider || !this.filtersConfig) {
       return html`
         <p>Loading...</p>
       `;
     }
+
+    const selectedFilters = this.selectedFilters[this.viewMode] ?? [];
 
     return html`
       <top-panel
@@ -116,19 +111,19 @@ export class AMRApp extends LitElement {
         .filtersConfig=${this.filtersConfig}
         .selectedFilters=${this.selectedFilters}
         @filter-changed=${this.onFilterChange}
-        @selection-mode-change=${this.onViewModeChanged}
+        @view-mode-change=${this.onViewModeChange}
       ></top-panel>
+      <bottom-panel
+        .dataProvider=${this.dataProvider}
+        .selectedFilters=${selectedFilters}
+      ></bottom-panel>
     `;
   }
 
 }
 
-
-/**
-
-      <bottom-panel
-        .dataProvider=${this.dataProvider}
-        .queryParams=${this.queryParams}
-      ></bottom-panel>
-
- */
+    //  <div style="height: 100%; overflow-y: auto;">
+    //     ${ selectedFilters.length ? html`
+    //       <pre>${JSON.stringify(selectedFilters, null, 2)}</pre>        
+    //     ` : null}
+    //   </div>

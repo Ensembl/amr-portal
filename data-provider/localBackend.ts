@@ -2,9 +2,8 @@ import { filtersConfig } from './filtersConfig';
 
 import type { AsyncDuckDB } from "@duckdb/duckdb-wasm"; '@duckdb/duckdb-wasm';
 
-import type { AntibioticFilter } from '../types/filters/antibioticFilter';
-import type { SpeciesFilter } from '../types/filters/speciesFilter';
 import type { BiosampleDBRecord, BiosampleRecord } from '../types/biosample';
+import type { SelectedFilter } from '../client/index'; // FIXME: this type should move out of the component
 
 export class LocalBackend {
   db: AsyncDuckDB;
@@ -41,64 +40,60 @@ export class LocalBackend {
     ].join(', ');
   }
 
+  /**
+   * Transform an array of filters into an object that groups filter values by filter category,
+   * in order to facilitate the building of a SQL statement
+   */
+  #groupFilters = (filters: SelectedFilter[]): Record<string, string[]> => {
+    const result: Record<string, string[]> = {};
+
+    for (const filter of filters) {
+      const { category, value } = filter;
+      if (!result[category]) {
+        result[category] = [];
+      }
+
+      result[category].push(value);
+    }
+
+    return result;
+  }
+
   getFiltersConfig = async () => {
     // making this async to pretend that we fetched this from some remote source
     return filtersConfig;
   }
 
-
-  getAntibioticFilters = async () => {
-    const sqlString = `SELECT DISTINCT Antibiotic_name, Antibiotic_abbreviation FROM '${this.filePath}' ORDER BY Antibiotic_name`;
-    const dbRecords: Array<{ Antibiotic_name: string, Antibiotic_abbreviation: string }> = await this.#readFromDb(sqlString);
-
-    return dbRecords.map(this.#buildAntibioticFilter);
-  }
-
-  getSpeciesFilters = async () => {
-    const sqlString = `SELECT DISTINCT genus, species FROM '${this.filePath}' ORDER BY genus, species`;
-    const dbRecords: Array<SpeciesFilter> = await this.#readFromDb(sqlString);
-    return dbRecords;
-  }
-
-  getBiosamplesByAntibioticNames = async (antibioticNames: string[]) => {
+  getBiosamples = async (filters: SelectedFilter[]) => {
+    console.log('about to get biosamples');
     const columnNames = this.#getBiosampleDbRecordFields();
-    const antibioticNamesString = antibioticNames.map(name => `'${name}'`).join(', ');
+    const filterGroups = this.#groupFilters(filters);
+
+    let whereFragments = '';
+
+    // building a WHERE clause, e.g. Antibiotic_abbreviation IN ('CCV', 'AMP', 'SMX') AND phenotype IN ('high level resistance', 'resistant')
+    for (const [category, values] of Object.entries(filterGroups)) {
+      const valuesString = values.map(value => `'${value}'`).join(', ')
+      const fragment = `${category} IN (${valuesString})`;
+      if (!whereFragments.length) {
+        whereFragments = fragment;
+      } else {
+        whereFragments = `${whereFragments} AND ${fragment}`;
+      }
+    }
+
     const sqlString = `
       SELECT
       ${columnNames}
       FROM '${this.filePath}'
-      WHERE Antibiotic_name in (${antibioticNamesString})
-      LIMIT 1000`;
+      WHERE ${whereFragments}
+      LIMIT 1000
+    `;
+
+    console.log('sql statement', sqlString);
 
     const dbRecords: BiosampleDBRecord[] = await this.#readFromDb(sqlString);
-
     return dbRecords.map(record => this.#buildBiosampleRecord(record));
-  }
-
-  getBiosamplesBySpeciesNames = async (speciesNames: Array<{ genus: string, species: string | null }>) => {
-    const speciesQueryString = speciesNames.map(({ genus, species }) => {
-      const speciesString = species ? `species = '${species}'` : `species is NULL`;
-      return `(genus = '${genus}' and ${speciesString})`
-    }).join(' OR ');
-
-    const columnNames = this.#getBiosampleDbRecordFields();
-    const sqlString = `
-      SELECT
-      ${columnNames}
-      FROM '${this.filePath}'
-      WHERE ${speciesQueryString}
-      LIMIT 1000`;
-
-    const dbRecords: BiosampleDBRecord[] = await this.#readFromDb(sqlString);
-
-    return dbRecords.map(record => this.#buildBiosampleRecord(record));
-  }
-
-  #buildAntibioticFilter = (dbRecord: { Antibiotic_name: string, Antibiotic_abbreviation: string }): AntibioticFilter => {
-    return {
-      name: dbRecord.Antibiotic_name,
-      abbreviation: dbRecord.Antibiotic_abbreviation
-    };
   }
 
   #buildBiosampleRecord = (dbRecord: BiosampleDBRecord): BiosampleRecord => {

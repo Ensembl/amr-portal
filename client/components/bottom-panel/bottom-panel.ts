@@ -3,22 +3,23 @@ import { customElement, property, state } from 'lit/decorators.js';
 
 import type { LocalBackend } from '../../../data-provider/dataProvider';
 import type { BiosampleRecord } from '../../../types/biosample';
+import type { SelectedFilter } from '../../index';
 
-
-type QueryParams = {
-  mode: 'antibiotics';
-  filters: string[];
-} | {
-  mode: 'species';
-  filters: Array<{ genus: string; species: string | null }>;
-};
 
 
 @customElement('bottom-panel')
 export class BottomPanel extends LitElement {
 
-  @property({ type: Object })
-  queryParams: QueryParams | null = null;
+  static styles = css`
+    :host {
+      display: block;
+      height: 100%;
+      overflow-y: auto;
+    }
+  `;
+
+  @property({ type: Array })
+  selectedFilters: SelectedFilter[];
 
   @property({ type: Object })
   dataProvider: LocalBackend;
@@ -28,8 +29,8 @@ export class BottomPanel extends LitElement {
 
 
   protected willUpdate(changedProperties: PropertyValues) {
-    if (changedProperties.has('queryParams')) {
-      if (this.queryParams?.filters.length) {
+    if (changedProperties.has('selectedFilters')) {
+      if (this.selectedFilters.length) {
         this.fetchData();
       } else {
         this.biosampleRecords = [];
@@ -38,16 +39,12 @@ export class BottomPanel extends LitElement {
   }
 
   fetchData = async() => {
-    if (this.queryParams.mode === 'antibiotics') {
-      this.biosampleRecords = await this.dataProvider.getBiosamplesByAntibioticNames(this.queryParams.filters);
-    } else if (this.queryParams.mode === 'species') {
-      this.biosampleRecords = await this.dataProvider.getBiosamplesBySpeciesNames(this.queryParams.filters);
-    }
+    this.biosampleRecords = await this.dataProvider
+      .getBiosamples(this.selectedFilters);
   }
  
-
   render() {
-    if (!this.biosampleRecords) {
+    if (!this.biosampleRecords.length) {
       return html`
         <p>No data</p>
       `
