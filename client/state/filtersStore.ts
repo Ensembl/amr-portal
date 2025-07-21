@@ -1,6 +1,6 @@
 import { Signal } from 'signal-polyfill';
 
-import type { FiltersConfig } from '../../types/filters/filtersConfig';
+import type { FiltersConfig, FiltersView } from '../../types/filters/filtersConfig';
 
 export type SelectedFilter = {
   category: string;
@@ -38,7 +38,7 @@ const updateSelectedFilters = (payload: FiltersUpdatePayload) => {
     throw new Error('Selected filters can only be updated if view mode is set');
   }
   const { category, value: filterValue, isSelected } = payload;
-  const currentViewMode = viewMode.get();
+  const currentViewMode = viewMode.get() as string;
   const storedFiltersForAllModes = selectedFilters.get();
   const storedFilters = storedFiltersForAllModes[currentViewMode];
 
@@ -78,9 +78,9 @@ const toggleExtraFilters = () => {
 
 const filterGroupsForViewMode = new Signal.Computed(() => {
   const currentViewMode = viewMode.get();
-  const filtersConfigValue = filtersConfig.get();
+  const filtersConfigValue = filtersConfig.get() as FiltersConfig;
   const filtersView = filtersConfigValue
-    .filterViews.find(view => view.name === currentViewMode);
+    .filterViews.find(view => view.name === currentViewMode) as FiltersView;
 
   return filtersView.otherCategoryGroups;
 });
@@ -96,7 +96,7 @@ const activeFilterGroup = new Signal.Computed<string | null>(() => {
   return currentActiveFilterGroups[currentViewMode] ?? null;
 });
 const setActiveFilterGroup = (filterGroupId: string | null) => {
-  const currentViewMode = store.viewMode.get();
+  const currentViewMode = store.viewMode.get() as string;
   const currentActiveFilterGroups = activeFilterGroups.get();
 
   activeFilterGroups.set({

@@ -1,14 +1,18 @@
-import { html, css, LitElement, type PropertyValues } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { html, css, LitElement } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+import { SignalWatcher } from '@lit-labs/signals';
+
+import biosampleStore from '../../state/biosampleStore';
+import filtersStore from '../../state/filtersStore';
 
 import type { LocalBackend } from '../../../data-provider/dataProvider';
 import type { BiosampleRecord } from '../../../types/biosample';
-import type { SelectedFilter } from '../../index';
-
 
 
 @customElement('bottom-panel')
-export class BottomPanel extends LitElement {
+export class BottomPanel extends SignalWatcher(LitElement) {
+
+  biosamplesResource: ReturnType<typeof biosampleStore.createBiosampleResource> | null = null;
 
   static styles = css`
     :host {
@@ -18,42 +22,51 @@ export class BottomPanel extends LitElement {
     }
   `;
 
-  @property({ type: Array })
-  selectedFilters: SelectedFilter[];
-
   @property({ type: Object })
-  dataProvider: LocalBackend;
+  dataProvider!: LocalBackend;
 
-  @state()
-  biosampleRecords: BiosampleRecord[] = [];
-
-
-  protected willUpdate(changedProperties: PropertyValues) {
-    if (changedProperties.has('selectedFilters')) {
-      if (this.selectedFilters.length) {
-        this.fetchData();
-      } else {
-        this.biosampleRecords = [];
-      }
-    }
+  connectedCallback() {
+    super.connectedCallback();
+    this.initialise();
   }
 
-  fetchData = async() => {
-    this.biosampleRecords = await this.dataProvider
-      .getBiosamples(this.selectedFilters);
+  initialise() {
+    const biosamplesResource = biosampleStore.createBiosampleResource({
+      dataProvider: this.dataProvider,
+      selectedFilters: filtersStore.selectedFiltersForViewMode
+    });
+    this.biosamplesResource = biosamplesResource;
   }
+
  
   render() {
-    if (!this.biosampleRecords.length) {
+    const biosamplesResource = this.biosamplesResource;
+
+    if (!biosamplesResource || biosamplesResource?.status === 'pending') {
       return html`
-        <p>No data</p>
+        <p>Loading...</p>
       `
     }
 
+    if (biosamplesResource.status === 'complete') {
+      const biosampleRecords = biosamplesResource.value ?? [];
+
+      if (!biosampleRecords.length) {
+        return html`
+          <p>No data</p>
+        `
+      }
+
+      return this.renderBiosampleRecords(biosamplesResource.value ?? []);
+    }
+  }
+
+
+  renderBiosampleRecords(biosampleRecords: BiosampleRecord[]) {
     return html`
       <table>
         <tbody>
-          ${this.biosampleRecords.map(rowData => html`
+          ${biosampleRecords.map(rowData => html`
             <tr>
               <td>
                 ${rowData.biosample_id}

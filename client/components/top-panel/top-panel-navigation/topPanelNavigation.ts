@@ -21,7 +21,7 @@ export class TopPanelNavigation extends SignalWatcher(LitElement) {
     const currentViewMode = filtersStore.viewMode.get();
     const isViewingExtraFilters = filtersStore.isViewingExtraFilters.get();
 
-    const viewModeButtons = filtersConfig.filterViews.map(view => html`
+    const viewModeButtons = filtersConfig!.filterViews.map(view => html`
       <button
         @click=${() => this.#onViewModeChange(view.name)}
         ?disabled=${currentViewMode === view.name && !isViewingExtraFilters}

@@ -1,5 +1,5 @@
 import { html, css, LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { customElement } from 'lit/decorators.js';
 import { SignalWatcher } from '@lit-labs/signals';
 import { repeat } from 'lit/directives/repeat.js';
 
@@ -7,18 +7,8 @@ import filtersStore from '../../../state/filtersStore';
 
 import './filters-area-top';
 
-import type { SelectedFiltersState } from '../../../index';
 import type { FilterChangeEventPayload } from '../../../../types/events/filterChangeEvent';
-
-// height: 100%;
-// column-width: 14em;
-
-
-      // display: flex;
-      // flex-direction: column;
-      // flex-wrap: wrap;
-      // column-gap: 1rem;
-
+import { FilterCategoryGroup, FiltersConfig, FiltersView } from '../../../../types/filters/filtersConfig';
 
 @customElement('filters-area')
 export class FiltersArea extends SignalWatcher(LitElement) {
@@ -68,14 +58,15 @@ export class FiltersArea extends SignalWatcher(LitElement) {
   }
 
   #getFilterGroup = () => {
-    const filtersConfig = filtersStore.filtersConfig.get();
+    const filtersConfig = filtersStore.filtersConfig.get() as FiltersConfig;
     const viewMode = filtersStore.viewMode.get();
     const activeFiltersGroup = filtersStore.activeFilterGroup.get();
 
-    const filterView = filtersConfig.filterViews.find(view => view.name === viewMode);
+    const filterView = filtersConfig.filterViews.find(view => view.name === viewMode) as FiltersView;
 
     if (activeFiltersGroup) {
-      return filterView.otherCategoryGroups.find(group => group.name === activeFiltersGroup);
+      return filterView.otherCategoryGroups
+        .find(group => group.name === activeFiltersGroup) as FilterCategoryGroup;
     } else {
       return filterView.categoryGroups[0]; // FIXME: it seems that we only ever need one
     }
@@ -103,7 +94,7 @@ export class FiltersArea extends SignalWatcher(LitElement) {
 
   renderFiltersInCategory(categoryId: string) {
     const filtersConfig = filtersStore.filtersConfig.get();
-    const category = filtersConfig.filterCategories[categoryId];
+    const category = filtersConfig!.filterCategories[categoryId];
 
     const selectedFilters = filtersStore.selectedFiltersForViewMode.get();
 

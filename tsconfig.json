@@ -6,6 +6,7 @@
     "moduleResolution": "bundler", 
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "strict": true
   }
 }

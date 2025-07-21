@@ -1,4 +1,4 @@
-import { html, css, LitElement, type PropertyValues } from 'lit';
+import { html, css, LitElement } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { SignalWatcher } from '@lit-labs/signals';
 
@@ -8,8 +8,6 @@ import filtersStore from './state/filtersStore';
 
 import './components/top-panel/top-panel';
 import './components/bottom-panel/bottom-panel';
-
-import type { FilterChangeEventPayload } from '../types/events/filterChangeEvent';
 
 export type SelectedFilter = {
   category: string;
@@ -30,7 +28,7 @@ export class AMRApp extends SignalWatcher(LitElement) {
   `;
 
   @state()
-  dataProvider: LocalBackend;
+  dataProvider: LocalBackend | null = null;
 
   // protected willUpdate(changedProperties: PropertyValues) {
   //   if (changedProperties.has('selectionMode')) {
@@ -46,7 +44,7 @@ export class AMRApp extends SignalWatcher(LitElement) {
 
   initialise = async () => {
     await this.getDataProvider();
-    const filtersConfig = await this.dataProvider.getFiltersConfig();
+    const filtersConfig = await this.dataProvider!.getFiltersConfig();
     const defaultViewMode = filtersConfig.filterViews[0].name;
     
     filtersStore.setFiltersConfig(filtersConfig);
