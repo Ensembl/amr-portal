@@ -1,11 +1,13 @@
 import { html, css, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import { SignalWatcher } from '@lit-labs/signals';
 import { repeat } from 'lit/directives/repeat.js';
+
+import filtersStore from '../../../state/filtersStore';
 
 import './filters-area-top';
 
 import type { SelectedFiltersState } from '../../../index';
-import type { FiltersConfig } from '../../../../types/filters/filtersConfig';
 import type { FilterChangeEventPayload } from '../../../../types/events/filterChangeEvent';
 
 // height: 100%;
@@ -19,7 +21,7 @@ import type { FilterChangeEventPayload } from '../../../../types/events/filterCh
 
 
 @customElement('filters-area')
-export class FiltersArea extends LitElement {
+export class FiltersArea extends SignalWatcher(LitElement) {
   static styles = css`
     :host {
       display: grid;
@@ -44,21 +46,6 @@ export class FiltersArea extends LitElement {
     }
   `;
 
-  @property({ type: String })
-  viewMode: string;
-
-  @property({ type: Boolean })
-  isViewingExtraFilters: boolean;
-
-  @property({ type: String })
-  activeFiltersGroup: string | null;
-
-  @property({ type: Object })
-  filtersConfig: FiltersConfig;
-
-  @property({ type: Object })
-  selectedFilters: SelectedFiltersState;
-
   #onFilterChange = ({
     name,
     value,
@@ -71,31 +58,27 @@ export class FiltersArea extends LitElement {
     const eventTarget = event.target as HTMLInputElement;
     const isChecked = eventTarget.checked;
 
-    const eventPayload: FilterChangeEventPayload = {
+    const payload: FilterChangeEventPayload = {
       category: name,
       value,
       isSelected: isChecked
     };
 
-    this.dispatchEvent(new CustomEvent('filter-changed', {
-      detail: eventPayload,
-      composed: true,
-      bubbles: true
-    }));
+    filtersStore.updateSelectedFilters(payload);
   }
 
   #getFilterGroup = () => {
-    const filterView = this.filtersConfig.filterViews.find(view => view.name === this.viewMode);
+    const filtersConfig = filtersStore.filtersConfig.get();
+    const viewMode = filtersStore.viewMode.get();
+    const activeFiltersGroup = filtersStore.activeFilterGroup.get();
 
-    if (this.activeFiltersGroup) {
-      return filterView.otherCategoryGroups.find(group => group.name === this.activeFiltersGroup);
+    const filterView = filtersConfig.filterViews.find(view => view.name === viewMode);
+
+    if (activeFiltersGroup) {
+      return filterView.otherCategoryGroups.find(group => group.name === activeFiltersGroup);
     } else {
       return filterView.categoryGroups[0]; // FIXME: it seems that we only ever need one
     }
-  }
-
-  #getSelectedFilters = () => {
-    return this.selectedFilters[this.viewMode] ?? [];
   }
  
   render() {
@@ -103,8 +86,6 @@ export class FiltersArea extends LitElement {
     const filterCategoryIds = filterGroup.categories;
 
     const filterCategoryBlocks = filterCategoryIds.map(id => {
-      const filterCategory = this.filtersConfig.filterCategories[id];
-
       return html`
         <div class="filters-category">
           ${this.renderFiltersInCategory(id)}
@@ -113,13 +94,7 @@ export class FiltersArea extends LitElement {
     });
 
     return html`
-      <filters-area-top
-        .viewMode=${this.viewMode}
-        .activeFiltersGroup=${this.activeFiltersGroup}
-        .filtersConfig=${this.filtersConfig}
-        .isViewingExtraFilters=${this.isViewingExtraFilters}
-      >
-      </filters-area-top>
+      <filters-area-top></filters-area-top>
       <div class="main">
         ${filterCategoryBlocks}
       </div>
@@ -127,8 +102,10 @@ export class FiltersArea extends LitElement {
   }
 
   renderFiltersInCategory(categoryId: string) {
-    const category = this.filtersConfig.filterCategories[categoryId];
-    const selectedFilters = this.#getSelectedFilters();
+    const filtersConfig = filtersStore.filtersConfig.get();
+    const category = filtersConfig.filterCategories[categoryId];
+
+    const selectedFilters = filtersStore.selectedFiltersForViewMode.get();
 
     return repeat(category.filters, (filter) => filter.value, ( filter ) => {
       const isSelected = !!selectedFilters.find(selectedFilter => {

@@ -1,45 +1,30 @@
 import { html, css, LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement } from 'lit/decorators.js';
+import { SignalWatcher } from '@lit-labs/signals';
 
-import type { FiltersConfig } from '../../../../types/filters/filtersConfig';
+import filtersStore from '../../../state/filtersStore';
 
 
 @customElement('top-panel-navigation')
-export class TopPanelNavigation extends LitElement {
+export class TopPanelNavigation extends SignalWatcher(LitElement) {
 
-  @property({ type: String })
-  currentViewMode: string;
-
-  @property({ type: Object })
-  filtersConfig: FiltersConfig;
-
-  @property({ type: Boolean })
-  isViewingExtraFilters: boolean;
-
-  onViewModeChange = (mode: string) => {
-    const event = new CustomEvent('view-mode-change', {
-      detail: mode,
-      composed: true,
-      bubbles: true
-    });
-
-    this.dispatchEvent(event);
+  #onViewModeChange = (mode: string) => {
+    filtersStore.setViewMode(mode);
   }
 
-  onFiltersClick = () => {
-    const event = new Event('extra-filters-click', {
-      bubbles: true,
-      composed: true
-    });
-    this.dispatchEvent(event);
+  #onExtraFiltersViewToggle = () => {
+    filtersStore.toggleExtraFilters();
   }
-
 
   render() {
-    const viewModeButtons = this.filtersConfig.filterViews.map(view => html`
+    const filtersConfig = filtersStore.filtersConfig.get();
+    const currentViewMode = filtersStore.viewMode.get();
+    const isViewingExtraFilters = filtersStore.isViewingExtraFilters.get();
+
+    const viewModeButtons = filtersConfig.filterViews.map(view => html`
       <button
-        @click=${() => this.onViewModeChange(view.name)}
-        ?disabled=${this.currentViewMode === view.name && !this.isViewingExtraFilters}
+        @click=${() => this.#onViewModeChange(view.name)}
+        ?disabled=${currentViewMode === view.name && !isViewingExtraFilters}
       >
         ${view.name}
       </button>        
@@ -49,7 +34,7 @@ export class TopPanelNavigation extends LitElement {
     return html`
       <div>
         ${viewModeButtons}
-        <button style="margin-top: 1.5rem;" @click=${this.onFiltersClick}>
+        <button style="margin-top: 1.5rem;" @click=${this.#onExtraFiltersViewToggle}>
           Filters
         </button>
       </div>

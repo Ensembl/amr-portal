@@ -1,15 +1,11 @@
 import { html, css, LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { customElement } from 'lit/decorators.js';
+import { SignalWatcher } from '@lit-labs/signals';
 
-import type { FiltersConfig } from '../../../../types/filters/filtersConfig';
-
-type FiltersGroupChangeEventPayload = {
-  viewMode: string;
-  filtersGroupName: string;
-};
+import filtersStore from '../../../state/filtersStore';
 
 @customElement('filters-area-top')
-export class FiltersAreaTop extends LitElement {
+export class FiltersAreaTop extends SignalWatcher(LitElement) {
   static styles = css`
     :host {
       display: block;
@@ -25,29 +21,7 @@ export class FiltersAreaTop extends LitElement {
     }
   `;
 
-  @property({ type: String })
-  viewMode: string;
-
-  @property({ type: Boolean })
-  isViewingExtraFilters: boolean;
-
-  @property({ type: String })
-  activeFiltersGroup: string | null;
-
-  @property({ type: Object })
-  filtersConfig: FiltersConfig;
-
-  getFilterGroups() {
-    const filtersView = this.filtersConfig.filterViews.find(view => view.name === this.viewMode);
-
-    return filtersView.otherCategoryGroups;
-  }
-
   onFiltersGroupSelect = (groupName: string) => {
-    const eventPayload: FiltersGroupChangeEventPayload = {
-      viewMode: this.viewMode,
-      filtersGroupName: groupName
-    };
     const event = new CustomEvent('filters-group-change', {
       detail: groupName,
       bubbles: true,
@@ -58,16 +32,17 @@ export class FiltersAreaTop extends LitElement {
   }
 
   render() {
+    const isViewingExtraFilters = filtersStore.isViewingExtraFilters.get();
 
     return html`
       <div>
-        ${ this.isViewingExtraFilters ? this.renderFilterGroupsNav() : 'Hello' }
+        ${ isViewingExtraFilters ? this.renderFilterGroupsNav() : 'Hello' }
       </div>
     `;
   }
 
   renderFilterGroupsNav() {
-    const filterGroups = this.getFilterGroups();
+    const filterGroups = filtersStore.filterGroupsForViewMode.get();
 
     // FIXME: put text buttons inside of the li elements
 
