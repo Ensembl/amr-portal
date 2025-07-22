@@ -61,9 +61,7 @@ export class LocalBackend {
 
   getFiltersConfig = async () => {
     // making this async to pretend that we fetched this from some remote source
-    return await fetch('http://localhost:8000/filters-config').then(
-        response => response.json()
-    );
+    return filtersConfig;
   }
 
   getBiosamples = async (filters: SelectedFilter[]) => {
@@ -89,7 +87,7 @@ export class LocalBackend {
       ${columnNames}
       FROM '${this.filePath}'
       WHERE ${whereFragments}
-      LIMIT 1000
+      LIMIT 100
     `;
 
     console.log('sql statement', sqlString);

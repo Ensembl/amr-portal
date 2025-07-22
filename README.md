@@ -56,3 +56,12 @@ npm install
 npm run dev
 ```
 
+#### Switching between API and Local DB (experimental)
+
+Change the value in `.env`
+* `api`: Uses the backend
+* `local`: Loads the data straight to the frontend
+
+```
+VITE_DATA_PROVIDER=api
+```
