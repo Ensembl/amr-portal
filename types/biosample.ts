@@ -14,8 +14,12 @@ export type BiosampleDBRecord = {
   measurement_unit: string | null;
   isolation_context: string | null;
   isolation_source: string | null;
+  isolation_latitude: string | null; // empty data represented with string 'nan'
+  isolation_longitude: string | null; // empty data represented with string 'nan'
+  platform: string;
   laboratory_typing_platform: string | null;
   laboratory_typing_method: string | null;
+  collection_date: number | null;
 };
 
 export type BiosampleRecord = {
@@ -36,8 +40,12 @@ export type BiosampleRecord = {
   };
   isolation_context: string | null;
   isolation_source: string | null;
+  platform: string;
   laboratory_typing_platform: string | null;
   laboratory_typing_method: string | null;
+  isolation_latitude: string | null; // empty data represented with string 'nan'
+  isolation_longitude: string | null; // empty data represented with string 'nan'
+  collection_date: number | null;
 };
 
 

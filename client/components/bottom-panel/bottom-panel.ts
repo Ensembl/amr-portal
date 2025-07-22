@@ -43,6 +43,10 @@ export class BottomPanel extends SignalWatcher(LitElement) {
     const biosamplesResource = this.biosamplesResource;
 
     if (!biosamplesResource || biosamplesResource?.status === 'pending') {
+      if (biosamplesResource?.value?.length) {
+        return this.renderBiosampleRecords(biosamplesResource.value);
+      }
+
       return html`
         <p>Loading...</p>
       `
