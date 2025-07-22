@@ -3,7 +3,7 @@ import { filtersConfig } from './filtersConfig';
 import type { AsyncDuckDB } from "@duckdb/duckdb-wasm"; '@duckdb/duckdb-wasm';
 
 import type { BiosampleDBRecord, BiosampleRecord } from '../types/biosample';
-import type { SelectedFilter } from '../client/index'; // FIXME: this type should move out of the component
+import type { SelectedFilter } from '../client'; // FIXME: this type should move out of the component
 
 export class LocalBackend {
   db: AsyncDuckDB;
@@ -61,7 +61,9 @@ export class LocalBackend {
 
   getFiltersConfig = async () => {
     // making this async to pretend that we fetched this from some remote source
-    return filtersConfig;
+    return await fetch('http://localhost:8000/filters-config').then(
+        response => response.json()
+    );
   }
 
   getBiosamples = async (filters: SelectedFilter[]) => {
