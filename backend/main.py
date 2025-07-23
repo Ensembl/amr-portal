@@ -4,6 +4,7 @@ from collections import defaultdict
 from fastapi import FastAPI
 from fastapi import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 
 import duckdb
 import numpy as np
@@ -13,6 +14,7 @@ from filters_config import FILTERS_CONFIG
 
 app = FastAPI()
 
+# Add CORS support
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -20,6 +22,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Add GZip compression
+app.add_middleware(GZipMiddleware, minimum_size=1000, compresslevel=5)
 
 # Connecting to the DuckDB database
 data = duckdb.read_parquet("step1_merge_all_v7.parquet")
