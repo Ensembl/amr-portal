@@ -2,7 +2,8 @@ import { Signal } from 'signal-polyfill';
 import { AsyncComputed } from 'signal-utils/async-computed';
 
 import type { SelectedFilter } from '../index';
-import type { LocalBackend } from '../../data-provider/dataProvider';
+import type { BackendInterface } from '../../data-provider/backendInterface';
+// import type { LocalBackend, ApiBackend } from '../../data-provider/dataProvider';
 
 /**
  * Likely additions to this model:
@@ -18,9 +19,8 @@ import type { LocalBackend } from '../../data-provider/dataProvider';
 const page = new Signal.State(1);
 const setPage = (value: number) => page.set(value);
 
-const perPage = new Signal.State(1000);
+const perPage = new Signal.State(100);
 const setPerPage = (value: number) => perPage.set(value);
-
 
 const createBiosampleResource = ({
   selectedFilters,
@@ -29,7 +29,7 @@ const createBiosampleResource = ({
   selectedFilters: Signal.Computed<SelectedFilter[]>;
   // page: Signal.State<number>;
   // perPage: Signal.State<number>;
-  dataProvider: LocalBackend;
+  dataProvider: BackendInterface;
 }) => {
   const asyncResource = new AsyncComputed(async (abortSignal) => {
     const selectedFiltersValue = selectedFilters.get();
@@ -40,12 +40,15 @@ const createBiosampleResource = ({
 
     const requestStarted = performance.now();
 
-    const biosampleRecords = await dataProvider
-      .getBiosamples(selectedFiltersValue);
+    const amrRecords = await dataProvider.getAMRRecords({
+      filters: selectedFiltersValue,
+      page: page.get(),
+      perPage: perPage.get()
+    });
 
     console.log('Time spent fetching data', Math.round(performance.now() - requestStarted), 'milliseconds');
 
-    return biosampleRecords;
+    return amrRecords.data;
   });
 
   return asyncResource;

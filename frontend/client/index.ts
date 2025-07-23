@@ -2,7 +2,7 @@ import { html, css, LitElement } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { SignalWatcher } from '@lit-labs/signals';
 
-import { getDataProvider, type LocalBackend } from '../data-provider/dataProvider';
+import { getDataProvider, BackendInterface } from '../data-provider/dataProvider';
 
 import filtersStore from './state/filtersStore';
 
@@ -28,14 +28,7 @@ export class AMRApp extends SignalWatcher(LitElement) {
   `;
 
   @state()
-  dataProvider: LocalBackend | null = null;
-
-  // protected willUpdate(changedProperties: PropertyValues) {
-  //   if (changedProperties.has('selectionMode')) {
-  //     this.fetchData();
-  //   }
-  // }
-
+  dataProvider: BackendInterface | null = null;
 
   connectedCallback() {
     super.connectedCallback();
@@ -52,7 +45,13 @@ export class AMRApp extends SignalWatcher(LitElement) {
   }
 
   getDataProvider = async () => {
-    this.dataProvider = await getDataProvider({ provider: 'local' });
+    // const provider = import.meta.env.VITE_DATA_PROVIDER as 'local' | 'api' || 'api';
+
+    // const provider = 'local';
+    const provider = 'api';
+    this.dataProvider = await getDataProvider({ provider });
+
+    console.log(`Using data provider: ${provider}`);
   }  
 
   render() {
