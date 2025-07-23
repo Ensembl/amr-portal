@@ -1,11 +1,12 @@
+import type { AsyncDuckDB } from "@duckdb/duckdb-wasm";
+
 import { filtersConfig } from './filtersConfig';
 
-import type { AsyncDuckDB } from "@duckdb/duckdb-wasm"; '@duckdb/duckdb-wasm';
-
+import { BackendInterface, AMRRecordsFetchParams } from './backendInterface';
 import type { BiosampleDBRecord, BiosampleRecord } from '../types/biosample';
 import type { SelectedFilter } from '../client'; // FIXME: this type should move out of the component
 
-export class LocalBackend {
+export class LocalBackend implements BackendInterface {
   db: AsyncDuckDB;
 
   // should be passed during initialisation
@@ -23,20 +24,30 @@ export class LocalBackend {
     return result;
   }
 
-  #getBiosampleDbRecordFields = () => {
+  // check db schema in database-schema.md
+  #getAMRDbRecordFields = () => {
     return [
+      'BioSample_ID',
+      'Study_ID',
+      'genus',
+      'species',
       'Antibiotic_name',
       'Antibiotic_abbreviation',
+      'Assembly_ID',
       'phenotype',
       'measurement_sign',
       'measurement_value',
       'measurement_unit',
-      'genus',
-      'species',
-      'Assembly_ID',
       'isolation_context',
-      'BioSample_ID',
-      'Study_ID'
+      'isolation_source',
+      'platform',
+      'laboratory_typing_method',
+      'laboratory_typing_platform',
+      'SRA_run',
+      'SRA_sample',
+      'collection_date',
+      'isolation_latitude',
+      'isolation_longitude',
     ].join(', ');
   }
 
@@ -64,9 +75,9 @@ export class LocalBackend {
     return filtersConfig;
   }
 
-  getBiosamples = async (filters: SelectedFilter[]) => {
-    console.log('about to get biosamples');
-    const columnNames = this.#getBiosampleDbRecordFields();
+  getAMRRecords = async (params: AMRRecordsFetchParams) => {
+    const { filters } = params;
+    const columnNames = this.#getAMRDbRecordFields();
     const filterGroups = this.#groupFilters(filters);
 
     let whereFragments = '';
@@ -93,10 +104,19 @@ export class LocalBackend {
     console.log('sql statement', sqlString);
 
     const dbRecords: BiosampleDBRecord[] = await this.#readFromDb(sqlString);
-    return dbRecords.map(record => this.#buildBiosampleRecord(record));
+    const amrRecords = dbRecords.map(record => this.#buildAMRRecord(record));
+
+    return {
+      meta: {
+        page: 1,
+        per_page: 100,
+        total_hits: 1000
+      },
+      data: amrRecords
+    };
   }
 
-  #buildBiosampleRecord = (dbRecord: BiosampleDBRecord): BiosampleRecord => {
+  #buildAMRRecord = (dbRecord: BiosampleDBRecord): BiosampleRecord => {
     return {
       biosample_id: dbRecord.BioSample_ID,
       study_id: dbRecord.Study_ID,
@@ -104,8 +124,8 @@ export class LocalBackend {
       species: dbRecord.species,
       antibiotic_name: dbRecord.Antibiotic_name,
       antibiotic_abbreviation: dbRecord.Antibiotic_abbreviation,
-      phenotype: dbRecord.phenotype,
       assembly_accession_id: dbRecord.Assembly_ID,
+      phenotype: dbRecord.phenotype,
       measurement: {
         value: dbRecord.measurement_value,
         sign: dbRecord.measurement_sign,
@@ -113,32 +133,15 @@ export class LocalBackend {
       },
       isolation_context: dbRecord.isolation_context,
       isolation_source: dbRecord.isolation_source,
+      platform: dbRecord.platform,
       laboratory_typing_method: dbRecord.laboratory_typing_method,
       laboratory_typing_platform: dbRecord.laboratory_typing_platform,
       sra_run: dbRecord.SRA_run,
       sra_sample: dbRecord.SRA_sample,
+      collection_date: dbRecord.collection_date,
+      isolation_latitude: dbRecord.isolation_latitude,
+      isolation_longitude: dbRecord.isolation_longitude,
     };
   }
 
 }
-
-
-/**
-
-{
-    "Antibiotic_name": "Omadacycline",
-    "Antibiotic_abbreviation": "OMC",
-    "phenotype": "resistant",
-    "measurement_sign": "=",
-    "measurement_value": "16.0",
-    "measurement_unit": null,
-    "genus": "Klebsiella",
-    "species": "pneumoniae",
-    "Assembly_ID": null,
-    "isolation_context": null,
-    "BioSample_ID": "SAMN05170244",
-    "Study_ID": "SRP074197"
-}
-
-
- */

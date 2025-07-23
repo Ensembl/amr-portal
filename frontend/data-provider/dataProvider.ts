@@ -1,5 +1,9 @@
+import type { BackendInterface } from './backendInterface';
+
 export type { LocalBackend } from './localBackend';
 export type { ApiBackend } from './apiBackend';
+export type { BackendInterface } from './backendInterface';
+
 
 type ProviderType = 'local' | 'api';
 
@@ -7,7 +11,7 @@ export const getDataProvider = async ({
   provider
 }: {
   provider: ProviderType;
-}) => {
+}): Promise<BackendInterface> => {
   if (provider === 'local') {
     const { default: initialiseDuckDb } = await import('./initialiseDuckDb');
     const { LocalBackend } = await import('./localBackend'); // your old DuckDB-based one

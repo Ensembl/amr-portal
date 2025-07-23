@@ -2,7 +2,8 @@ import { Signal } from 'signal-polyfill';
 import { AsyncComputed } from 'signal-utils/async-computed';
 
 import type { SelectedFilter } from '../index';
-import type { LocalBackend, ApiBackend } from '../../data-provider/dataProvider';
+import type { BackendInterface } from '../../data-provider/backendInterface';
+// import type { LocalBackend, ApiBackend } from '../../data-provider/dataProvider';
 
 /**
  * Likely additions to this model:
@@ -21,7 +22,6 @@ const setPage = (value: number) => page.set(value);
 const perPage = new Signal.State(100);
 const setPerPage = (value: number) => perPage.set(value);
 
-// Accepts either LocalBackend or ApiBackend
 const createBiosampleResource = ({
   selectedFilters,
   dataProvider
@@ -29,7 +29,7 @@ const createBiosampleResource = ({
   selectedFilters: Signal.Computed<SelectedFilter[]>;
   // page: Signal.State<number>;
   // perPage: Signal.State<number>;
-  dataProvider: LocalBackend | ApiBackend;
+  dataProvider: BackendInterface;
 }) => {
   const asyncResource = new AsyncComputed(async (abortSignal) => {
     const selectedFiltersValue = selectedFilters.get();
@@ -40,27 +40,15 @@ const createBiosampleResource = ({
 
     const requestStarted = performance.now();
 
-    let biosampleRecords;
-
-    // @ts-ignore
-    if ('getBiosamples' in dataProvider && dataProvider.apiUrl) {
-      // ApiBackend: supports pagination
-      // use .getBiosamples(filters, page, perPage)
-      biosampleRecords = await (dataProvider as ApiBackend).getBiosamples(
-        selectedFiltersValue,
-        page.get(),
-        perPage.get()
-      );
-      biosampleRecords = biosampleRecords.data; // extract `.data` from API response
-    } else {
-      // LocalBackend: only takes filters
-      biosampleRecords = await (dataProvider as LocalBackend).getBiosamples(selectedFiltersValue);
-    }
-    console.log('biosampleRecords', biosampleRecords);
+    const amrRecords = await dataProvider.getAMRRecords({
+      filters: selectedFiltersValue,
+      page: page.get(),
+      perPage: perPage.get()
+    });
 
     console.log('Time spent fetching data', Math.round(performance.now() - requestStarted), 'milliseconds');
 
-    return biosampleRecords;
+    return amrRecords.data;
   });
 
   return asyncResource;

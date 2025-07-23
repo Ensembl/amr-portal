@@ -5,7 +5,7 @@ import { SignalWatcher } from '@lit-labs/signals';
 import biosampleStore from '../../state/biosampleStore';
 import filtersStore from '../../state/filtersStore';
 
-import type { LocalBackend } from '../../../data-provider/dataProvider';
+import type { BackendInterface } from '../../../data-provider/dataProvider';
 import type { BiosampleRecord } from '../../../types/biosample';
 
 
@@ -23,7 +23,7 @@ export class BottomPanel extends SignalWatcher(LitElement) {
   `;
 
   @property({ type: Object })
-  dataProvider!: LocalBackend;
+  dataProvider!: BackendInterface;
 
   connectedCallback() {
     super.connectedCallback();
