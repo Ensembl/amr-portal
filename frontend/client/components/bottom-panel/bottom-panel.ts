@@ -1,26 +1,42 @@
-import { html, css, LitElement } from 'lit';
+import { html, css, unsafeCSS, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { SignalWatcher } from '@lit-labs/signals';
 
 import biosampleStore from '../../state/biosampleStore';
 import filtersStore from '../../state/filtersStore';
 
+import tableStyles from '@ensembl/ensembl-elements-common/styles/table.css?raw';
+
 import type { BackendInterface } from '../../../data-provider/dataProvider';
 import type { BiosampleRecord } from '../../../types/biosample';
 
+import { panelStyles } from '../panel/shared-panel-styles';
 
 @customElement('bottom-panel')
 export class BottomPanel extends SignalWatcher(LitElement) {
 
   biosamplesResource: ReturnType<typeof biosampleStore.createBiosampleResource> | null = null;
 
-  static styles = css`
-    :host {
-      display: block;
-      height: 100%;
-      overflow-y: auto;
-    }
-  `;
+  static styles = [
+    unsafeCSS(tableStyles),
+    panelStyles,
+    css`
+      :host {
+        box-sizing: border-box;
+        display: block;
+        height: 100%;
+        padding-top: 24px;
+        padding-left: 30px;
+        padding-right: 30px;
+        overflow: hidden;
+      }
+
+      .table-container {
+        overflow: auto;
+        height: 100%;
+      }
+    `
+  ];
 
   @property({ type: Object })
   dataProvider!: BackendInterface;
@@ -61,14 +77,33 @@ export class BottomPanel extends SignalWatcher(LitElement) {
         `
       }
 
-      return this.renderBiosampleRecords(biosamplesResource.value ?? []);
+      return html`
+        <div class="table-container">
+          ${this.renderBiosampleRecords(biosamplesResource.value ?? [])}
+        </div>
+      `;      
     }
   }
 
 
   renderBiosampleRecords(biosampleRecords: BiosampleRecord[]) {
     return html`
-      <table>
+      <table class="ens-table">
+        <thead class="sticky-table-head">
+          <tr>
+            <th>Biosample id</th>
+            <th>Antibiotic</th>
+            <th>Abbrev</th>
+            <th>Phenotype</th>
+            <th>Genus</th>
+            <th>Species</th>
+            <th>MIC</th>
+            <th>Isolation context</th>
+            <th>Isolation source</th>
+            <th>Lab typing method</th>
+            <th>Lab typing platform</th>
+          </tr>
+        </thead>
         <tbody>
           ${biosampleRecords.map(rowData => html`
             <tr>

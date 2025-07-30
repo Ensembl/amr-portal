@@ -3,6 +3,8 @@ import { customElement } from 'lit/decorators.js';
 import { SignalWatcher } from '@lit-labs/signals';
 import { repeat } from 'lit/directives/repeat.js';
 
+import '@ensembl/ensembl-elements-common/components/checkbox/checkbox.js'
+
 import filtersStore from '../../../state/filtersStore';
 
 import './filters-area-top';
@@ -19,6 +21,7 @@ export class FiltersArea extends SignalWatcher(LitElement) {
       row-gap: 35px;
       height: 100%;
       overflow: hidden;
+      padding-left: 36px;
     }
 
     .main {
@@ -104,18 +107,18 @@ export class FiltersArea extends SignalWatcher(LitElement) {
       });
 
       return html`
-        <label>
-          <input
-            type="checkbox"
-            @change=${(event: Event) => this.#onFilterChange({
+        <ens-checkbox
+          @change=${(event: Event) => {
+            this.#onFilterChange({
               name: category.id,
               value: filter.value,
               event
-            })}
-            ?checked=${isSelected}
-          />
+            })
+          }}
+          ?checked=${isSelected}
+        >
           ${filter.label}
-        </label>
+        </ens-checkbox>
       `
     });
   }

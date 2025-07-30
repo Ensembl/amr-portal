@@ -4,20 +4,28 @@ import { SignalWatcher } from '@lit-labs/signals';
 
 import filtersStore from '../../state/filtersStore';
 
-import './top-panel-navigation/topPanelNavigation';
+import './top-panel-navigation/top-panel-navigation';
 import './filters-area/filters-area';
+
+import { panelStyles } from '../panel/shared-panel-styles';
 
 
 @customElement('top-panel')
 export class TopPanel extends SignalWatcher(LitElement) {
-  static styles = css`
-    :host {
-      height: 100%;
-      display: grid;
-      grid-template-columns: 100px 1fr;
-      column-gap: 1rem;
-    }
-  `;
+
+  static styles = [
+    panelStyles,
+    css`
+      :host {
+        box-sizing: border-box;
+        height: 100%;
+        min-height: 300px;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        column-gap: 1rem;
+      }
+    `
+  ];
 
   #onFiltersGroupChange = (event: CustomEvent<string>) => {
     const filtersGroupName = event.detail;
