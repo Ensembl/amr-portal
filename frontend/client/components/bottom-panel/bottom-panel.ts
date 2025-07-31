@@ -5,6 +5,8 @@ import { SignalWatcher } from '@lit-labs/signals';
 import biosampleStore from '../../state/biosampleStore';
 import filtersStore from '../../state/filtersStore';
 
+import '@ensembl/ensembl-elements-common/components/external-link/external-link.js';
+
 import tableStyles from '@ensembl/ensembl-elements-common/styles/table.css?raw';
 
 import type { BackendInterface } from '../../../data-provider/dataProvider';
@@ -34,6 +36,7 @@ export class BottomPanel extends SignalWatcher(LitElement) {
       .table-container {
         overflow: auto;
         height: 100%;
+        white-space: nowrap;
       }
     `
   ];
@@ -97,6 +100,7 @@ export class BottomPanel extends SignalWatcher(LitElement) {
             <th>Phenotype</th>
             <th>Genus</th>
             <th>Species</th>
+            <th>Assembly accession in ENA</th>
             <th>MIC</th>
             <th>Isolation context</th>
             <th>Isolation source</th>
@@ -126,6 +130,9 @@ export class BottomPanel extends SignalWatcher(LitElement) {
                 ${rowData.species}
               </td>
               <td>
+                ${this.renderAssemblyLink(rowData.assembly)}
+              </td>
+              <td>
                 ${rowData.measurement.sign ?? ''}
                 ${rowData.measurement.value}
                 ${' '}
@@ -148,6 +155,18 @@ export class BottomPanel extends SignalWatcher(LitElement) {
 
         </tbody>
       </table>
+    `;
+  }
+
+  renderAssemblyLink(assembly: BiosampleRecord['assembly']) {
+    if (!assembly) {
+      return null;
+    }
+
+    return html`
+      <ens-external-link href="${assembly.url}">
+        ${assembly.accession_id}
+      </ens-external-link>
     `;
   }
 

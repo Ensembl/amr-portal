@@ -2,7 +2,7 @@ import type { AsyncDuckDB } from "@duckdb/duckdb-wasm";
 
 import { filtersConfig } from './filtersConfig';
 
-import { BackendInterface, AMRRecordsFetchParams } from './backendInterface';
+import { BackendInterface, AMRRecordsFetchParams, AMRRecordsResponse } from './backendInterface';
 import type { BiosampleDBRecord, BiosampleRecord } from '../types/biosample';
 import type { SelectedFilter } from '../client'; // FIXME: this type should move out of the component
 
@@ -75,7 +75,7 @@ export class LocalBackend implements BackendInterface {
     return filtersConfig;
   }
 
-  getAMRRecords = async (params: AMRRecordsFetchParams) => {
+  getAMRRecords = async (params: AMRRecordsFetchParams): Promise<AMRRecordsResponse> => {
     const { filters } = params;
     const columnNames = this.#getAMRDbRecordFields();
     const filterGroups = this.#groupFilters(filters);
@@ -124,7 +124,10 @@ export class LocalBackend implements BackendInterface {
       species: dbRecord.species,
       antibiotic_name: dbRecord.Antibiotic_name,
       antibiotic_abbreviation: dbRecord.Antibiotic_abbreviation,
-      assembly_accession_id: dbRecord.Assembly_ID,
+      assembly: dbRecord.Assembly_ID ? {
+        accession_id: dbRecord.Assembly_ID,
+        url: `https://www.ebi.ac.uk/ena/browser/view/${dbRecord.Assembly_ID}`
+      } : null,
       phenotype: dbRecord.phenotype,
       measurement: {
         value: dbRecord.measurement_value,

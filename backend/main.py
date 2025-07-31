@@ -101,7 +101,7 @@ def get_amr_records(payload: Payload):
             "study_id": row.get("Study_ID"),
             "sra_sample": row.get("SRA_sample"),
             "sra_run": row.get("SRA_run"),
-            "assembly_accession_id": row.get("Assembly_ID"),
+            "assembly": get_assembly(row.get("Assembly_ID")),
             "phenotype": row.get("phenotype"),
             "measurement": {
                 "value": str(row.get("measurement_value")) if row.get("measurement_value") not in [None, "nan"] else None,
@@ -128,3 +128,10 @@ def get_amr_records(payload: Payload):
         "data": result
     }
 
+
+def get_assembly(assembly_accession_id: str | None):
+    if (assembly_accession_id):
+        return {
+            "accession_id": assembly_accession_id,
+            "url": f"https://www.ebi.ac.uk/ena/browser/view/{assembly_accession_id}"
+        }

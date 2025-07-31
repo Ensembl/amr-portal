@@ -31,7 +31,10 @@ export type BiosampleRecord = {
   study_id: string | null;
   sra_sample: string | null;
   sra_run: string | null; // no guarantee that sra_sample and sra_run are both always null or always not null
-  assembly_accession_id: string | null; // many nulls in db
+  assembly: {
+    accession_id: string;
+    url: string;
+  } | null;
   phenotype: string | null; // many nulls in db
   measurement: {
     value: string;
