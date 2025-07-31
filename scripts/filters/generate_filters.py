@@ -2,6 +2,8 @@ import sys
 import argparse
 import json
 
+from jsonschema import validate
+from jsonschema.exceptions import ValidationError
 import duckdb
 
 DESCRIPTION = "Tool for generating AMR filter data"
@@ -29,6 +31,13 @@ def get_cli_args() -> argparse.ArgumentParser:
     )
 
     cli.add_argument(
+        '-v',
+        '--schema',
+        default="schema.json",
+        help="JSON Schema used to validate input"
+    )
+
+    cli.add_argument(
         '-o',
         '--output',
         default="filters.json",
@@ -37,18 +46,62 @@ def get_cli_args() -> argparse.ArgumentParser:
     return cli
 
 
-def generate_filters(config_path, data_path, output_path):
+def validate_filters(filters: dict, schema: str, report: bool) -> bool:
+    # Validate JSON
+    try:
+        validate(instance=filters, schema=schema)
+    except ValidationError as err:
+        print(f"SCHEMA ERROR: {err.message}")
+        return False
+
+    hasCheckFailed = False
+
+    # Check filter names
+    for view in filters["filterViews"]:
+        for cat_grp in view["categoryGroups"]:
+            for cat in cat_grp["categories"]:
+                if cat not in filters["filterCategories"].keys():
+                    print(f"Unknown Category: {cat} found for {view['name']}")
+                    hasCheckFailed = True
+        for other in view["otherCategoryGroups"]:
+            for cat in other["categories"]:
+                if cat not in filters["filterCategories"].keys():
+                    print(f"Unknown Category: {cat} found for {view['name']}")
+                    hasCheckFailed = True
+    if hasCheckFailed:
+        return False
+    return True
+
+
+def generate_filters(
+    config_path: str,
+    data_path: str,
+    output_path: str,
+    schema_path: str
+):
     print("Generating filters")
     # load json
     with open(config_path) as json_in:
         filters = json.load(json_in)
+
+    # Todo Json schema validation
+    # Validate filter json
+    with open(schema_path) as schema_in:
+        schema = json.load(schema_in)
+    if not validate_filters(filters, schema, True):
+        print("Unable to generate filters due to the above reasons!!")
+        return
 
     # connect to database
     conn = duckdb.connect()
     duckdb.read_parquet(data_path)
     conn.sql(f"CREATE VIEW amr_data AS SELECT * FROM '{data_path}'")
 
-    filter_sql = "SELECT DISTINCT {} as value, {} as label from amr_data where {} is not null"
+    filter_sql = """
+    SELECT DISTINCT {} as value, {} as label
+    FROM amr_data
+    WHERE {} is not null
+    ORDER BY label ASC"""
 
     # generate filter values
     for id, f in filters["filterCategories"].items():
@@ -79,4 +132,4 @@ def generate_filters(config_path, data_path, output_path):
 
 if __name__ == "__main__":
     cli = get_cli_args().parse_args(sys.argv[1:])
-    generate_filters(cli.config, cli.data, cli.output)
+    generate_filters(cli.config, cli.data, cli.output, cli.schema)

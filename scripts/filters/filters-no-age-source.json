@@ -5,8 +5,8 @@
 			"label":"Antibiotic",
 			"filter_label":"concat(Antibiotic_name,' ',Antibiotic_abbreviation)"
 		},
-		"genome":{
-			"id":"concat(genus,' ',species)",
+		"species":{
+			"id":"species",
 			"label":"Genome",
 			"filter_label":"concat(genus,' ',species)"
 		},
@@ -15,8 +15,8 @@
 			"label":"Isolation Host",
 			"filter_label":"isolation_context"
 		},
-		"Phenotype":{
-			"id":"Phenotype",
+		"phenotype":{
+			"id":"phenotype",
 			"label":"Phenotype",
 			"filter_label":"phenotype"
 		},
@@ -42,7 +42,7 @@
 			"categoryGroups": [ { "name": "", "categories": ["Antibiotic_abbreviation"] } ],
       		"otherCategoryGroups": [
         		{ "name": "Phenotype", "categories": ["phenotype"] },
-        		{ "name": "Genome", "categories": ["genome"] },
+        		{ "name": "Genome", "categories": ["species"] },
         		{ "name": "Testing method", "categories": ["laboratory_typing_method"] },
         		{ "name": "Isolate Host", "categories": ["isolation_context"] },
         		{ "name": "Isolate attributes", "categories": [ "host_sex", "isolation_country"] }
@@ -50,7 +50,7 @@
 		},
 		{
 			"name":"AMR genomes",
-			"categoryGroups": [ { "name": "", "categories": ["genome"] } ],
+			"categoryGroups": [ { "name": "", "categories": ["species"] } ],
       		"otherCategoryGroups": [
       			{ "name": "Antibiotic", "categories": ["Antibiotic_abbreviation"] },
         		{ "name": "Phenotype", "categories": ["phenotype"] },
@@ -65,7 +65,7 @@
       		"otherCategoryGroups": [
       			{ "name": "Antibiotic", "categories": ["Antibiotic_abbreviation"] },
         		{ "name": "Phenotype", "categories": ["phenotype"] },
-        		{ "name": "Genome", "categories": ["genome"] },
+        		{ "name": "Genome", "categories": ["species"] },
         		{ "name": "Testing method", "categories": ["laboratory_typing_method"] },
         		{ "name": "Isolate attributes", "categories": ["host_sex", "isolation_country"] }
       		]
