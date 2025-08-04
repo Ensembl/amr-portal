@@ -3,11 +3,13 @@ from collections import defaultdict
 
 from fastapi import FastAPI
 from fastapi import HTTPException
+from fastapi.responses import Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 
 import duckdb
 import numpy as np
+import yaml
 
 from pydantic import BaseModel
 from filters_config import FILTERS_CONFIG
@@ -44,6 +46,13 @@ class Payload(BaseModel):
     page: Optional[int] = 1
     per_page: Optional[int] = 100
     order_by: Optional[OrderBy] = None
+
+
+@app.get("/openapi.yaml", include_in_schema=False)
+async def get_openapi_yaml():
+    openapi_json = app.openapi()
+    yaml_s = yaml.dump(openapi_json, sort_keys=False)
+    return Response(yaml_s, media_type="text/yaml")
 
 @app.get("/filters-config")
 def get_filters_confi():
