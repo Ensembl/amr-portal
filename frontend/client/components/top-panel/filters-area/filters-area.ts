@@ -34,7 +34,8 @@ export class FiltersArea extends SignalWatcher(LitElement) {
       display: flex;
       flex-direction: column;
       flex-wrap: wrap;
-      column-gap: 1rem;
+      column-gap: 3rem;
+      row-gap: 10px;
       height: 100%;
     }
   `;
@@ -79,7 +80,7 @@ export class FiltersArea extends SignalWatcher(LitElement) {
     const filterGroup = this.#getFilterGroup();
     const filterCategoryIds = filterGroup.categories;
 
-    const filterCategoryBlocks = filterCategoryIds.map(id => {
+    const filterCategoryBlocks = repeat(filterCategoryIds, (id) => id, (id) => {
       return html`
         <div class="filters-category">
           ${this.renderFiltersInCategory(id)}
@@ -101,7 +102,7 @@ export class FiltersArea extends SignalWatcher(LitElement) {
 
     const selectedFilters = filtersStore.selectedFiltersForViewMode.get();
 
-    return repeat(category.filters, (filter) => filter.value, ( filter ) => {
+    return repeat(category.filters, (filter) => filter.value, (filter) => {
       const isSelected = !!selectedFilters.find(selectedFilter => {
         return selectedFilter.category === categoryId && selectedFilter.value === filter.value;
       });

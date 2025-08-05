@@ -93,7 +93,10 @@ const createBiosampleResource = ({
     const selectedFilters = queryParams.filters;
 
     if (!selectedFilters.length) {
-      return [];
+      return {
+        meta: null,
+        data: []
+      };
     }
 
     const requestStarted = performance.now();
@@ -117,7 +120,7 @@ const createBiosampleResource = ({
 
     console.log('Time spent fetching data', Math.round(performance.now() - requestStarted), 'milliseconds');
 
-    return amrRecords.data;
+    return amrRecords;
   });
 
   return asyncResource;

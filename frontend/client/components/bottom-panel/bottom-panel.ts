@@ -16,6 +16,7 @@ import tableStyles from '@ensembl/ensembl-elements-common/styles/constructable-s
 
 import type { BackendInterface } from '../../../data-provider/dataProvider';
 import type { BiosampleRecord } from '../../../types/biosample';
+import type { AMRRecordsResponse } from '../../../data-provider/backendInterface';
 
 import { panelStyles } from '../panel/shared-panel-styles';
 
@@ -41,8 +42,10 @@ export class BottomPanel extends SignalWatcher(LitElement) {
 
       .table-controls-area {
         display: grid;
-        grid-template-columns: auto 1fr;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
         column-gap: 1.5rem;
+        padding-bottom: 1rem;
       }
 
       .table-container {
@@ -107,8 +110,7 @@ export class BottomPanel extends SignalWatcher(LitElement) {
  
   render() {
     const biosamplesResource = this.biosamplesResource;
-    const hasData = Boolean(biosamplesResource?.value?.length)
-    console.log('biosamplesResource?.status', biosamplesResource?.status);
+    const hasData = Boolean(biosamplesResource?.value?.data.length);
 
     if (!biosamplesResource || biosamplesResource?.status === 'pending' && !hasData) {
       return html`
@@ -123,20 +125,27 @@ export class BottomPanel extends SignalWatcher(LitElement) {
         `
       }
 
+      const { meta, data } = biosamplesResource.value as AMRRecordsResponse;
+
       return html`
-        ${this.renderTableControlsArea()}
+        ${this.renderTableControlsArea({ responseMeta: meta })}
         <div class="table-container">
-          ${this.renderBiosampleRecords(biosamplesResource.value ?? [])}
+          ${this.renderBiosampleRecords(data)}
         </div>
       `;      
     }
   }
 
-  renderTableControlsArea() {
+  renderTableControlsArea({
+    responseMeta
+  }: {
+    responseMeta: AMRRecordsResponse['meta']
+  }) {
     return html`
       <div class="table-controls-area">
         ${this.renderPerPageSelector()}
-        ${this.renderPaginator()}
+        ${this.renderPaginator({ responseMeta })}
+        ${this.renderTotalHitsCount({ responseMeta })}
       </div>
     `;
   }
@@ -171,13 +180,19 @@ export class BottomPanel extends SignalWatcher(LitElement) {
     `;
   }
 
-  renderPaginator() {
+  renderPaginator({
+    responseMeta
+  }: {
+    responseMeta: AMRRecordsResponse['meta']
+  }) {
     const currentPage = biosampleStore.page.get();
+    const { per_page, total_hits } = responseMeta;
+    const totalPages = Math.ceil(total_hits / per_page);
 
     return html`
       <ens-paginator
         current-page=${currentPage}
-        total-pages=${1000}
+        total-pages=${totalPages}
         @ens-paginator-page-change=${this.onPageChange}
       ></ens-paginator>
     `;
@@ -284,6 +299,23 @@ export class BottomPanel extends SignalWatcher(LitElement) {
         ${assembly.accession_id}
       </ens-external-link>
     `;
+  }
+
+  renderTotalHitsCount = ({
+    responseMeta
+  }: {
+    responseMeta: AMRRecordsResponse['meta']
+  }) => {
+    const { total_hits } = responseMeta;
+
+    return html`
+      <span class="total-hits">
+        <span>${ total_hits }</span>
+        <span class="total-hits-label">
+          results
+        </span>
+      </span>
+    `
   }
 
   getSortOrderFor = (category: string) => {
