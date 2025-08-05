@@ -29,7 +29,7 @@ app.add_middleware(
 app.add_middleware(GZipMiddleware, minimum_size=1000, compresslevel=5)
 
 # Connecting to the DuckDB database
-data = duckdb.read_parquet("step1_merge_all_v7.parquet")
+data = duckdb.read_parquet("amr_v2.parquet")
 
 class SelectedFilter(BaseModel):
     # the column name

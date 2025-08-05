@@ -10,7 +10,7 @@ export class LocalBackend implements BackendInterface {
   db: AsyncDuckDB;
 
   // should be passed during initialisation
-  filePath = 'https://amr-portal.s3.eu-west-2.amazonaws.com/step1_merge_all_v7.parquet'
+  filePath = 'https://amr-portal.s3.eu-west-2.amazonaws.com/amr_v2.parquet'
 
   constructor ({ db }: { db: AsyncDuckDB }) {
     this.db = db

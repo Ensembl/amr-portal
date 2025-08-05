@@ -1,13 +1,17 @@
-import { html, css, unsafeCSS, LitElement } from 'lit';
+import { html, css, nothing, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 import { SignalWatcher } from '@lit-labs/signals';
 
 import biosampleStore from '../../state/biosampleStore';
 import filtersStore from '../../state/filtersStore';
 
 import '@ensembl/ensembl-elements-common/components/external-link/external-link.js';
+import '@ensembl/ensembl-elements-common/components/select/select.js';
+import '@ensembl/ensembl-elements-common/components/paginator/paginator.js';
+import '@ensembl/ensembl-elements-common/components/table/sortable-column-header.js';
 
-import tableStyles from '@ensembl/ensembl-elements-common/styles/table.css?raw';
+import tableStyles from '@ensembl/ensembl-elements-common/styles/constructable-stylesheets/table.js';
 
 import type { BackendInterface } from '../../../data-provider/dataProvider';
 import type { BiosampleRecord } from '../../../types/biosample';
@@ -20,12 +24,13 @@ export class BottomPanel extends SignalWatcher(LitElement) {
   biosamplesResource: ReturnType<typeof biosampleStore.createBiosampleResource> | null = null;
 
   static styles = [
-    unsafeCSS(tableStyles),
+    tableStyles,
     panelStyles,
     css`
       :host {
         box-sizing: border-box;
-        display: block;
+        display: grid;
+        grid-template-rows: auto 1fr;
         height: 100%;
         padding-top: 24px;
         padding-left: 30px;
@@ -33,10 +38,26 @@ export class BottomPanel extends SignalWatcher(LitElement) {
         overflow: hidden;
       }
 
+      .table-controls-area {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        column-gap: 1.5rem;
+      }
+
       .table-container {
         overflow: auto;
         height: 100%;
         white-space: nowrap;
+      }
+
+      .per-page-container {
+        display: flex;
+        align-items: center;
+        column-gap: 1rem;
+      }
+
+      .per-page-label {
+        font-weight: var(--font-weight-light);
       }
     `
   ];
@@ -57,35 +78,102 @@ export class BottomPanel extends SignalWatcher(LitElement) {
     this.biosamplesResource = biosamplesResource;
   }
 
+  onPageChange = (event: CustomEvent<number>) => {
+    const page = event.detail;
+    biosampleStore.setPage(page);
+  }
+
+  onPerPageChange = (event: Event) => {
+    const selectElement = event.target as HTMLSelectElement;
+    const newValue = parseInt(selectElement.value);
+    biosampleStore.setPerPage(newValue);
+  }
+
+  onOrderChange = (category: string) => {
+    Promise.resolve().then(() => {
+      biosampleStore.setOrder(category);      
+    }).then(() => {
+      biosampleStore.setOrder(category);      
+    })
+    // biosampleStore.setOrder(category);
+    // biosampleStore.setOrder(category);
+  }
  
   render() {
     const biosamplesResource = this.biosamplesResource;
+    const hasData = Boolean(biosamplesResource?.value?.length)
 
-    if (!biosamplesResource || biosamplesResource?.status === 'pending') {
-      if (biosamplesResource?.value?.length) {
-        return this.renderBiosampleRecords(biosamplesResource.value);
-      }
-
+    if (!biosamplesResource || biosamplesResource?.status === 'pending' && !hasData) {
       return html`
         <p>Loading...</p>
       `
     }
 
-    if (biosamplesResource.status === 'complete') {
-      const biosampleRecords = biosamplesResource.value ?? [];
-
-      if (!biosampleRecords.length) {
+    if (biosamplesResource.status === 'complete' || hasData) {
+      if (!hasData) {
         return html`
           <p>No data</p>
         `
       }
 
       return html`
+        ${this.renderTableControlsArea()}
         <div class="table-container">
           ${this.renderBiosampleRecords(biosamplesResource.value ?? [])}
         </div>
       `;      
     }
+  }
+
+  renderTableControlsArea() {
+    return html`
+      <div class="table-controls-area">
+        ${this.renderPerPageSelector()}
+        ${this.renderPaginator()}
+      </div>
+    `;
+  }
+
+  renderPerPageSelector() {
+    const values = [100, 200, 500, 1000];
+    const currenValue = biosampleStore.perPage.get();
+
+    const optionElements = values.map(value => html`
+      <option
+        value=${value}
+        ?selected=${value===currenValue}
+      >
+        ${value}
+      </option>
+    `);
+
+    return html`
+      <div class="per-page-container">
+        <ens-select>
+          <select
+            aria-label="Table rows per page"
+            @change=${this.onPerPageChange}
+          >
+            ${optionElements}
+          </select>
+        </ens-select>
+        <span class="per-page-label">
+          per page
+        </span>
+      </div>
+    `;
+  }
+
+  renderPaginator() {
+    const currentPage = biosampleStore.page.get();
+
+    return html`
+      <ens-paginator
+        current-page=${currentPage}
+        total-pages=${1000}
+        @ens-paginator-page-change=${this.onPageChange}
+      ></ens-paginator>
+    `;
   }
 
 
@@ -95,10 +183,31 @@ export class BottomPanel extends SignalWatcher(LitElement) {
         <thead class="sticky-table-head">
           <tr>
             <th>Biosample id</th>
-            <th>Antibiotic</th>
+            <th>
+              <ens-table-sortable-column-head
+                sort-order=${ifDefined(this.getSortOrderFor('Antibiotic_name'))}
+                @click=${() => this.onOrderChange('Antibiotic_name')}
+              >
+                Antibiotic
+              </ens-table-sortable-column-head>
+            </th>
             <th>Abbrev</th>
-            <th>Phenotype</th>
-            <th>Genus</th>
+            <th>
+              <ens-table-sortable-column-head
+                sort-order=${ifDefined(this.getSortOrderFor('phenotype'))}
+                @click=${() => this.onOrderChange('phenotype')}
+              >
+                Phenotype
+              </ens-table-sortable-column-head>
+            </th>
+            <th>
+              <ens-table-sortable-column-head
+                sort-order=${ifDefined(this.getSortOrderFor('genus'))}
+                @click=${() => this.onOrderChange('genus')}
+              >
+                Genus
+              </ens-table-sortable-column-head>
+            </th>
             <th>Species</th>
             <th>Assembly accession in ENA</th>
             <th>MIC</th>
@@ -169,5 +278,14 @@ export class BottomPanel extends SignalWatcher(LitElement) {
       </ens-external-link>
     `;
   }
+
+  getSortOrderFor = (category: string) => {
+    const sortOrder = biosampleStore.order.get();
+    if (sortOrder?.category === category) {
+      return sortOrder.order;
+    } else {
+      return null;
+    }
+  };
 
 }
