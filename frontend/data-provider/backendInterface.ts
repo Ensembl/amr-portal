@@ -4,7 +4,7 @@ import type { FiltersConfig } from '../types/filters/filtersConfig';
 
 export type AMRRecordsFetchParams = {
   filters: SelectedFilter[];
-  page?: number;
+  page: number;
   perPage: number;
   orderBy?: { category: string; order: 'ASC' | 'DESC' }
 };

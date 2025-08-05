@@ -14,55 +14,97 @@ type OrderPayload = {
 
 const DEFAULT_NUM_ITEMS_PER_PAGE = 100;
 
-const page = new Signal.State(1);
-const setPage = (value: number) => page.set(value);
+type QueryState = {
+  filters: SelectedFilter[];
+  page: number;
+  perPage: number;
+  orderBy: OrderPayload | null;
+}
 
-const perPage = new Signal.State(DEFAULT_NUM_ITEMS_PER_PAGE);
-const setPerPage = (value: number) => perPage.set(value);
-
-const order = new Signal.State<OrderPayload | null>(null);
-const setOrder = (category: string) => {
-  const currentOrder = order.get();
-  if (!currentOrder) {
-    order.set({ category, order: 'asc' });
-  } else if (currentOrder.order === 'asc') {
-    order.set({ category, order: 'desc' });
-  } else {
-    order.set(null)
-  }
+const initialQueryState: QueryState = {
+  filters: [] as SelectedFilter[],
+  page: 1,
+  perPage: DEFAULT_NUM_ITEMS_PER_PAGE,
+  orderBy: null
 };
 
-const resetPageAndOrder = () => {
-  page.set(1);
-  perPage.set(DEFAULT_NUM_ITEMS_PER_PAGE);
-  order.set(null);
+const amrQueryState = new Signal.State(initialQueryState);
+
+const setFilters = (filters: SelectedFilter[]) => {
+  amrQueryState.set({
+    ...initialQueryState,
+    filters
+  });
+};
+
+const page = new Signal.Computed(() => {
+  return amrQueryState.get().page;
+});
+
+const setPage = (page: number) => {
+  const currentState = amrQueryState.get();
+  amrQueryState.set({
+    ...currentState,
+    page
+  });
+};
+
+const perPage = new Signal.Computed(() => {
+  return amrQueryState.get().perPage;
+});
+
+const setPerPage = (perPage: number) => {
+  const currentState = amrQueryState.get();
+  amrQueryState.set({
+    ...currentState,
+    perPage
+  });
+};
+
+const order = new Signal.Computed(() => {
+  return amrQueryState.get().orderBy ?? null;
+});
+
+const setOrder = (category: string) => {
+  const currentState = amrQueryState.get();
+  const currentOrder = currentState.orderBy;
+  let nextOrder: QueryState['orderBy'];
+  if (!currentOrder) {
+    nextOrder = { category, order: 'asc' };
+  } else if (currentOrder.order === 'asc') {
+    nextOrder = { category, order: 'desc' };
+  } else {
+    nextOrder = null;
+  }
+
+  amrQueryState.set({
+    ...currentState,
+    orderBy: nextOrder
+  });
 };
 
 const createBiosampleResource = ({
-  selectedFilters,
   dataProvider
 }: {
-  selectedFilters: Signal.Computed<SelectedFilter[]>;
-  // page: Signal.State<number>;
-  // perPage: Signal.State<number>;
   dataProvider: BackendInterface;
 }) => {
   const asyncResource = new AsyncComputed(async (abortSignal) => {
-    const selectedFiltersValue = selectedFilters.get();
+    const queryParams = amrQueryState.get();
+    const selectedFilters = queryParams.filters;
 
-    if (!selectedFiltersValue.length) {
+    if (!selectedFilters.length) {
       return [];
     }
 
     const requestStarted = performance.now();
 
     const requestParams: AMRRecordsFetchParams = {
-      filters: selectedFiltersValue,
-      page: page.get(),
-      perPage: perPage.get()
+      filters: selectedFilters,
+      page: queryParams.page,
+      perPage: queryParams.perPage
     };
 
-    const currentOrder = order.get();
+    const currentOrder = queryParams.orderBy;
 
     if (currentOrder) {
       requestParams.orderBy = {
@@ -88,7 +130,7 @@ const store = {
   setPerPage,
   order,
   setOrder,
-  resetPageAndOrder,
+  setFilters,
   createBiosampleResource
 };
 

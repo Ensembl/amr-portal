@@ -1,7 +1,8 @@
-import { html, css, nothing, LitElement } from 'lit';
+import { html, css, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { SignalWatcher } from '@lit-labs/signals';
+import { effect } from 'signal-utils/subtle/microtask-effect';
 
 import biosampleStore from '../../state/biosampleStore';
 import filtersStore from '../../state/filtersStore';
@@ -65,15 +66,26 @@ export class BottomPanel extends SignalWatcher(LitElement) {
   @property({ type: Object })
   dataProvider!: BackendInterface;
 
+  unwatchFiltersStore: ( () => void ) | null = null;
+
   connectedCallback() {
     super.connectedCallback();
     this.initialise();
   }
 
+  disconnectedCallback(): void {
+    this.unwatchFiltersStore?.();
+    super.disconnectedCallback();
+  }
+
   initialise() {
+    this.unwatchFiltersStore = effect(() => {
+      const filters = filtersStore.selectedFiltersForViewMode.get();
+      biosampleStore.setFilters(filters);
+    });
+
     const biosamplesResource = biosampleStore.createBiosampleResource({
-      dataProvider: this.dataProvider,
-      selectedFilters: filtersStore.selectedFiltersForViewMode
+      dataProvider: this.dataProvider
     });
     this.biosamplesResource = biosamplesResource;
   }
@@ -90,18 +102,13 @@ export class BottomPanel extends SignalWatcher(LitElement) {
   }
 
   onOrderChange = (category: string) => {
-    Promise.resolve().then(() => {
-      biosampleStore.setOrder(category);      
-    }).then(() => {
-      biosampleStore.setOrder(category);      
-    })
-    // biosampleStore.setOrder(category);
-    // biosampleStore.setOrder(category);
+    biosampleStore.setOrder(category);
   }
  
   render() {
     const biosamplesResource = this.biosamplesResource;
     const hasData = Boolean(biosamplesResource?.value?.length)
+    console.log('biosamplesResource?.status', biosamplesResource?.status);
 
     if (!biosamplesResource || biosamplesResource?.status === 'pending' && !hasData) {
       return html`
