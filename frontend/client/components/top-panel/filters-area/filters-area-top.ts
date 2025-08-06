@@ -1,6 +1,8 @@
-import { html, css, LitElement } from 'lit';
+import { html, css, nothing, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { SignalWatcher } from '@lit-labs/signals';
+
+import '@ensembl/ensembl-elements-common/components/text-button/text-button.js';
 
 import filtersStore from '../../../state/filtersStore';
 
@@ -14,6 +16,10 @@ export class FiltersAreaTop extends SignalWatcher(LitElement) {
     .filter-groups-nav {
       display: flex;
       column-gap: 1rem;
+    }
+
+    .active {
+      --text-button-disabled-color: var(--color-black);
     }
 
     li {
@@ -36,24 +42,29 @@ export class FiltersAreaTop extends SignalWatcher(LitElement) {
 
     return html`
       <div>
-        ${ isViewingExtraFilters ? this.renderFilterGroupsNav() : 'Hello' }
+        ${ isViewingExtraFilters ? this.renderFilterGroupsNav() : nothing }
       </div>
     `;
   }
 
   renderFilterGroupsNav() {
     const filterGroups = filtersStore.filterGroupsForViewMode.get();
-
-    // FIXME: put text buttons inside of the li elements
+    const activeFilterGroup = filtersStore.activeFilterGroup.get();
 
     return html`
       <ul class="filter-groups-nav">
         ${filterGroups.map(group => {
+          const isActiveGroup = group.name === activeFilterGroup;
+
           return html`
-            <li @click=${() => this.onFiltersGroupSelect(group.name)}>
+            <ens-text-button
+              class=${isActiveGroup ? 'active' : nothing}
+              @click=${() => this.onFiltersGroupSelect(group.name)}
+              ?disabled=${isActiveGroup}
+            >
               ${group.name}
-            </li>
-          `
+            </ens-text-button>
+         `
         })}
       </ul>
     `;
