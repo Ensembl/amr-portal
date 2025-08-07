@@ -10,3 +10,4 @@ node_modules
 
 # Data files
 *.parquet
+*.duckdb
