@@ -1,1 +1,12 @@
+# IDE artifacts
+.idea
+
+# Python directories
+__pycache__
+venv
+
+# Node directories
 node_modules
+
+# Data files
+*.parquet
