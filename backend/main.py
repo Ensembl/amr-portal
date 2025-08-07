@@ -101,32 +101,7 @@ def get_amr_records(payload: Payload):
 
     result = []
     for _, row in res_df.iterrows():
-        record = {
-            "biosample_id": row.get("BioSample_ID"),
-            "genus": row.get("genus"),
-            "species": row.get("species"),
-            "antibiotic_name": row.get("Antibiotic_name"),
-            "antibiotic_abbreviation": row.get("Antibiotic_abbreviation"),
-            "study_id": row.get("Study_ID"),
-            "sra_sample": row.get("SRA_sample"),
-            "sra_run": row.get("SRA_run"),
-            "assembly": get_assembly(row.get("Assembly_ID")),
-            "phenotype": row.get("phenotype"),
-            "measurement": {
-                "value": str(row.get("measurement_value")) if row.get("measurement_value") not in [None, "nan"] else None,
-                "sign": row.get("measurement_sign"),
-                "unit": row.get("measurement_unit"),
-            },
-            "isolation_context": row.get("isolation_context"),
-            "isolation_source": row.get("isolation_source"),
-            "platform": row.get("platform"),
-            "laboratory_typing_platform": row.get("laboratory_typing_platform"),
-            "laboratory_typing_method": row.get("laboratory_typing_method"),
-            "isolation_latitude": None if row.get("isolation_latitude") == "nan" else row.get("isolation_latitude"),
-            "isolation_longitude": None if row.get("isolation_longitude") == "nan" else row.get("isolation_longitude"),
-            "collection_date": row.get("collection_date"),
-        }
-        result.append(record)
+        result.append(serialize_amr_record(row))
 
     return {
         "meta": {
@@ -144,3 +119,58 @@ def get_assembly(assembly_accession_id: str | None):
             "accession_id": assembly_accession_id,
             "url": f"https://www.ebi.ac.uk/ena/browser/view/{assembly_accession_id}"
         }
+
+
+def serialize_amr_record(row):
+    def val(key):
+        v = row.get(key)
+        return None if v in [None, "nan", np.nan, np.inf, -np.inf] else v
+
+    result = []
+
+    keys = row.keys()
+
+    # Special handling: measurement
+    has_measurement = "measurement_value" in keys and "measurement_unit" in keys
+    if has_measurement:
+        value = val("measurement_value")
+        unit = val("measurement_unit")
+        if value is not None and unit is not None:
+            result.append({
+                "type": "string",
+                "column_id": "measurement",
+                "value": f"{value} {unit}"
+            })
+
+    for col in keys:
+        v = val(col)
+
+        # skip the measurement components already used
+        if has_measurement and col in {"measurement_value", "measurement_unit", "measurement_sign"}:
+            continue
+
+        # handle assembly links
+        elif col.lower() in {"assembly", "assembly_id"}:
+            result.append({
+                "type": "link",
+                "column_id": "assembly",
+                "value": v,
+                "url": f"https://www.ebi.ac.uk/ena/browser/view/{v}" if v else None
+            })
+
+        # handle dates
+        elif col.lower().endswith("_date") or col.lower() == "collection_date":
+            result.append({
+                "type": "string",
+                "column_id": col,
+                "value": str(v) if v is not None else None
+            })
+
+        else:
+            result.append({
+                "type": "string",
+                "column_id": col,
+                "value": v
+            })
+
+    return result
