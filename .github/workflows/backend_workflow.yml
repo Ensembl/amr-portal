@@ -8,14 +8,6 @@ on:
     branches:
       - "**"
 
-on:
-  push:
-    branches:
-      - "**"
-  pull_request:
-    branches:
-      - "**"
-
 jobs:
   test:
     name: Install & Test
