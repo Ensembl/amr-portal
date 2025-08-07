@@ -10,15 +10,32 @@ cd amr-portal
 
 ### Backend
 
+1. Install requirements
 ```
 cd backend
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-fastapi dev main.py
+```
+
+2. Create a .env File
+```
+# .env
+DUCKDB_PATH=backend/amr_v2.parquet
+```
+
+```shell
+# make sure you're in the *root directory*
+cd ..
+uvicorn backend.main:app --reload
 ```
 
 Swagger UI: http://localhost:8000/docs
+
+For production use:
+```shell
+uvicorn backend.main:app --host 0.0.0.0 --port 8000 --workers 4
+```
 
 #### API Calls Examples
 
