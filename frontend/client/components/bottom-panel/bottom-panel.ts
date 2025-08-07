@@ -1,6 +1,6 @@
 import { html, css, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { ifDefined } from 'lit/directives/if-defined.js';
+import {repeat} from 'lit/directives/repeat.js';
 import { SignalWatcher } from '@lit-labs/signals';
 import { effect } from 'signal-utils/subtle/microtask-effect';
 
@@ -15,7 +15,7 @@ import '@ensembl/ensembl-elements-common/components/table/sortable-column-header
 import tableStyles from '@ensembl/ensembl-elements-common/styles/constructable-stylesheets/table.js';
 
 import type { BackendInterface } from '../../../data-provider/dataProvider';
-import type { BiosampleRecord } from '../../../types/biosample';
+import type { AMRRecord, AMRRecordField, LinkData } from '../../../types/amrRecord';
 import type { AMRRecordsResponse } from '../../../data-provider/backendInterface';
 
 import { panelStyles } from '../panel/shared-panel-styles';
@@ -130,7 +130,7 @@ export class BottomPanel extends SignalWatcher(LitElement) {
       return html`
         ${this.renderTableControlsArea({ responseMeta: meta })}
         <div class="table-container">
-          ${this.renderBiosampleRecords(data)}
+          ${this.renderTable(data)}
         </div>
       `;      
     }
@@ -199,104 +199,77 @@ export class BottomPanel extends SignalWatcher(LitElement) {
   }
 
 
-  renderBiosampleRecords(biosampleRecords: BiosampleRecord[]) {
+  renderTable(data: AMRRecord[]) {
     return html`
       <table class="ens-table">
         <thead class="sticky-table-head">
           <tr>
-            <th>Biosample id</th>
-            <th>
-              <ens-table-sortable-column-head
-                sort-order=${ifDefined(this.getSortOrderFor('Antibiotic_name'))}
-                @click=${() => this.onOrderChange('Antibiotic_name')}
-              >
-                Antibiotic
-              </ens-table-sortable-column-head>
-            </th>
-            <th>Abbrev</th>
-            <th>
-              <ens-table-sortable-column-head
-                sort-order=${ifDefined(this.getSortOrderFor('phenotype'))}
-                @click=${() => this.onOrderChange('phenotype')}
-              >
-                Phenotype
-              </ens-table-sortable-column-head>
-            </th>
-            <th>
-              <ens-table-sortable-column-head
-                sort-order=${ifDefined(this.getSortOrderFor('genus'))}
-                @click=${() => this.onOrderChange('genus')}
-              >
-                Genus
-              </ens-table-sortable-column-head>
-            </th>
-            <th>Species</th>
-            <th>Assembly accession in ENA</th>
-            <th>MIC</th>
-            <th>Isolation context</th>
-            <th>Isolation source</th>
-            <th>Lab typing method</th>
-            <th>Lab typing platform</th>
+            ${this.renderTableColumnNames(data[0])}
           </tr>
         </thead>
         <tbody>
-          ${biosampleRecords.map(rowData => html`
-            <tr>
-              <td>
-                ${rowData.biosample_id}
-              </td>
-              <td>
-                ${rowData.antibiotic_name}
-              </td>
-              <td>
-                ${rowData.antibiotic_abbreviation}
-              </td>
-              <td>
-                ${rowData.phenotype}
-              </td>
-              <td>
-                ${rowData.genus}
-              </td>
-              <td>
-                ${rowData.species}
-              </td>
-              <td>
-                ${this.renderAssemblyLink(rowData.assembly)}
-              </td>
-              <td>
-                ${rowData.measurement.sign ?? ''}
-                ${rowData.measurement.value}
-                ${' '}
-                ${rowData.measurement.unit ?? ''}
-              </td>
-              <td>
-                ${rowData.isolation_context}
-              </td>
-              <td>
-                ${rowData.isolation_source}
-              </td>
-              <td>
-                ${rowData.laboratory_typing_method}
-              </td>
-              <td>
-                ${rowData.laboratory_typing_platform}
-              </td>
-            </tr>
-          `)}
-
+          ${data.map(rowData => this.renderTableRow(rowData))}
         </tbody>
       </table>
     `;
   }
 
-  renderAssemblyLink(assembly: BiosampleRecord['assembly']) {
-    if (!assembly) {
+  /**
+   * The implementation is temporary, until we start getting the list of columns from the backend
+   * 
+   * Remember that when we want to add sorting by columns, to put something like this inside of th elements: 
+   *  <ens-table-sortable-column-head
+        sort-order=${ifDefined(this.getSortOrderFor('Antibiotic_name'))}
+        @click=${() => this.onOrderChange('Antibiotic_name')}
+      >
+        Antibiotic
+      </ens-table-sortable-column-head>
+   * 
+   */
+  renderTableColumnNames = (fields: AMRRecord) => {
+    return repeat(fields, (field) => field.id, (field) => {
+      return html`
+        <th>${ field.id }</th>
+      `;
+    });
+  };
+
+  renderTableRow = (record: AMRRecord) => {
+    const cells = repeat(record, (field) => field.id, (field) => {
+      let cellContent;
+      if (this.isLink(field)) {
+        cellContent = this.renderLink(field);
+      } else {
+        cellContent = field.value;
+      }
+
+      return html`
+        <td>${ cellContent }</td>
+      `;
+    });
+
+    return html`
+      <tr>
+        ${cells}
+      </tr>
+    `;
+  };
+
+  isLink(data: AMRRecordField): data is LinkData {
+    return data.type === 'link';
+  }
+
+  renderLink(data: LinkData) {
+    if (!data.value) {
       return null;
+    } else if (!data.url) {
+      // semantically, this should not happen; but nothing in the data types guards against this 
+      return data.value;
     }
 
     return html`
-      <ens-external-link href="${assembly.url}">
-        ${assembly.accession_id}
+      <ens-external-link href="${data.url}">
+        ${data.value}
       </ens-external-link>
     `;
   }

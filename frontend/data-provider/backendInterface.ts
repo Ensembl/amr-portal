@@ -1,4 +1,4 @@
-import type { BiosampleRecord } from '../types/biosample';
+import type { AMRRecord } from '../types/amrRecord';
 import type { SelectedFilter } from '../client';
 import type { FiltersConfig } from '../types/filters/filtersConfig';
 
@@ -17,7 +17,7 @@ type PagniatedMetadata = {
 
 export type AMRRecordsResponse = {
   meta: PagniatedMetadata;
-  data: BiosampleRecord[];
+  data: AMRRecord[];
 };
 
 export interface BackendInterface {
