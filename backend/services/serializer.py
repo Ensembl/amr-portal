@@ -1,19 +1,28 @@
 import numpy as np
 from backend.core.columns_schema import get_columns_list, get_column_meta_map
 
+# keeps JSON order
+SCHEMA_COLUMNS = get_columns_list()
+# id -> meta (type, url, sortable, ...)
 COLUMN_META_MAP = get_column_meta_map()
-ORDERED_COLUMNS = [c["id"] for c in get_columns_list()]
+
+MEASUREMENT_FIELDS = {"measurement_value", "measurement_unit", "measurement_sign"}
+
 
 def _clean(v):
     return None if v in (None, "nan", np.nan, np.inf, -np.inf) else v
 
+
+def _is_date_col(col: str) -> bool:
+    c = col.lower()
+    return c.endswith("_date") or c == "collection_date"
+
+
 def serialize_amr_record(row):
     result = []
 
-    keys = list(row.keys())
-
-    # Synthetic "measurement" (kept for convenience/UI)
-    # Handle measurement, only measurement_value is mandatory
+    # Build the synthetic measurement
+    # Only measurement_value is mandatory
     value = _clean(row.get("measurement_value"))
     if value is not None:
         sign = _clean(row.get("measurement_sign"))
@@ -23,51 +32,43 @@ def serialize_amr_record(row):
     else:
         measurement = None
 
-    # Skip raw measurement parts from the rest
-    skip = {"measurement_value", "measurement_unit", "measurement_sign"}
+    # Iterate strictly in the schema order
+    # columns not in the schema are not included
+    for col_meta in SCHEMA_COLUMNS:
+        col = col_meta["id"]
 
-    # Prefer schema order, then any extra columns that appear in data
-    # TODO: this is where we can play with the ordering.. to demystify
-    ordered = [c for c in ORDERED_COLUMNS if c in keys and c not in skip]
-    extras  = [c for c in keys if c not in set(ordered) | skip]
+        # Skip raw measurement components
+        if col in MEASUREMENT_FIELDS:
+            continue
 
-    for col in ordered + extras:
+        # Inline-handle the synthetic measurement column
+        if col == "measurement":
+            result.append({
+                "type": "string",  # keep synthetic as string
+                "column_id": "measurement",
+                "value": measurement
+            })
+            continue
+
         v = _clean(row.get(col))
-        meta = COLUMN_META_MAP.get(col, {"type": "string", "sortable": False})
 
-        if meta.get("type") == "link":
-            url_t = meta.get("url")
+        if col_meta.get("type") == "link":
+            url_tmpl = col_meta.get("url")
             result.append({
                 "type": "link",
                 "column_id": col,
                 "value": v,
-                "url": (url_t.format(v) if (v and url_t) else None),
+                "url": (url_tmpl.format(v) if (v and url_tmpl) else None),
             })
         else:
-            # Default: string
             result.append({
                 "type": "string",
                 "column_id": col,
-                "value": (str(v) if v is not None else None) if col.endswith("_date") or col == "collection_date" else v
+                "value": (str(v) if (v is not None and _is_date_col(col)) else v),
             })
 
-    # add measurement last
-    # TODO: this is a synthetic column, we need to agree on how to handle it
-    """
-    If we want the client to know about the synthetic column too, we need to add it to the column_schema JSON:
-    ```
-    {
-      "id": "measurement",
-      "label": "Measurement",
-      "type": "string",
-      "sortable": false
-    }
-    ```
-    """
-    result.append({
-        "type": "string",
-        "column_id": "measurement",
-        "value": measurement
-    })
+    for col_dict in result:
+        if col_dict.get("column_id") == "measurement" and measurement is not None:
+            col_dict["value"] = measurement
 
     return result

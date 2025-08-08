@@ -1,6 +1,7 @@
 from collections import defaultdict
 import numpy as np
 from fastapi import HTTPException
+
 from backend.core.database import data
 from backend.models.payload import Payload
 from backend.services.serializer import serialize_amr_record
@@ -42,8 +43,6 @@ def filter_amr_records(payload: Payload):
 
     offset = (payload.page - 1) * payload.per_page
     base_query += f" LIMIT {payload.per_page} OFFSET {offset}"
-
-
 
     res_df = data.query("amr_table", base_query).fetchdf()
     res_df = res_df.replace({np.nan: None, np.inf: None, -np.inf: None})

@@ -75,6 +75,12 @@
             "sortable": true
         },
         {
+            "id": "measurement",
+            "label": "Measurement",
+            "type": "string",
+            "sortable": false
+        },
+        {
             "id": "phenotype",
             "label": "Phenotype",
             "type": "string",
