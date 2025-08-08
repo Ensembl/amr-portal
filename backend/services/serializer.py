@@ -8,22 +8,32 @@ def serialize_amr_record(row):
     result = []
     keys = row.keys()
 
-    has_measurement = "measurement_value" in keys and "measurement_unit" in keys
-    if has_measurement:
-        value = val("measurement_value")
-        unit = val("measurement_unit")
-        if value is not None and unit is not None:
-            result.append({
-                "type": "string",
-                "column_id": "measurement",
-                "value": f"{value} {unit}"
-            })
+    # Handle measurement
+    sign = val("measurement_sign") if "measurement_sign" in keys else None
+    value = val("measurement_value") if "measurement_value" in keys else None
+    unit = val("measurement_unit") if "measurement_unit" in keys else None
+
+    measurement = (
+        f"{sign} {value} {unit}".strip()
+        if None not in (sign, value, unit)
+        else None
+    )
+    result.append({
+        "type": "string",
+        "column_id": "measurement",
+        "value": measurement
+    })
+
+    # Process remaining columns
+    skip_measurement_fields = {"measurement_value", "measurement_unit", "measurement_sign"}
 
     for col in keys:
-        v = val(col)
-        if has_measurement and col in {"measurement_value", "measurement_unit", "measurement_sign"}:
+        if col in skip_measurement_fields:
             continue
-        elif col.lower() in {"assembly", "assembly_id"}:
+
+        v = val(col)
+
+        if col.lower() in {"assembly", "assembly_id"}:
             result.append({
                 "type": "link",
                 "column_id": "assembly",
