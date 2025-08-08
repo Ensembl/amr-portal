@@ -8,16 +8,16 @@ def serialize_amr_record(row):
     result = []
     keys = row.keys()
 
-    # Handle measurement
-    sign = val("measurement_sign") if "measurement_sign" in keys else None
+    # Handle measurement, only measurement_value is mandatory
     value = val("measurement_value") if "measurement_value" in keys else None
-    unit = val("measurement_unit") if "measurement_unit" in keys else None
+    if value is not None:
+        sign = val("measurement_sign") if "measurement_sign" in keys else None
+        unit = val("measurement_unit") if "measurement_unit" in keys else None
+        parts = [str(part) for part in (sign, value, unit) if part is not None]
+        measurement = " ".join(parts) if parts else None
+    else:
+        measurement = None
 
-    measurement = (
-        f"{sign} {value} {unit}".strip()
-        if None not in (sign, value, unit)
-        else None
-    )
     result.append({
         "type": "string",
         "column_id": "measurement",
