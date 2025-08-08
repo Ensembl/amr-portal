@@ -1,0 +1,193 @@
+{
+    "table": "phenotype",
+    "columns": [
+        {
+            "id": "BioSample_ID",
+            "label": "Biosample Id",
+            "type": "string",
+            "sortable": true
+        },
+        {
+            "id": "isolate_name",
+            "label": "Isolate Name",
+            "type": "string",
+            "sortable": true
+        },
+        {
+            "id": "SRA_run",
+            "label": "Sra Run",
+            "type": "string",
+            "sortable": true
+        },
+        {
+            "id": "Assembly_ID",
+            "label": "Assembly Id",
+            "type": "link",
+            "sortable": true,
+            "url": "https://www.ebi.ac.uk/ena/browser/view/{}"
+        },
+        {
+            "id": "platform",
+            "label": "Platform",
+            "type": "string",
+            "sortable": true
+        },
+        {
+            "id": "genus",
+            "label": "Genus",
+            "type": "string",
+            "sortable": true
+        },
+        {
+            "id": "species",
+            "label": "Species",
+            "type": "string",
+            "sortable": true
+        },
+        {
+            "id": "Antibiotic_abbreviation",
+            "label": "Antibiotic Abbreviation",
+            "type": "string",
+            "sortable": true
+        },
+        {
+            "id": "Antibiotic_name",
+            "label": "Antibiotic Name",
+            "type": "string",
+            "sortable": true
+        },
+        {
+            "id": "measurement_sign",
+            "label": "Measurement Sign",
+            "type": "string",
+            "sortable": true
+        },
+        {
+            "id": "measurement_value",
+            "label": "Measurement Value",
+            "type": "string",
+            "sortable": true
+        },
+        {
+            "id": "measurement_unit",
+            "label": "Measurement Unit",
+            "type": "string",
+            "sortable": true
+        },
+        {
+            "id": "phenotype",
+            "label": "Phenotype",
+            "type": "string",
+            "sortable": true
+        },
+        {
+            "id": "Updated_phenotype_CLSI",
+            "label": "Updated Phenotype Clsi",
+            "type": "string",
+            "sortable": true
+        },
+        {
+            "id": "Updated_phenotype_EUCAST",
+            "label": "Updated Phenotype Eucast",
+            "type": "string",
+            "sortable": true
+        },
+        {
+            "id": "used_ECOFF",
+            "label": "Used Ecoff",
+            "type": "string",
+            "sortable": true
+        },
+        {
+            "id": "laboratory_typing_method",
+            "label": "Laboratory Typing Method",
+            "type": "string",
+            "sortable": true
+        },
+        {
+            "id": "laboratory_typing_platform",
+            "label": "Laboratory Typing Platform",
+            "type": "string",
+            "sortable": true
+        },
+        {
+            "id": "testing_standard",
+            "label": "Testing Standard",
+            "type": "string",
+            "sortable": true
+        },
+        {
+            "id": "testing_standard_year",
+            "label": "Testing Standard Year",
+            "type": "string",
+            "sortable": true
+        },
+        {
+            "id": "isolation_context",
+            "label": "Isolation Context",
+            "type": "string",
+            "sortable": true
+        },
+        {
+            "id": "isolation_source",
+            "label": "Isolation Source",
+            "type": "string",
+            "sortable": true
+        },
+        {
+            "id": "isolation_source_categories",
+            "label": "Isolation Source Categories",
+            "type": "string",
+            "sortable": true
+        },
+        {
+            "id": "host_sex",
+            "label": "Host Sex",
+            "type": "string",
+            "sortable": true
+        },
+        {
+            "id": "host_age",
+            "label": "Host Age",
+            "type": "string",
+            "sortable": true
+        },
+        {
+            "id": "isolation_country",
+            "label": "Isolation Country",
+            "type": "string",
+            "sortable": true
+        },
+        {
+            "id": "isolation_longitude",
+            "label": "Isolation Longitude",
+            "type": "string",
+            "sortable": true
+        },
+        {
+            "id": "isolation_latitude",
+            "label": "Isolation Latitude",
+            "type": "string",
+            "sortable": true
+        },
+        {
+            "id": "collection_date",
+            "label": "Collection Date",
+            "type": "string",
+            "sortable": true
+        },
+        {
+            "id": "Pubmed_ID",
+            "label": "Pubmed Id",
+            "type": "link",
+            "sortable": false,
+            "url": "https://pubmed.ncbi.nlm.nih.gov/{}"
+        },
+        {
+            "id": "database",
+            "label": "Source",
+            "type": "string",
+            "sortable": true
+        }
+    ]
+}
