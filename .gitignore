@@ -12,5 +12,5 @@ node_modules
 *.parquet
 *.duckdb
 
-# virtual environemnt
+# Environemnt variables
 .env

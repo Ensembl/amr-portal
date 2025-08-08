@@ -64,8 +64,8 @@ export class AMRApp extends SignalWatcher(LitElement) {
   }
 
   getDataProvider = async () => {
-    const provider = 'local';
-    // const provider = 'api';
+    // const provider = 'local';
+    const provider = 'api';
     this.dataProvider = await getDataProvider({ provider });
 
     console.log(`Using data provider: ${provider}`);
