@@ -118,38 +118,38 @@ export class LocalBackend implements BackendInterface {
   #buildAMRRecord = (dbRecord: BiosampleDBRecord): AMRRecord => {
     const biosampleId = {
       type: 'string',
-      id: 'biosample_id',
+      column_id: 'biosample_id',
       value: dbRecord.BioSample_ID
     } as const;
     const genus = {
       type: 'string',
-      id: 'genus',
+      column_id: 'genus',
       value: dbRecord.genus
     } as const;
     const species = {
       type: 'string',
-      id: 'species',
+      column_id: 'species',
       value: dbRecord.species
     } as const;
     const antibioticName = {
       type: 'string',
-      id: 'antibiotic_name',
+      column_id: 'antibiotic_name',
       value: dbRecord.Antibiotic_name
     } as const;
     const antibioticAbbreviation = {
       type: 'string',
-      id: 'antibiotic_abbreviation',
+      column_id: 'antibiotic_abbreviation',
       value: dbRecord.Antibiotic_abbreviation
     } as const;
     const assembly = {
       type: 'link',
-      id: 'assembly',
+      column_id: 'assembly',
       value: dbRecord.Assembly_ID,
       url: dbRecord.Assembly_ID ? `https://www.ebi.ac.uk/ena/browser/view/${dbRecord.Assembly_ID}` : null
     } as const;
     const phenotype = {
       type: 'string',
-      id: 'phenotype',
+      column_id: 'phenotype',
       value: dbRecord.phenotype
     } as const;
 
@@ -163,52 +163,52 @@ export class LocalBackend implements BackendInterface {
     
     const measurement = {
       type: 'string',
-      id: 'measurement',
+      column_id: 'measurement',
       value: measurementString
     } as const;
     const isolationContext = {
       type: 'string',
-      id: 'isolation_context',
+      column_id: 'isolation_context',
       value: dbRecord.isolation_context
     } as const;
     const isolationSource = {
       type: 'string',
-      id: 'isolation_source',
+      column_id: 'isolation_source',
       value: dbRecord.isolation_source
     } as const;
     const platform = {
       type: 'string',
-      id: 'platform',
+      column_id: 'platform',
       value: dbRecord.platform
     } as const;
     const laboratoryTypingMethod = {
       type: 'string',
-      id: 'laboratory_typing_method',
+      column_id: 'laboratory_typing_method',
       value: dbRecord.platform
     } as const;
     const laboratoryTypingPlatform = {
       type: 'string',
-      id: 'laboratory_typing_platform',
+      column_id: 'laboratory_typing_platform',
       value: dbRecord.laboratory_typing_platform
     } as const;
     const sraRun = {
       type: 'string',
-      id: 'sra_run',
+      column_id: 'sra_run',
       value: dbRecord.SRA_run
     } as const;
     const collectionDate = {
       type: 'string',
-      id: 'collection_date',
+      column_id: 'collection_date',
       value: dbRecord.collection_date ? `${dbRecord.collection_date}` : null
     } as const;
     const isolationLatitude = {
       type: 'string',
-      id: 'isolation_latitude',
+      column_id: 'isolation_latitude',
       value: dbRecord.isolation_latitude
     } as const;
     const isolationLongitude = {
       type: 'string',
-      id: 'isolation_longitude',
+      column_id: 'isolation_longitude',
       value: dbRecord.isolation_longitude
     } as const;
 

@@ -1,12 +1,12 @@
 export type StringData = {
   type: "string";
-  id: string;
+  column_id: string;
   value: string | null;
 };
 
 export type LinkData = {
   type: "link";
-  id: string;
+  column_id: string;
   value: string | null;
   url: string | null;
 };

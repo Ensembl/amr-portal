@@ -227,15 +227,15 @@ export class BottomPanel extends SignalWatcher(LitElement) {
    * 
    */
   renderTableColumnNames = (fields: AMRRecord) => {
-    return repeat(fields, (field) => field.id, (field) => {
+    return repeat(fields, (field) => field.column_id, (field) => {
       return html`
-        <th>${ field.id }</th>
+        <th>${ field.column_id }</th>
       `;
     });
   };
 
   renderTableRow = (record: AMRRecord) => {
-    const cells = repeat(record, (field) => field.id, (field) => {
+    const cells = repeat(record, (field) => field.column_id, (field) => {
       let cellContent;
       if (this.isLink(field)) {
         cellContent = this.renderLink(field);
