@@ -11,3 +11,7 @@ dist
 
 # Data files
 *.parquet
+*.duckdb
+
+# Environemnt variables
+.env
