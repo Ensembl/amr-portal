@@ -50,8 +50,22 @@ curl -X 'POST' \
 
 ### Frontend
 
+Prerequisite: need to have Node installed. As a rule of thumb, always use the latest LTS version of Node.
+
 ```
 cd frontend
 npm install
 npm run dev
 ```
+
+## Production build
+
+### Frontend
+
+```
+cd frontend
+npm install
+npm run build
+```
+
+This will create a `dist` directory containing a static html file and all the assets that it loads.
