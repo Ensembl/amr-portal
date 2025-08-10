@@ -1,6 +1,7 @@
 import { html, css, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import {repeat} from 'lit/directives/repeat.js';
+import { repeat } from 'lit/directives/repeat.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 import { SignalWatcher } from '@lit-labs/signals';
 import { effect } from 'signal-utils/subtle/microtask-effect';
 
@@ -15,8 +16,13 @@ import '@ensembl/ensembl-elements-common/components/table/sortable-column-header
 import tableStyles from '@ensembl/ensembl-elements-common/styles/constructable-stylesheets/table.js';
 
 import type { BackendInterface } from '../../../data-provider/dataProvider';
-import type { AMRRecord, AMRRecordField, LinkData } from '../../../types/amrRecord';
-import type { AMRRecordsResponse } from '../../../data-provider/backendInterface';
+import type {
+  AMRRecordsResponse,
+  AMRRecord,
+  AMRTableColumn,
+  AMRRecordField,
+  LinkData
+} from '../../../types/amrRecord';
 
 import { panelStyles } from '../panel/shared-panel-styles';
 
@@ -130,7 +136,7 @@ export class BottomPanel extends SignalWatcher(LitElement) {
       return html`
         ${this.renderTableControlsArea({ responseMeta: meta })}
         <div class="table-container">
-          ${this.renderTable(data)}
+          ${this.renderTable({ meta, data })}
         </div>
       `;      
     }
@@ -199,12 +205,13 @@ export class BottomPanel extends SignalWatcher(LitElement) {
   }
 
 
-  renderTable(data: AMRRecord[]) {
+  renderTable({ meta, data }: AMRRecordsResponse) {
+    const columnsData = meta.columns;
     return html`
       <table class="ens-table">
         <thead class="sticky-table-head">
           <tr>
-            ${this.renderTableColumnNames(data[0])}
+            ${this.renderTableColumnHeads(columnsData)}
           </tr>
         </thead>
         <tbody>
@@ -226,10 +233,23 @@ export class BottomPanel extends SignalWatcher(LitElement) {
       </ens-table-sortable-column-head>
    * 
    */
-  renderTableColumnNames = (fields: AMRRecord) => {
-    return repeat(fields, (field) => field.column_id, (field) => {
+  renderTableColumnHeads = (columns: AMRTableColumn[]) => {
+    return repeat(columns, (column) => column.id, (column) => {
+      if (column.sortable) {
+        return html`
+          <th>
+            <ens-table-sortable-column-head
+              sort-order=${ifDefined(this.getSortOrderFor(column.id))}
+              @click=${() => this.onOrderChange(column.id)}
+            >
+              ${ column.label }
+            </ens-table-sortable-column-head>
+          </th>
+        `;
+      }
+
       return html`
-        <th>${ field.column_id }</th>
+        <th>${ column.label }</th>
       `;
     });
   };

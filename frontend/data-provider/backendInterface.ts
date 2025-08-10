@@ -1,4 +1,4 @@
-import type { AMRRecord } from '../types/amrRecord';
+import type { AMRRecordsResponse } from '../types/amrRecord';
 import type { SelectedFilter } from '../client';
 import type { FiltersConfig } from '../types/filters/filtersConfig';
 
@@ -13,11 +13,6 @@ type PagniatedMetadata = {
   total_hits: number;
   page: number;
   per_page: number
-};
-
-export type AMRRecordsResponse = {
-  meta: PagniatedMetadata;
-  data: AMRRecord[];
 };
 
 export interface BackendInterface {
