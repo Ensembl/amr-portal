@@ -3,9 +3,12 @@ import solidPlugin from 'vite-plugin-solid';
 import solidSvg from 'vite-plugin-solid-svg';
 
 export default defineConfig({
-  plugins: [solidPlugin(), solidSvg({
-    defaultAsComponent: true
-  })],
+  plugins: [
+    solidPlugin(),
+    solidSvg({
+      defaultAsComponent: true,
+    }),
+  ],
   base: '/amr/',
   server: {
     port: 3000,

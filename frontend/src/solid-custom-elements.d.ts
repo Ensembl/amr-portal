@@ -16,7 +16,7 @@ declare module 'solid-js' {
         class?: string;
         onChange?: (event: Event) => void;
         children?: any;
-        type?: "checkbox";
+        type?: 'checkbox';
       };
       'ens-external-link': {
         href: string;
