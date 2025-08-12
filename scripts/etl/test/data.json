@@ -1,0 +1,10 @@
+[
+	{
+		"name":"phenotype",
+		"path":"/Users/jon/Data/amr/dereplicated__all_clean.csv"
+	},
+	{
+		"name":"genotype",
+		"path":"/Users/jon/Data/amr/amr_genotype.csv"
+	}
+]
