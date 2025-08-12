@@ -1,0 +1,16 @@
+.shaded-input {
+    padding: 1px 0px 1px 16px;
+    border: 1px solid #D4D9DE;
+    border-radius: 0px;
+    width: 250px;
+    height: 26px;
+    margin-left: auto;
+    box-shadow: inset 2px 2px 6px #0000004D;
+    font-size: 11px;
+    font-weight: lighter;
+}
+
+.shaded-input:focus {
+  outline: none;
+  box-shadow: inset 2px 2px 6px #0000004D;
+}
