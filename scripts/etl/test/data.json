@@ -1,7 +1,9 @@
 [
 	{
 		"name":"phenotype",
-		"path":"/Users/jon/Data/amr/dereplicated__all_clean.csv"
+		"path":"/Users/jon/Data/amr/dereplicated__all_clean.csv",
+		"filter":"/Users/jon/Data/amr/phenotype_filter.txt",
+		"filter_column":"BioSample_ID"
 	},
 	{
 		"name":"genotype",

@@ -3,6 +3,7 @@ import os
 import json
 
 from etl.cli import get_cli_args
+from etl.transform import transform_datasets
 from etl.config import validate_config, validate_dataset
 
 CONFIG_SCHEMA_FILE = "config.json"
@@ -41,28 +42,33 @@ def etl_step_1(config: dict, data: dict, release_path: str, cli) -> (bool, str):
     return (True, "Success")
 
 
-def etl_step_2(config: dict, data: dict, release_path: str, cli):
+def etl_step_2(config: dict, data: list[dict], release_path: str, cli):
     """
     process datasets - create parquet files, filter and merge columns
     """
-    return (False, "WIP")
+    results = transform_datasets(data, release_path)
+
+    if not results[0]:
+        return (results[0], results[1])
+
+    return (True, "Success")
 
 
-def etl_step_3(config: dict, data: dict, cli):
+def etl_step_3(config: dict, data: list[dict], cli):
     """
     Generate dataset columns - generate column data
     """
     return (False, "WIP")
 
 
-def etl_step_4(config: dict, data: dict, release_path: str, cli):
+def etl_step_4(config: dict, data: list[dict], release_path: str, cli):
     """
     Generate filters
     """
     return (False, "WIP")
 
 
-def etl_step_5(config: dict, data: dict, release_path: str, cli):
+def etl_step_5(config: dict, data: list[dict], release_path: str, cli):
     """
     Generate duckdb
     """

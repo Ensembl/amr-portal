@@ -4,6 +4,10 @@
   "minItems": 1,
   "items": {
     "type": "object",
+    "required": [
+      "name",
+      "path"
+    ],
     "properties": {
       "name": {
         "type": "string",
@@ -12,6 +16,14 @@
       "path": {
         "type": "string",
         "description": "dataset path"
+      },
+      "filter": {
+        "type": "string",
+        "description":"Path of list to values used to filter dataset by"
+      },
+      "filter_column": {
+        "type": "string",
+        "description": "name of column to filter by"
       }
     }
   }
