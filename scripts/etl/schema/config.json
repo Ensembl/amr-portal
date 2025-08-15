@@ -112,6 +112,9 @@
            "sortable": {
              "type":"boolean"
            },
+           "hidden": {
+             "type":"boolean"
+           },
            "template": {
              "type":"string"
            }

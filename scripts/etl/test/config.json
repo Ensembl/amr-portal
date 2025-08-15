@@ -8,9 +8,9 @@
 		},
 		"species":{
 			"dataset":"phenotype",
-			"id":"species",
+			"id":"gen_species",
 			"label":"Genome",
-			"filter_label":"concat(genus,' ',species)"
+			"filter_label":"gen_species"
 		},
 		"isolation_context":{
 			"dataset":"phenotype",
@@ -94,6 +94,21 @@
             },
             "database":{
                 "label":"Source"
+            },
+            "gen_species": {
+            	"label":"Species"
+            },
+            "species": {
+            	"hidden": true
+            },
+            "measurement_sign": {
+            	"hidden": true
+            },
+            "measurement_value": {
+            	"hidden": true
+            },
+            "measurement_unit": {
+            	"hidden": true
             }
         }
     }

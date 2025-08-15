@@ -1,9 +1,8 @@
-import sys
 import os
 import json
 import duckdb
 
-KNOWN_SPECIAL_ATTRIBUTES = ["type", "sortable", "label"]
+KNOWN_SPECIAL_ATTRIBUTES = ["type", "sortable", "label", "hidden"]
 
 
 def map_type(col_name: str, col_type: str, specials: dict) -> str:
@@ -25,7 +24,7 @@ def format_column_name(col_name: str, specials: dict) -> str:
     return col_name.replace('_', ' ').title()
 
 
-def build_dataset(parquet: str, table: str, release_path: str, specials: dict):
+def build_dataset(parquet: str, table: str, release_path: str, specials: dict) -> dict:
 
     conn = duckdb.connect()
     duckdb.read_parquet(parquet)
@@ -49,6 +48,9 @@ def build_dataset(parquet: str, table: str, release_path: str, specials: dict):
 
         # append additional data
         if col[0] in specials:
+            if "hidden" in specials[col[0]] and specials[col[0]]["hidden"]:
+                continue
+
             for key, val in specials[col[0]].items():
                 if key in KNOWN_SPECIAL_ATTRIBUTES:
                     continue
@@ -59,24 +61,23 @@ def build_dataset(parquet: str, table: str, release_path: str, specials: dict):
 
 
 def build_datasets(datasets: dict, special_columns: dict, release_path: str) -> (bool, str, list[dict]):
-    dataset_columns = []
     for dataset in datasets:
         dset = build_dataset(
-            dataset["path"],
+            dataset["parquet"],
             dataset["name"],
             release_path,
-            special_cases["special_columns"].get(dataset["name"], {})
+            special_columns.get(dataset["name"], {})
             )
-        dataset_columns.append(dset)
         save_path = os.path.join(
             release_path,
-            f"{dataset['name']}.json"
+            f"dataset-{dataset['name']}.json"
         )
+        dataset["column_meta"] = save_path
         with open(save_path, 'w') as dset_out:
             json.dump(dset, dset_out, indent=4)
-    return (True, "success", dataset_columns)
+    return (True, "success", datasets)
 
-
+"""
 if __name__ == "__main__":
 
     if len(sys.argv) <= 1:
@@ -100,3 +101,4 @@ if __name__ == "__main__":
             )
         with open(f"{dataset['name']}.json", 'w') as dset_out:
             json.dump(dset, dset_out, indent=4)
+"""

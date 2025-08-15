@@ -20,7 +20,7 @@ conn.close()
 
 DATASET_VIEW = """
 create view dataset as
-select * from
+select {} from
 read_csv('{}', header=true, all_varchar=true, delim =',', quote='"');
 """
 
@@ -41,20 +41,24 @@ COPY {} TO '{}'
 
 def transform_dataset(data: dict, release_path: str) -> (bool, str):
     # load data set
-    print(data)
     target = "dataset"
     conn = duckdb.connect()
-    conn.execute(DATASET_VIEW.format(data['path']))
+    # custom columns
+    dataset_cols = ['*']
+    if "create_columns" in data:
+        print("Creating new columns")
+        for c in data["create_columns"]:
+            dataset_cols.append(
+                f"{c['command']} as {c['name']}"
+                )
+
+    conn.execute(DATASET_VIEW.format(", ".join(dataset_cols), data['path']))
     # filter
     if "filter" and "filter_column" in data:
         target = "filtered_dataset"
         col = data["filter_column"]
         conn.execute(FILTER_VIEW.format(data['filter'], col))
-        
-        print(FILTERED_DATASET_VIEW.format(col, col))
         conn.execute(FILTERED_DATASET_VIEW.format(col, col))
-
-    # join columns
 
     # output as parquet
     name = f"{data['name']}.parquet"
@@ -65,8 +69,10 @@ def transform_dataset(data: dict, release_path: str) -> (bool, str):
     return (True, save_path)
 
 
-def transform_datasets(datasets: list[dict], release_path: str) -> (bool, str, list[str]):
-    paths = []
+def transform_datasets(
+            datasets: list[dict],
+            release_path: str
+            ) -> (bool, str, list[dict]):
     for dataset in datasets:
         result = transform_dataset(
             dataset,
@@ -76,5 +82,5 @@ def transform_datasets(datasets: list[dict], release_path: str) -> (bool, str, l
         if not result[0]:
             return (result[0], result[1], [])
         else:
-            paths.append(result[1])
-    return (True, "Success", paths)
+            dataset['parquet'] = result[1]
+    return (True, "Success", datasets)

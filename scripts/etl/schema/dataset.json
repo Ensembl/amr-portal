@@ -24,6 +24,26 @@
       "filter_column": {
         "type": "string",
         "description": "name of column to filter by"
+      },
+      "create_columns": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "name",
+            "command"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Column name"
+            },
+            "command": {
+              "type": "string",
+              "description": "SQL used to generate column data"
+            }
+          }
+        }
       }
     }
   }

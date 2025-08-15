@@ -5,6 +5,8 @@ import json
 from etl.cli import get_cli_args
 from etl.transform import transform_datasets
 from etl.config import validate_config, validate_dataset
+from etl.dataset import build_datasets
+from etl.filters import generate_filters
 
 CONFIG_SCHEMA_FILE = "config.json"
 DATA_SCHEMA_FILE = "dataset.json"
@@ -51,21 +53,32 @@ def etl_step_2(config: dict, data: list[dict], release_path: str, cli):
     if not results[0]:
         return (results[0], results[1])
 
+    data = results[2]
     return (True, "Success")
 
 
-def etl_step_3(config: dict, data: list[dict], cli):
+def etl_step_3(config: dict, data: list[dict], release_path: str, cli):
     """
     Generate dataset columns - generate column data
     """
-    return (False, "WIP")
+    results = build_datasets(data, config["special_columns"], release_path)
+    if not results[0]:
+        return (results[0], results[1])
+    data = results[2]
+
+    return (True, "Success")
 
 
 def etl_step_4(config: dict, data: list[dict], release_path: str, cli):
     """
     Generate filters
     """
-    return (False, "WIP")
+    results = generate_filters(data, config["filterCategories"], release_path)
+    if not results[0]:
+        return (results[0], results[1])
+    data = results[2]
+
+    return (True, "Success")
 
 
 def etl_step_5(config: dict, data: list[dict], release_path: str, cli):
