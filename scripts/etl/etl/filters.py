@@ -22,7 +22,7 @@ def generate_filters(
 
     for dataset in datasets:
         # generate filter values
-        filters = {}
+        filters = []
         for id, f in filter_config.items():
             if f['dataset'] != dataset['name']:
                 continue
@@ -48,7 +48,7 @@ def generate_filters(
             if len(filter["filters"]) > 60:
                 print(f"Warning! {f['id']} has over 60 ({len(filter['filters'])}) values")
             del filter["filter_label"]
-            filters[id] = filter
+            filters.append(filter)
 
         # save
         save_path = os.path.join(

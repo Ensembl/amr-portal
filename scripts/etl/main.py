@@ -7,6 +7,7 @@ from etl.transform import transform_datasets
 from etl.config import validate_config, validate_dataset
 from etl.dataset import build_datasets
 from etl.filters import generate_filters
+from etl.processor import amr_release_to_duckdb
 
 CONFIG_SCHEMA_FILE = "config.json"
 DATA_SCHEMA_FILE = "dataset.json"
@@ -85,7 +86,16 @@ def etl_step_5(config: dict, data: list[dict], release_path: str, cli):
     """
     Generate duckdb
     """
-    return (False, "WIP")
+    results = amr_release_to_duckdb(
+        release_path,
+        config["views"],
+        cli.release
+    )
+
+    if not results[0]:
+        return results
+
+    return (True, "Success")
 
 
 ETL_STEPS = [
