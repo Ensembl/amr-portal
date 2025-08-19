@@ -105,7 +105,7 @@ def amr_release_to_duckdb(
         release: str
         ) -> (bool, str):
     # create db
-    db_path = os.path.join(release_path, "amr.duckdb")
+    db_path = os.path.join(release_path, f"amr_{release}.duckdb")
     conn = duckdb.connect(db_path)
 
     # load dataset meta

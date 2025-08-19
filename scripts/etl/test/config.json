@@ -41,6 +41,36 @@
 			"id":"laboratory_typing_method",
 			"label":"Testing method",
 			"filter_label":"laboratory_typing_method"
+		},
+		"genome":{
+			"dataset":"genotype",
+			"id":"genome",
+			"label":"Genomes",
+			"filter_label":"genome"
+		},
+		"gene_symbol":{
+			"dataset":"genotype",
+			"id":"gene_symbol",
+			"label":"Genes",
+			"filter_label":"gene_symbol"
+		},
+		"drug_class":{
+			"dataset":"genotype",
+			"id":"drug_class",
+			"label":"Antibiotic",
+			"filter_label":"drug_class"
+		},
+		"strand":{
+			"dataset":"genotype",
+			"id":"strand",
+			"label":"Strand",
+			"filter_label":"strand"
+		},
+		"region":{
+			"dataset":"genotype",
+			"id":"region",
+			"label":"Region",
+			"filter_label":"region"
 		}
 	},
 	"views":[
@@ -59,13 +89,11 @@
 		{
 			"name":"AMR genomes",
 			"dataset":"genotype",
-			"categoryGroups": [ { "name": "", "categories": ["species"] } ],
+			"categoryGroups": [ { "name": "", "categories": ["genome"] } ],
       		"otherCategoryGroups": [
-      			{ "name": "Antibiotic", "categories": ["Antibiotic_abbreviation"] },
-        		{ "name": "Phenotype", "categories": ["phenotype"] },
-        		{ "name": "Testing method", "categories": ["laboratory_typing_method"] },
-        		{ "name": "Isolate Host", "categories": ["isolation_context"] },
-        		{ "name": "Isolate attributes", "categories": ["host_sex", "isolation_country"] }
+      			{ "name": "Antibiotic", "categories": ["drug_class"] },
+        		{ "name": "Gene", "categories": ["gene_symbol"] },
+        		{ "name": "Other", "categories": ["region","strand"] }
       		]
 		},
 		{

@@ -55,6 +55,7 @@ def transform_dataset(data: dict, release_path: str) -> (bool, str):
     conn.execute(DATASET_VIEW.format(", ".join(dataset_cols), data['path']))
     # filter
     if "filter" and "filter_column" in data:
+        print(f"Filtering {data['name']}")
         target = "filtered_dataset"
         col = data["filter_column"]
         conn.execute(FILTER_VIEW.format(data['filter'], col))
