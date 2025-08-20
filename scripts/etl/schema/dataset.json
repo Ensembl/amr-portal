@@ -1,6 +1,7 @@
 {
   "title": "AMR ETL datasets",
   "type": "array",
+  "description":"Describes an array of AMR datasets",
   "minItems": 1,
   "items": {
     "type": "object",

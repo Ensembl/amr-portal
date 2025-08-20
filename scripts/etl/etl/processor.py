@@ -13,7 +13,7 @@ FROM read_json([{}])
 FILTER_PREFIX = "filters-"
 SQL_CREATE_FILTERS = """
 CREATE TABLE filters AS (
-SELECT id,dataset,label, unnest(filters, recursive:=true)
+SELECT id,dataset,title, unnest(filters, recursive:=true)
 FROM read_json([{}])
 )
 """

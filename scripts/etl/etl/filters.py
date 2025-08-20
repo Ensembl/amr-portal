@@ -28,6 +28,9 @@ def generate_filters(
                 continue
 
             filter = dict(f)
+            # rename label to prevent using label to mean multiple things
+            filter["title"] = filter["label"]
+            del filter["label"]
 
             sql = filter_sql.format(
                 f["id"],
