@@ -1,0 +1,143 @@
+{
+	"filterCategories":{
+		"Antibiotic_abbreviation":{
+			"dataset":"phenotype",
+			"id":"Antibiotic_abbreviation",
+			"label":"Antibiotic",
+			"filter_label":"concat(Antibiotic_name,' ',Antibiotic_abbreviation)"
+		},
+		"species":{
+			"dataset":"phenotype",
+			"id":"gen_species",
+			"label":"Genome",
+			"filter_label":"gen_species"
+		},
+		"isolation_context":{
+			"dataset":"phenotype",
+			"id":"isolation_context",
+			"label":"Isolation Host",
+			"filter_label":"isolation_context"
+		},
+		"phenotype":{
+			"dataset":"phenotype",
+			"id":"phenotype",
+			"label":"Phenotype",
+			"filter_label":"phenotype"
+		},
+		"host_sex":{
+			"dataset":"phenotype",
+			"id":"host_sex",
+			"label":"Host Sex",
+			"filter_label":"host_sex"
+		},
+		"isolation_country":{
+			"dataset":"phenotype",
+			"id":"isolation_country",
+			"label":"Isolation Location",
+			"filter_label":"isolation_country"
+		},
+		"laboratory_typing_method":{
+			"dataset":"phenotype",
+			"id":"laboratory_typing_method",
+			"label":"Testing method",
+			"filter_label":"laboratory_typing_method"
+		},
+		"genome":{
+			"dataset":"genotype",
+			"id":"genome",
+			"label":"Genomes",
+			"filter_label":"genome"
+		},
+		"gene_symbol":{
+			"dataset":"genotype",
+			"id":"gene_symbol",
+			"label":"Genes",
+			"filter_label":"gene_symbol"
+		},
+		"drug_class":{
+			"dataset":"genotype",
+			"id":"drug_class",
+			"label":"Antibiotic",
+			"filter_label":"drug_class"
+		},
+		"strand":{
+			"dataset":"genotype",
+			"id":"strand",
+			"label":"Strand",
+			"filter_label":"strand"
+		},
+		"region":{
+			"dataset":"genotype",
+			"id":"region",
+			"label":"Region",
+			"filter_label":"region"
+		}
+	},
+	"views":[
+		{
+			"name":"AMR antibiotics",
+			"dataset":"phenotype",
+			"categoryGroups": [ { "name": "", "categories": ["Antibiotic_abbreviation"] } ],
+      		"otherCategoryGroups": [
+        		{ "name": "Phenotype", "categories": ["phenotype"] },
+        		{ "name": "Genome", "categories": ["species"] },
+        		{ "name": "Testing method", "categories": ["laboratory_typing_method"] },
+        		{ "name": "Isolate Host", "categories": ["isolation_context"] },
+        		{ "name": "Isolate attributes", "categories": [ "host_sex", "isolation_country"] }
+      		]
+		},
+		{
+			"name":"AMR genomes",
+			"dataset":"genotype",
+			"categoryGroups": [ { "name": "", "categories": ["genome"] } ],
+      		"otherCategoryGroups": [
+      			{ "name": "Antibiotic", "categories": ["drug_class"] },
+        		{ "name": "Gene", "categories": ["gene_symbol"] },
+        		{ "name": "Other", "categories": ["region","strand"] }
+      		]
+		},
+		{
+			"name":"AMR isolates",
+			"dataset":"phenotype",
+			"categoryGroups": [ { "name": "", "categories": ["isolation_context"] } ],
+      		"otherCategoryGroups": [
+      			{ "name": "Antibiotic", "categories": ["Antibiotic_abbreviation"] },
+        		{ "name": "Phenotype", "categories": ["phenotype"] },
+        		{ "name": "Genome", "categories": ["species"] },
+        		{ "name": "Testing method", "categories": ["laboratory_typing_method"] },
+        		{ "name": "Isolate attributes", "categories": ["host_sex", "isolation_country"] }
+      		]
+		}
+	],
+	"special_columns":{
+        "phenotype":{
+            "Assembly_ID":{
+                "type":"link",
+                "url":"https://www.ebi.ac.uk/ena/browser/view/{}"
+            },
+            "Pubmed_ID":{
+                "sortable":0,
+                "type":"link",
+                "url":"https://pubmed.ncbi.nlm.nih.gov/{}"
+            },
+            "database":{
+                "label":"Source"
+            },
+            "gen_species": {
+            	"label":"Species"
+            },
+            "species": {
+            	"hidden": true
+            },
+            "measurement_sign": {
+            	"hidden": true
+            },
+            "measurement_value": {
+            	"hidden": true
+            },
+            "measurement_unit": {
+            	"hidden": true
+            }
+        }
+    }
+}
