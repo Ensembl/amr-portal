@@ -1,9 +1,14 @@
 from collections import defaultdict
 import numpy as np
 from fastapi import HTTPException
-from backend.core.database import data
+from backend.core.database import db_conn
 from backend.models.payload import Payload
 from backend.services.serializer import serialize_amr_record
+from backend.core.filters_config_parser import build_filters_config
+
+def fetch_filters():
+    filters = build_filters_config()
+    return filters
 
 def filter_amr_records(payload: Payload):
     grouped_filters = defaultdict(list)
@@ -25,10 +30,10 @@ def filter_amr_records(payload: Payload):
     if where_sql:
         count_query += f" WHERE {where_sql}"
 
-    total_hits = data.query("amr_table", count_query).fetchone()[0]
+    total_hits = db_conn.query("amr_table", count_query).fetchone()[0]
 
     # Validate order column
-    if payload.order_by and payload.order_by.category not in set(data.columns):
+    if payload.order_by and payload.order_by.category not in set(db_conn.columns):
         raise HTTPException(status_code=400, detail="Invalid column for ordering")
 
     offset = (payload.page - 1) * payload.per_page
@@ -36,7 +41,7 @@ def filter_amr_records(payload: Payload):
         base_query += f" ORDER BY {payload.order_by.category} {payload.order_by.order}"
     base_query += f" LIMIT {payload.per_page} OFFSET {offset}"
 
-    res_df = data.query("amr_table", base_query).fetchdf()
+    res_df = db_conn.query("amr_table", base_query).fetchdf()
     res_df = res_df.replace({np.nan: None, np.inf: None, -np.inf: None})
 
     result = [serialize_amr_record(row) for _, row in res_df.iterrows()]

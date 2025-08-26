@@ -1,13 +1,13 @@
 from fastapi import APIRouter
 from backend.models.payload import Payload
-from backend.services.filters import filter_amr_records
-from backend.core.filters_config import FILTERS_CONFIG
+from backend.services.filters import fetch_filters, filter_amr_records
 
 router = APIRouter()
 
 @router.get("/filters-config")
 def get_filters_config():
-    return FILTERS_CONFIG
+    filters = fetch_filters()
+    return filters
 
 @router.post("/amr-records")
 def get_amr_records(payload: Payload):
