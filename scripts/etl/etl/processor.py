@@ -12,10 +12,19 @@ FROM read_json([{}])
 
 FILTER_PREFIX = "filters-"
 SQL_CREATE_FILTERS = """
+CREATE TEMP TABLE filter_dump as (
+    SELECT id,dataset,title, unnest(filters, recursive:=true)
+    FROM read_json([{}]));
+
+CREATE TABLE category AS (
+    SELECT concat(dataset,"-",id) as category_id, dataset, title FROM
+    filter_dump
+);
+
 CREATE TABLE filters AS (
-SELECT id,dataset,title, unnest(filters, recursive:=true)
-FROM read_json([{}])
-)
+    SELECT concat(dataset,"-",id) as category_id, value, label
+    FROM filter_dump
+);
 """
 
 SQL_DATASETS = """
@@ -25,39 +34,38 @@ CREATE TABLE {} AS (
 """
 
 SQL_CREATE_VIEW_TABLES = """
-CREATE TABLE views (
+CREATE TABLE view (
     view_id INTEGER PRIMARY KEY,
-    name VARCHAR,
-    dataset VARCHAR
+    name VARCHAR
 );
 
-CREATE TABLE categories (
-    category_id INTEGER PRIMARY KEY,
+CREATE TABLE category_group (
+    category_group_id INTEGER PRIMARY KEY,
     name VARCHAR,
     is_primary BOOL
 );
+
+CREATE TABLE view_category_group (
+    view_id INTEGER,
+    category_group_id INTEGER
+)
 
 CREATE TABLE filter_to_categories (
     category_id INTEGER,
     filter_id VARCHAR
 );
-
-CREATE TABLE categories_to_views (
-    view_id INTEGER,
-    category_id INTEGER
-)
 """
 
 SQL_ADD_VIEW = """
-INSERT INTO views (view_id, name, dataset) VALUES (?,?,?)
+INSERT INTO view (view_id, name, dataset) VALUES (?,?,?)
 """
 
-SQL_ADD_CATEGORIES = """
-INSERT INTO categories (category_id, name, is_primary) VALUES (?,?,?)
+SQL_ADD_CATEGORY_GROUPS = """
+INSERT INTO category_group (category_group_id, name, is_primary) VALUES (?,?,?)
 """
 
 SQL_LINK_VIEWS_AND_CATEGORIES = """
-INSERT INTO categories_to_views (view_id, category_id) VALUES (?,?)
+INSERT INTO view_category_group (view_id, category_group_id) VALUES (?,?)
 """
 
 SQL_LINK_FILTERS_AND_CATEGORIES = """
