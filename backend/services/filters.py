@@ -85,12 +85,10 @@ def filter_amr_records(payload: Payload):
 
     # Execute with parameters
     try:
-        # For debugging, print the query and parameters
-        logger.info(f"Fetching {payload.dataset} records")
-        logger.info(f"Filters: {payload.selected_filters}")
-        logger.info(f"Base query: {base_query}")
-        logger.info(f"Count query: {count_query}")
-        # print(f"Count query: {count_query}")
+        logger.info(f"dataset {payload.dataset} records")
+        logger.info(f"selected_filters: {payload.selected_filters}")
+        logger.info(f"base_query: {base_query}")
+        logger.info(f"count_query: {count_query}")
 
         total_hits = db_conn.execute(count_query).fetchone()[0]
 

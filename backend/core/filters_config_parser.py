@@ -20,7 +20,7 @@ def _query_to_records(db, sql: str) -> List[Dict[str, Any]]:
 
 
 def _build_filter_categories(rows: Iterable[Dict[str, Any]]) -> Dict[Any, Dict[str, Any]]:
-    """Transform raw `filters` table rows into the `filterCategories` structure.
+    """Transform raw `filter` table rows into the `filterCategories` structure.
 
     The expected row keys include: `id` (category id), `title`, `dataset`, `label`, `value`.
 
@@ -33,11 +33,11 @@ def _build_filter_categories(rows: Iterable[Dict[str, Any]]) -> Dict[Any, Dict[s
     categories: Dict[Any, Dict[str, Any]] = OrderedDict()
 
     for r in rows:
-        cat_id = r["id"]
+        cat_id = r["column_id"]
         if cat_id not in categories:
             categories[cat_id] = {
-                "id": r["id"],
-                "label": r["title"],
+                "id": r["column_id"],
+                "label": r["label"],
                 "dataset": r["dataset"],
                 "filters": [],
             }
@@ -83,14 +83,6 @@ def _ensure_group(
 def _build_filter_views(rows: Iterable[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """Transform joined rows into the `filterViews` structure.
 
-    Expected row keys include:
-        - view_id
-        - view_name
-        - category_id (not returned, but may exist)
-        - category_name
-        - filter_id
-        - is_primary (truthy for primary group)
-
     Args:
         rows: Iterable of dict rows from the views/categories/filters join.
 
@@ -115,13 +107,13 @@ def _build_filter_views(rows: Iterable[Dict[str, Any]]) -> List[Dict[str, Any]]:
         group = _ensure_group(
             view=view,
             group_name=r["category_name"],
-            is_primary=bool(r["is_primary"]),
+            is_primary=bool(r["category_group_is_primary"]),
             group_index=per_view_group_index[vid],
         )
 
         # Append the filter id (avoid accidental duplicates)
-        if r["filter_id"] not in group["categories"]:
-            group["categories"].append(r["filter_id"])
+        if r["column_id"] not in group["categories"]:
+            group["categories"].append(r["column_id"])
 
     # Return views ordered by view_id (insertion order already reflects scan order,
     # but sorting is safer if the SQL loses ORDER BY in the future).
@@ -132,8 +124,8 @@ def build_filters_config(db=default_db_conn) -> Dict[str, Any]:
     """Build the complete filters configuration document.
 
     This wraps two steps:
-      1) Build `filterCategories` from the `filters` table.
-      2) Build `filterViews` from a join of views, categories, and filter relations.
+      1) Build `filterCategories` from the `filter` and `category` tables.
+      2) Build `filterViews` from `view_categories` DuckDB view.
 
     Args:
         db: Database connection object. Defaults to the shared `db_conn`.
@@ -144,24 +136,24 @@ def build_filters_config(db=default_db_conn) -> Dict[str, Any]:
             - "filterViews": [ {...}, ... ]
     """
     # Categories
-    filters_category_query = "SELECT * FROM filters"
+    filters_category_query = """
+        SELECT  f.label, f.value, c.dataset, c.column_id
+        FROM filter f
+        JOIN category AS c ON c.column_id = f.column_id
+    """
     category_rows = _query_to_records(db, filters_category_query)
     filter_categories = _build_filter_categories(category_rows)
 
     # Views
     filters_view_query = """
-        SELECT
-          v.view_id,
-          c.category_id,
-          v.name AS view_name,
-          c.name AS category_name,
-          ftg.filter_id,
-          c.is_primary
-        FROM views AS v
-        JOIN categories_to_views AS ctv ON v.view_id = ctv.view_id
-        JOIN categories AS c ON ctv.category_id = c.category_id
-        JOIN filter_to_categories AS ftg ON c.category_id = ftg.category_id
-        ORDER BY v.view_id, c.category_id
+        SELECT view_id,
+            category_group_id,
+            view_name,
+            category_name,
+            column_id,
+            category_group_is_primary
+        FROM view_categories
+        ORDER BY view_id, category_group_id
     """
     view_rows = _query_to_records(db, filters_view_query)
     filter_views = _build_filter_views(view_rows)
