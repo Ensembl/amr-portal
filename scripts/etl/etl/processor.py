@@ -4,10 +4,19 @@ import duckdb
 
 DATASET_PREFIX = "dataset-"
 SQL_CREATE_DATASET_COLUMNS = """
-CREATE TABLE dataset_columns AS (
-SELECT "table" AS "dataset", unnest(columns, recursive:=true)
+CREATE TEMP TABLE dataset_columns_dump AS (
+SELECT 'table' AS 'dataset', unnest(columns, recursive:=true)
 FROM read_json([{}])
-)
+);
+CREATE TABLE dataset_column AS (
+    SELECT concat(dataset,'-',id) as column_id,
+           id as column_name,
+           label,
+           type,
+           sortable,
+           url
+    FROM dataset_columns_dump
+);
 """
 
 FILTER_PREFIX = "filters-"
@@ -17,12 +26,16 @@ CREATE TEMP TABLE filter_dump as (
     FROM read_json([{}]));
 
 CREATE TABLE category AS (
-    SELECT distinct concat(dataset,'-',id) as category_id, dataset, title FROM
-    filter_dump
+    SELECT
+        distinct concat(dataset,'-',id) as column_id,
+        id as column_name,
+        dataset,
+        title
+    FROM filter_dump
 );
 
 CREATE TABLE filter AS (
-    SELECT concat(dataset,'-',id) as category_id, value, label
+    SELECT concat(dataset,'-',id) as column_id, value, label
     FROM filter_dump
 );
 """
@@ -48,7 +61,7 @@ CREATE TABLE category_group (
 
 CREATE TABLE category_group_category (
     category_group_id INTEGER,
-    category_id VARCHAR
+    column_id VARCHAR
 );
 """
 
@@ -62,7 +75,7 @@ VALUES (?,?,?,?)
 """
 
 SQL_LINK_CATEGORY_GROUP_AND_CATEGORY = """
-INSERT INTO category_group_category (category_group_id, category_id)
+INSERT INTO category_group_category (category_group_id, column_id)
 VALUES (?,?)
 """
 
@@ -70,7 +83,7 @@ SQL_CREATE_CATEGORIES_VIEW = """
 CREATE VIEW view_categories as (
     SELECT views.view_id, categories.* FROM views
     JOIN categories_to_views ON views.view_id = categories_to_views.view_id
-    JOIN categories ON categories.category_id = categories_to_views.category_id
+    JOIN categories ON categories.column_id = categories_to_views.column_id
 )
 """
 
@@ -83,12 +96,14 @@ CREATE VIEW view_categories as (
           cg.name AS category_group_name,
           cg.is_primary as category_group_is_primary,
           c.title as category_name,
-          c.category_id
+          c.column_id,
+          c.column_name
         FROM view AS v
         JOIN category_group AS cg ON v.view_id = cg.view_id
-        JOIN category_group_category AS cgc ON cgc.category_group_id = cg.category_group_id
-        JOIN category AS c ON c.category_id = cgc.category_id
-        ORDER BY v.view_id, c.category_id
+        JOIN category_group_category AS cgc
+        ON cgc.category_group_id = cg.category_group_id
+        JOIN category AS c ON c.column_id = cgc.column_id
+        ORDER BY v.view_id, c.column_id
 )
 """
 
@@ -101,12 +116,14 @@ CREATE VIEW view_categories_json as (
     category_group_name: cg.name,
     category_group_is_primary: cg.is_primary,
     category_name: c.title,
-    category_id: c.category_id}::JSON as json
+    column_id: c.column_id,
+    column_name: c.column_name}::JSON as json
     FROM view AS v
     JOIN category_group AS cg ON v.view_id = cg.view_id
-    JOIN category_group_category AS cgc ON cgc.category_group_id = cg.category_group_id
-    JOIN category AS c ON c.category_id = cgc.category_id
-    ORDER BY v.view_id, c.category_id
+    JOIN category_group_category AS cgc
+    ON cgc.category_group_id = cg.category_group_id
+    JOIN category AS c ON c.column_id = cgc.column_id
+    ORDER BY v.view_id, c.column_id
 );
 """
 
@@ -148,8 +165,7 @@ def amr_release_to_duckdb(
         return (False, "No dataset metadata found!")
 
     conn.execute(
-        SQL_CREATE_DATASET_COLUMNS.format(
-            ",".join(dataset_meta))
+        SQL_CREATE_DATASET_COLUMNS.format(",".join(dataset_meta))
         )
 
     # load filters
