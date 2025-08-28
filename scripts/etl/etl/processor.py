@@ -17,12 +17,12 @@ CREATE TEMP TABLE filter_dump as (
     FROM read_json([{}]));
 
 CREATE TABLE category AS (
-    SELECT concat(dataset,"-",id) as category_id, dataset, title FROM
+    SELECT concat(dataset,'-',id) as category_id, dataset, title FROM
     filter_dump
 );
 
-CREATE TABLE filters AS (
-    SELECT concat(dataset,"-",id) as category_id, value, label
+CREATE TABLE filter AS (
+    SELECT concat(dataset,'-',id) as category_id, value, label
     FROM filter_dump
 );
 """
@@ -48,28 +48,28 @@ CREATE TABLE category_group (
 CREATE TABLE view_category_group (
     view_id INTEGER,
     category_group_id INTEGER
-)
+);
 
-CREATE TABLE filter_to_categories (
-    category_id INTEGER,
-    filter_id VARCHAR
+CREATE TABLE category_group_category (
+    category_group_id INTEGER,
+    category_id VARCHAR
 );
 """
 
 SQL_ADD_VIEW = """
-INSERT INTO view (view_id, name, dataset) VALUES (?,?,?)
+INSERT INTO view (view_id, name) VALUES (?,?)
 """
 
 SQL_ADD_CATEGORY_GROUPS = """
 INSERT INTO category_group (category_group_id, name, is_primary) VALUES (?,?,?)
 """
 
-SQL_LINK_VIEWS_AND_CATEGORIES = """
+SQL_LINK_VIEW_AND_CATEGORY_GROUP = """
 INSERT INTO view_category_group (view_id, category_group_id) VALUES (?,?)
 """
 
-SQL_LINK_FILTERS_AND_CATEGORIES = """
-INSERT INTO filter_to_categories (category_id, filter_id) VALUES (?,?)
+SQL_LINK_CATEGORY_GROUP_AND_CATEGORY = """
+INSERT INTO category_group_category (category_group_id, category_id) VALUES (?,?)
 """
 
 SQL_CREATE_CATEGORIES_VIEW = """
@@ -146,8 +146,8 @@ def amr_release_to_duckdb(
     # create view tables
     schema_sql = [
         SQL_CREATE_VIEW_TABLES,
-        SQL_CREATE_CATEGORIES_VIEW,
-        SQL_CREATE_FILTERS_VIEW
+        # SQL_CREATE_CATEGORIES_VIEW,
+        # SQL_CREATE_FILTERS_VIEW
     ]
 
     for sql in schema_sql:
@@ -159,7 +159,7 @@ def amr_release_to_duckdb(
     for v in views:
         conn.execute(
             SQL_ADD_VIEW,
-            [view_index, v["name"], v["dataset"]]
+            [view_index, v["name"]]
         )
 
         groups = [
@@ -171,19 +171,19 @@ def amr_release_to_duckdb(
 
         for (is_prime, cat) in groups:
             conn.execute(
-                SQL_ADD_CATEGORIES,
-                [category_index, cat["name"], is_prime]
+                SQL_ADD_CATEGORY_GROUPS,
+                [category_index, cat['name'], is_prime]
             )
 
             conn.execute(
-                SQL_LINK_VIEWS_AND_CATEGORIES,
+                SQL_LINK_VIEW_AND_CATEGORY_GROUP,
                 [view_index, category_index]
             )
 
             for c in cat["categories"]:
                 conn.execute(
-                    SQL_LINK_FILTERS_AND_CATEGORIES,
-                    [category_index, c]
+                    SQL_LINK_CATEGORY_GROUP_AND_CATEGORY,
+                    [category_index, f"{v['dataset']}-{c}"]
                 )
             category_index += 1
         view_index += 1
