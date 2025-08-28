@@ -17,7 +17,7 @@ CREATE TEMP TABLE filter_dump as (
     FROM read_json([{}]));
 
 CREATE TABLE category AS (
-    SELECT concat(dataset,'-',id) as category_id, dataset, title FROM
+    SELECT distinct concat(dataset,'-',id) as category_id, dataset, title FROM
     filter_dump
 );
 
@@ -41,13 +41,9 @@ CREATE TABLE view (
 
 CREATE TABLE category_group (
     category_group_id INTEGER PRIMARY KEY,
+    view_id INTEGER,
     name VARCHAR,
     is_primary BOOL
-);
-
-CREATE TABLE view_category_group (
-    view_id INTEGER,
-    category_group_id INTEGER
 );
 
 CREATE TABLE category_group_category (
@@ -61,15 +57,13 @@ INSERT INTO view (view_id, name) VALUES (?,?)
 """
 
 SQL_ADD_CATEGORY_GROUPS = """
-INSERT INTO category_group (category_group_id, name, is_primary) VALUES (?,?,?)
-"""
-
-SQL_LINK_VIEW_AND_CATEGORY_GROUP = """
-INSERT INTO view_category_group (view_id, category_group_id) VALUES (?,?)
+INSERT INTO category_group (category_group_id, view_id, name, is_primary)
+VALUES (?,?,?,?)
 """
 
 SQL_LINK_CATEGORY_GROUP_AND_CATEGORY = """
-INSERT INTO category_group_category (category_group_id, category_id) VALUES (?,?)
+INSERT INTO category_group_category (category_group_id, category_id)
+VALUES (?,?)
 """
 
 SQL_CREATE_CATEGORIES_VIEW = """
@@ -80,13 +74,40 @@ CREATE VIEW view_categories as (
 )
 """
 
-SQL_CREATE_FILTERS_VIEW = """
-CREATE VIEW category_filters as (
-    SELECT categories.category_id, filters.* FROM categories
-    JOIN filter_to_categories ON
-    filter_to_categories.category_id = categories.category_id
-    JOIN filters on filters.id = filter_to_categories.filter_id
+SQL_CREATE_VIEW_CATEGORIES = """
+CREATE VIEW view_categories as (
+        SELECT
+          v.view_id,
+          cg.category_group_id,
+          v.name AS view_name,
+          cg.name AS category_group_name,
+          cg.is_primary as category_group_is_primary,
+          c.title as category_name,
+          c.category_id
+        FROM view AS v
+        JOIN category_group AS cg ON v.view_id = cg.view_id
+        JOIN category_group_category AS cgc ON cgc.category_group_id = cg.category_group_id
+        JOIN category AS c ON c.category_id = cgc.category_id
+        ORDER BY v.view_id, c.category_id
 )
+"""
+
+SQL_CREATE_VIEW_CATEGORIES_JSON = """
+CREATE VIEW view_categories_json as (
+    SELECT
+    {view_id: v.view_id,
+    category_group_id: cg.category_group_id,
+    view_name: v.name,
+    category_group_name: cg.name,
+    category_group_is_primary: cg.is_primary,
+    category_name: c.title,
+    category_id: c.category_id}::JSON as json
+    FROM view AS v
+    JOIN category_group AS cg ON v.view_id = cg.view_id
+    JOIN category_group_category AS cgc ON cgc.category_group_id = cg.category_group_id
+    JOIN category AS c ON c.category_id = cgc.category_id
+    ORDER BY v.view_id, c.category_id
+);
 """
 
 
@@ -146,6 +167,8 @@ def amr_release_to_duckdb(
     # create view tables
     schema_sql = [
         SQL_CREATE_VIEW_TABLES,
+        SQL_CREATE_VIEW_CATEGORIES,
+        SQL_CREATE_VIEW_CATEGORIES_JSON,
         # SQL_CREATE_CATEGORIES_VIEW,
         # SQL_CREATE_FILTERS_VIEW
     ]
@@ -172,12 +195,7 @@ def amr_release_to_duckdb(
         for (is_prime, cat) in groups:
             conn.execute(
                 SQL_ADD_CATEGORY_GROUPS,
-                [category_index, cat['name'], is_prime]
-            )
-
-            conn.execute(
-                SQL_LINK_VIEW_AND_CATEGORY_GROUP,
-                [view_index, category_index]
+                [category_index, view_index, cat['name'], is_prime]
             )
 
             for c in cat["categories"]:
