@@ -5,7 +5,7 @@ import duckdb
 DATASET_PREFIX = "dataset-"
 SQL_CREATE_DATASET_COLUMNS = """
 CREATE TEMP TABLE dataset_columns_dump AS (
-SELECT 'table' AS 'dataset', unnest(columns, recursive:=true)
+SELECT "table" AS dataset, unnest(columns, recursive:=true)
 FROM read_json([{}])
 );
 CREATE TABLE dataset_column AS (
