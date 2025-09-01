@@ -47,6 +47,7 @@ curl -X 'GET' \
 ```
 
 ##### `/amr-records`
+###### Fetching _Phynotype_ data
 ```
 curl -X 'POST' \
   'http://localhost:8000/amr-records' \
@@ -54,12 +55,30 @@ curl -X 'POST' \
   -H 'Content-Type: application/json' \
   -d '{
   "selected_filters": [
-    { "category": "genus", "value": "Streptococcus" },
-    { "category": "Antibiotic_abbreviation", "value": "OXA" },
-    { "category": "Antibiotic_abbreviation", "value": "AMK" }
+    { "category": "phenotype-genus", "value": "Streptococcus" },
+    { "category": "phenotype-Antibiotic_abbreviation", "value": "OXA" },
+    { "category": "phenotype-Antibiotic_abbreviation", "value": "AMK" }
   ],
   "order_by": {
     "category": "collection_date",
+    "order": "DESC"
+  }
+}'
+```
+
+###### Fetching _Genotype_ data
+```
+curl -X 'POST' \
+  'http://localhost:8000/amr-records' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "selected_filters": [
+    { "category": "genotype-genome", "value": "BU_CCUG35501" },
+    { "category": "genotype-genome", "value": "PV_WCA-389-WT-3C" }
+  ],
+  "order_by": {
+    "category": "genome",
     "order": "DESC"
   }
 }'

@@ -32,41 +32,58 @@ def get_table_columns(table_name: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Failed to get columns for table: {table_name}")
 
+def get_table_from_filters(grouped_filters, table_columns_dict):
+    for table, cols in table_columns_dict.items():
+        # check if selected filters are all  in table cols
+        if set(grouped_filters).issubset(cols):
+            return table
+    return None
+
 
 def fetch_filters():
     return build_filters_config()
 
 
 def filter_amr_records(payload: Payload):
-    # Validate dataset/table name
-    valid_tables = get_valid_tables()  # not used for now
-    if payload.dataset not in ALLOWED_TABLES:
+    # Build column map for allowed tables
+    table_columns_dict = {}
+    for table in ALLOWED_TABLES:
+        valid_columns = get_table_columns(table)
+        table_columns_dict[table] = valid_columns
+
+    # Gather the selected filters
+    selected_filters = []
+    for f in payload.selected_filters:
+        selected_filters.append(f)
+
+    # group them together and trim the first dataset name part
+    grouped_filters = defaultdict(list)
+    for f in payload.selected_filters:
+        trimmed_filter_category = f.category.split("-")[-1]
+        grouped_filters[trimmed_filter_category].append(f.value)
+
+    # After getting the selected filters and grouping them together
+    # we need to pick the dataset/table from which we fetch the data
+    # based on the selected filters, for now, get_table_from_filters()
+    # returns one dataset/table name only, this means that all the
+    # selected filters should belong to the same dataset/table (genotype
+    # or phenotype) this can be changed later
+    selected_dataset = get_table_from_filters(grouped_filters, table_columns_dict)
+    logger.info(f"selected_dataset: {selected_dataset}")
+    logger.info(f"grouped_filters: {grouped_filters}")
+    if not selected_dataset:
         raise HTTPException(
             status_code=400,
-            detail=f"Invalid dataset: '{payload.dataset}'. Available datasets: {list(ALLOWED_TABLES)}"
+            detail="Something is wrong with the filters, double check the category values"
         )
 
-    # Get valid columns from the database
-    valid_columns = get_table_columns(payload.dataset)
-
-    # Validate each filter category passed by the user before processing
-    for f in payload.selected_filters:
-        if f.category not in valid_columns:
-            raise HTTPException(
-                status_code=400,
-                detail=f"Invalid filter category: '{f.category}'. Valid columns are: {valid_columns}"
-            )
-
     # Validate order column
-    if payload.order_by and payload.order_by.category not in valid_columns:
-        raise HTTPException(status_code=400, detail=f"Invalid column for ordering: '{payload.order_by.category}'")
+    if payload.order_by:
+        ob_col = payload.order_by.category
+        if ob_col not in table_columns_dict[selected_dataset]:
+            raise HTTPException(status_code=400, detail=f"Invalid order_by column: {ob_col!r}")
 
-    grouped_filters = defaultdict(list)
     where_clauses = []
-
-    for f in payload.selected_filters:
-        grouped_filters[f.category].append(f.value)
-
     for category, values in grouped_filters.items():
         # Convert list to SQL tuple syntax: ('value1', 'value2')
         quoted_values = [f"'{v}'" for v in values]
@@ -76,8 +93,8 @@ def filter_amr_records(payload: Payload):
     where_sql = " AND ".join(where_clauses)
 
     # Build queries
-    base_query = f"SELECT * FROM {payload.dataset}"
-    count_query = f"SELECT COUNT(*) AS count FROM {payload.dataset}"
+    base_query = f"SELECT * FROM {selected_dataset}"
+    count_query = f"SELECT COUNT(*) AS count FROM {selected_dataset}"
 
     if where_sql:
         base_query += f" WHERE {where_sql}"
@@ -85,7 +102,6 @@ def filter_amr_records(payload: Payload):
 
     # Execute with parameters
     try:
-        logger.info(f"dataset {payload.dataset} records")
         logger.info(f"selected_filters: {payload.selected_filters}")
         logger.info(f"base_query: {base_query}")
         logger.info(f"count_query: {count_query}")

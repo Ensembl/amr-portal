@@ -11,7 +11,6 @@ class OrderBy(BaseModel):
 
 class Payload(BaseModel):
     selected_filters: List[SelectedFilter]
-    dataset: str = "phenotype"  # TODO: remove later
     page: Optional[int] = 1
     per_page: Optional[int] = 100
     order_by: Optional[OrderBy] = None
