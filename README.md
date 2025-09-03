@@ -84,6 +84,43 @@ curl -X 'POST' \
 }'
 ```
 
+##### `/download`
+###### Download data in the current page in `CSV` format
+```
+curl -X 'POST' \
+  'http://localhost:8000/download' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "selected_filters": [
+    { "category": "phenotype-genus", "value": "Streptococcus" },
+    { "category": "phenotype-Antibiotic_abbreviation", "value": "OXA" },
+    { "category": "phenotype-Antibiotic_abbreviation", "value": "AMK" }
+  ],
+  "order_by": {
+    "category": "collection_date",
+    "order": "DESC"
+  }
+}'
+```
+
+###### Download all matches in `JSON` format
+```
+curl -X 'POST' \
+  'http://localhost:8000/download?scope=all&file_format=json' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "selected_filters": [
+    { "category": "phenotype-genus", "value": "Streptococcus" }
+  ],
+  "order_by": {
+    "category": "collection_date",
+    "order": "DESC"
+  }
+}'
+```
+
 ### Frontend
 
 Prerequisite: need to have Node installed. As a rule of thumb, always use the latest LTS version of Node.

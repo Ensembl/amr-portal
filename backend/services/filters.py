@@ -1,7 +1,11 @@
+import csv
+import io
+import json
 from collections import defaultdict
 import numpy as np
 from functools import lru_cache
 from fastapi import HTTPException
+from fastapi.responses import StreamingResponse
 import logging
 
 from backend.core.database import db_conn
@@ -131,3 +135,53 @@ def filter_amr_records(payload: Payload):
     except Exception as e:
         logger.error(f"Database query failed: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Database query failed, see the logs for more details")
+
+def flatten_record(record):
+    """Convert list-of-dicts into {column_id: value}."""
+    return {entry["column_id"]: entry.get("value") for entry in record}
+
+def fetch_filtered_records(payload: Payload, scope: str = "page", file_format: str = "csv"):
+    """
+    Download filtered AMR records in CSV or JSON format.
+    scope: "page" (current page) or "all" (all matches)
+    """
+    scope = (scope or "page").lower()
+    if scope not in {"page", "all"}:
+        raise HTTPException(status_code=400, detail="scope must be 'page' or 'all'")
+
+    # Get data for current page or for all matches (simple: bump per_page)
+    if scope == "all":
+        payload_for_all = payload.model_copy(deep=True)
+        payload_for_all.page = 1
+        payload_for_all.per_page = 10_000_000  # large cap; adjust if you prefer
+        data = filter_amr_records(payload_for_all)["data"]
+    else:
+        data = filter_amr_records(payload)["data"]
+
+    if not data:
+        raise HTTPException(status_code=404, detail="No data found for the given filters")
+
+    flat_results = [flatten_record(r) for r in data]
+
+    if file_format == "json":
+        content = json.dumps(flat_results, ensure_ascii=False, indent=2)
+        file_like = io.BytesIO(content.encode("utf-8"))
+        filename = "amr_records.json"
+        media_type = "application/json"
+    else:  # default = csv
+        # Collect headers from the first record
+        logger.debug(f"flat_results: {flat_results[0]}")
+        headers = list(flat_results[0].keys())
+        buffer = io.StringIO()
+        writer = csv.DictWriter(buffer, fieldnames=headers)
+        writer.writeheader()
+        writer.writerows(flat_results)
+        file_like = io.BytesIO(buffer.getvalue().encode("utf-8"))
+        filename = "amr_records.csv"
+        media_type = "text/csv"
+
+    return StreamingResponse(
+        file_like,
+        media_type=media_type,
+        headers={"Content-Disposition": f"attachment; filename={filename}"}
+    )
