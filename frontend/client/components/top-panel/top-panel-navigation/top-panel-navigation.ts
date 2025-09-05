@@ -1,6 +1,5 @@
 import { html, css, nothing, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import { classMap } from 'lit/directives/class-map.js';
 import { SignalWatcher } from '@lit-labs/signals';
 
 import '@ensembl/ensembl-elements-common/components/text-button/text-button.js';

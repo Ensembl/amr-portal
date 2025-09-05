@@ -72,6 +72,10 @@ const toggleExtraFilters = () => {
   const isViewing = isViewingExtraFilters.get();
   if (isViewing) {
     setActiveFilterGroup(null);
+  } else {
+    const filterGroups = filterGroupsForViewMode.get();
+    const firstFilterGroup = filterGroups[0];
+    setActiveFilterGroup(firstFilterGroup.name);
   }
   isViewingExtraFilters.set(!isViewing);
 };
@@ -96,7 +100,7 @@ const activeFilterGroup = new Signal.Computed<string | null>(() => {
   return currentActiveFilterGroups[currentViewMode] ?? null;
 });
 const setActiveFilterGroup = (filterGroupId: string | null) => {
-  const currentViewMode = store.viewMode.get() as string;
+  const currentViewMode = viewMode.get() as string;
   const currentActiveFilterGroups = activeFilterGroups.get();
 
   activeFilterGroups.set({
