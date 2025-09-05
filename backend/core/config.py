@@ -1,11 +1,10 @@
 from functools import lru_cache
-from pydantic_settings import BaseSettings
-from pydantic import ConfigDict
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
-    duckdb_path: str = "amr_v2.parquet"
+    duckdb_path: str = "amr_alpha_v6.duckdb"
 
-    model_config = ConfigDict(env_file=".env")
+    model_config = SettingsConfigDict(env_file=".env")
 
 @lru_cache()
 def get_settings():

@@ -19,18 +19,16 @@ def _query_to_records(db, sql: str) -> List[Dict[str, Any]]:
     return db.query(sql).fetchdf().to_dict(orient="records")
 
 
-def _build_filter_categories(rows: Iterable[Dict[str, Any]]) -> Dict[Any, Dict[str, Any]]:
+def _build_filter_categories(rows: Iterable[Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
     """Transform raw `filter` table rows into the `filterCategories` structure.
-
-    The expected row keys include: `id` (category id), `title`, `dataset`, `label`, `value`.
 
     Args:
         rows: Iterable of dict rows from the `filters` table.
 
     Returns:
-        Dict[Any, Dict[str, Any]]: Mapping of category-id -> category payload with its filters.
+        Dict[str, Dict[str, Any]]: Mapping of category-id -> category payload with its filters.
     """
-    categories: Dict[Any, Dict[str, Any]] = OrderedDict()
+    categories: Dict[str, Dict[str, Any]] = OrderedDict()
 
     for r in rows:
         cat_id = r["column_id"]

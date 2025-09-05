@@ -47,7 +47,7 @@ curl -X 'GET' \
 ```
 
 ##### `/amr-records`
-###### Fetching _Phynotype_ data
+###### Fetching _Phenotype_ data
 ```
 curl -X 'POST' \
   'http://localhost:8000/amr-records' \
@@ -88,8 +88,7 @@ curl -X 'POST' \
 ###### Download data in the current page in `CSV` format
 ```
 curl -X 'POST' \
-  'http://localhost:8000/download' \
-  -H 'accept: application/json' \
+  'http://localhost:8000/amr-records/download' \
   -H 'Content-Type: application/json' \
   -d '{
   "selected_filters": [
@@ -107,8 +106,7 @@ curl -X 'POST' \
 ###### Download all matches in `JSON` format
 ```
 curl -X 'POST' \
-  'http://localhost:8000/download?scope=all&file_format=json' \
-  -H 'accept: application/json' \
+  'http://localhost:8000/amr-records/download?scope=all&file_format=json' \
   -H 'Content-Type: application/json' \
   -d '{
   "selected_filters": [

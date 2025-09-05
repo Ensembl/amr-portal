@@ -75,6 +75,11 @@ def filter_amr_records(payload: Payload):
     selected_dataset = get_table_from_filters(grouped_filters, table_columns_dict)
     logger.info(f"selected_dataset: {selected_dataset}")
     logger.info(f"grouped_filters: {grouped_filters}")
+
+    # Check if the selected dataset is in the whitelist
+    if selected_dataset not in ALLOWED_TABLES:
+        raise ValueError(f"Invalid dataset name: {selected_dataset}")
+
     if not selected_dataset:
         raise HTTPException(
             status_code=400,
