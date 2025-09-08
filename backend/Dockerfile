@@ -12,10 +12,12 @@ RUN pip install -r requirements.txt
 LABEL org.opencontainers.image.authors="ensembl-webteam@ebi.ac.uk"
 
 FROM python:3.12.2-slim
+RUN groupadd amr && useradd amr -g amr
+USER amr
 WORKDIR /usr/app/venv
 EXPOSE 8000
-COPY --from=builder /usr/app/venv /usr/app/venv
-COPY . ./backend
+COPY --chown=amr:amr --from=builder /usr/app/venv /usr/app/venv
+COPY --chown=amr:amr . ./backend
 
 ENV PATH="/usr/app/venv/bin:$PATH"
 CMD ["uvicorn", "--host", "0.0.0.0", "--port", "8000" ,"backend.main:app"]
