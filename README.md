@@ -21,7 +21,13 @@ pip install -r requirements.txt
 2. Create a .env File
 ```
 # .env
-DUCKDB_PATH=backend/amr_v2.parquet
+DUCKDB_PATH=path/to/duckdb/file.duckdb
+```
+
+Or
+
+```shell
+export DUCKDB_PATH=path/to/duckdb/file.duckdb
 ```
 
 ```shell

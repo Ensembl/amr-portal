@@ -8,27 +8,13 @@ def serialize_amr_record(row):
     result = []
     keys = row.keys()
 
-    # Handle measurement, only measurement_value is mandatory
-    value = val("measurement_value") if "measurement_value" in keys else None
-    if value is not None:
-        sign = val("measurement_sign") if "measurement_sign" in keys else None
-        unit = val("measurement_unit") if "measurement_unit" in keys else None
-        parts = [str(part) for part in (sign, value, unit) if part is not None]
-        measurement = " ".join(parts) if parts else None
-    else:
-        measurement = None
-
-    result.append({
-        "type": "string",
-        "column_id": "measurement",
-        "value": measurement
-    })
-
-    # Process remaining columns
-    skip_measurement_fields = {"measurement_value", "measurement_unit", "measurement_sign"}
+    skip_fields = {
+        "genus", "species",
+        "measurement_value", "measurement_unit", "measurement_sign"
+    }
 
     for col in keys:
-        if col in skip_measurement_fields:
+        if col in skip_fields:
             continue
 
         v = val(col)
