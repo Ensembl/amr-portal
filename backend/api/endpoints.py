@@ -16,5 +16,12 @@ def get_amr_records(payload: Payload):
     return filter_amr_records(payload)
 
 @router.post("/amr-records/download")
-def download_filtered_records(payload: Payload, scope: str = "all", file_format: str = "csv"):
+def download_filtered_records(payload: Payload, scope: str = "page", file_format: str = "csv"):
     return fetch_filtered_records(payload, scope, file_format)
+
+@router.get('/health')
+def health():
+    # Health checks for ensuring application is healthy
+    # expand to include databae connectivity check etc
+    return "Healthy: OK", 200
+
