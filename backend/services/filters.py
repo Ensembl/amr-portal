@@ -109,7 +109,10 @@ def filter_amr_records(payload: Payload):
         base_query += f" WHERE {where_sql}"
         count_query += f" WHERE {where_sql}"
 
-    meta_columns_query = "SELECT * FROM dataset_column"
+    meta_columns_query = ("""
+        SELECT column_id as id, label, sortable
+        FROM dataset_column
+    """)
 
     # Execute with parameters
     try:
