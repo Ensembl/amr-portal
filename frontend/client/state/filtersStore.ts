@@ -72,6 +72,10 @@ const toggleExtraFilters = () => {
   const isViewing = isViewingExtraFilters.get();
   if (isViewing) {
     setActiveFilterGroup(null);
+  } else {
+    const filterGroups = filterGroupsForViewMode.get();
+    const firstFilterGroup = filterGroups[0];
+    setActiveFilterGroup(firstFilterGroup.name);
   }
   isViewingExtraFilters.set(!isViewing);
 };
@@ -96,7 +100,7 @@ const activeFilterGroup = new Signal.Computed<string | null>(() => {
   return currentActiveFilterGroups[currentViewMode] ?? null;
 });
 const setActiveFilterGroup = (filterGroupId: string | null) => {
-  const currentViewMode = store.viewMode.get() as string;
+  const currentViewMode = viewMode.get() as string;
   const currentActiveFilterGroups = activeFilterGroups.get();
 
   activeFilterGroups.set({
@@ -105,6 +109,67 @@ const setActiveFilterGroup = (filterGroupId: string | null) => {
   });
 }
 
+const currentViewConfig = new Signal.Computed(() => {
+  const currentViewMode = viewMode.get();
+  const filtersConfigValue = filtersConfig.get() as FiltersConfig;
+
+  return filtersConfigValue.filterViews.find(view => view.name === currentViewMode) ?? null;
+});
+
+
+/**
+ * A count of applied filters from the main filter category associated with a view
+ */
+const primaryFiltersCount = new Signal.Computed<number>(() => {
+  const currentViewMode = viewMode.get();
+  const viewConfig = currentViewConfig.get();
+  const filtersForViewMode = selectedFiltersForViewMode.get();
+
+  if (!currentViewMode || !viewConfig) {
+    return 0;
+  }
+
+  const primaryFilterCategoryGroups = viewConfig.categoryGroups;
+  const primaryFilterCategoryIds = primaryFilterCategoryGroups.reduce((ids, group) => {
+    return ids.concat(...group.categories)
+  }, [] as string[]);
+
+  let count = 0;
+  for (const filter of filtersForViewMode) {
+    if (primaryFilterCategoryIds.includes(filter.category)) {
+      count++;
+    }
+  }
+
+  return count;
+});
+
+/**
+ * A count of applied filters from other (non-main) filter categories associated with a view
+ */
+const otherFiltersCount = new Signal.Computed<number>(() => {
+  const currentViewMode = viewMode.get();
+  const viewConfig = currentViewConfig.get();
+  const filtersForViewMode = selectedFiltersForViewMode.get();
+
+  if (!currentViewMode || !viewConfig) {
+    return 0;
+  }
+
+  const filterCategoryGroups = viewConfig.otherCategoryGroups;
+  const filterCategoryIds = filterCategoryGroups.reduce((ids, group) => {
+    return ids.concat(...group.categories)
+  }, [] as string[]);
+
+  let count = 0;
+  for (const filter of filtersForViewMode) {
+    if (filterCategoryIds.includes(filter.category)) {
+      count++;
+    }
+  }
+
+  return count;
+});
 
 const store = {
   viewMode,
@@ -114,6 +179,8 @@ const store = {
   selectedFilters,
   selectedFiltersForViewMode,
   updateSelectedFilters,
+  primaryFiltersCount,
+  otherFiltersCount,
   isViewingExtraFilters,
   toggleExtraFilters,
   filterGroupsForViewMode,
