@@ -1,5 +1,9 @@
+include:
+  - template: Jobs/Container-Scanning.gitlab-ci.yml
+
 stages:
   - build
+  - container_scanning
   - deploy_rc
   - qa
   - deploy
@@ -26,6 +30,10 @@ Build:BE:Docker:
     - docker push ${DOCKER_IMAGE}
     - docker rmi ${DOCKER_IMAGE}
     - docker logout $CI_REGISTRY
+
+container_scanning:
+  variables:
+    CS_IMAGE: $CI_REGISTRY_IMAGE/tutorial-image
 
 Deploy:BE:RC:
   stage: deploy_rc
