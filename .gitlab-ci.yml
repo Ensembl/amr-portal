@@ -1,0 +1,61 @@
+stages:
+  - build
+  - deploy_rc
+  - qa
+  - deploy
+
+variables:
+  DOCKER_TLS_CERTDIR: ""
+  DOCKER_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}
+
+.be-rules: &be-code-change-rules
+  rules:
+    - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "main"'
+      changes:
+        - backend/**/*
+
+Build:BE:Docker:
+  stage: build
+  <<: *be-code-change-rules
+  image: python-slim
+  before_script:
+    - echo "Before Script"
+  script:
+    - echo "The Script"
+
+Deploy:BE:RC:
+  stage: deploy_rc
+  <<: *be-code-change-rules
+  image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:latest
+  variables:
+    AGENT: ${REVIEW_AGENT}
+    NS: ${CI_COMMIT_REF_SLUG}
+  before_script:
+    - echo "Before Script Deploy RC"
+  script:
+    - echo "The Script Deploy Live"
+
+QA:BE:
+  stage: qa
+  <<: *be-code-change-rules
+  image:
+    name: grafana/k6:latest
+    entrypoint: [ '' ]
+  variables:
+    HOST: amr.review.ensembl.org
+  before_script:
+    - echo "QA"
+  script:
+    - echo "QA"
+
+Deploy:BE:Live:
+  stage: deploy
+  <<: *be-code-change-rules
+  image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:latest
+  variables:
+    AGENT: ${PROD_AGENT}
+    NS: ${PROD_NS}
+  before_script:
+    - echo "Before Script Deploy Live"
+  script:
+    - echo "The Script Deploy Live"
