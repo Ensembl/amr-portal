@@ -10,7 +10,7 @@ variables:
 
 .be-rules: &be-code-change-rules
   rules:
-    - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "pipeline"'
       changes:
         - backend/**/*
 
