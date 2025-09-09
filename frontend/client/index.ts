@@ -16,6 +16,7 @@ import '@ensembl/ensembl-elements-common/styles/custom-properties.css';
 import '@ensembl/ensembl-elements-common/styles/global.css';
 import '@ensembl/ensembl-elements-common/styles/fonts.css';
 import './styles/global.css';
+import './styles/custom-properties.css';
 
 export type SelectedFilter = {
   category: string;

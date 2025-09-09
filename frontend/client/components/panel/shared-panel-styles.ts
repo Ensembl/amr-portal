@@ -10,7 +10,7 @@ export const panelStyles = css`
   :host {
     width: calc(100% - var(--standard-gutter) - var(--double-standard-gutter));
     margin-left: var(--standard-gutter);
-    border-radius: 5px;
+    border-radius: var(--panel-border-radius);
     background-color: var(--color-white);
     padding-right: var(--standard-gutter);
   }

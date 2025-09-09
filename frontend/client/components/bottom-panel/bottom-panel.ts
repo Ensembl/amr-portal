@@ -12,6 +12,7 @@ import '@ensembl/ensembl-elements-common/components/external-link/external-link.
 import '@ensembl/ensembl-elements-common/components/select/select.js';
 import '@ensembl/ensembl-elements-common/components/paginator/paginator.js';
 import '@ensembl/ensembl-elements-common/components/table/sortable-column-header.js';
+import './action-buttons/action-buttons';
 
 import tableStyles from '@ensembl/ensembl-elements-common/styles/constructable-stylesheets/table.js';
 
@@ -32,6 +33,7 @@ export class BottomPanel extends SignalWatcher(LitElement) {
     panelStyles,
     css`
       :host {
+        position: relative;
         box-sizing: border-box;
         display: grid;
         grid-template-rows: auto 1fr;
@@ -39,7 +41,7 @@ export class BottomPanel extends SignalWatcher(LitElement) {
         padding-top: 24px;
         padding-left: 30px;
         padding-right: 30px;
-        overflow: hidden;
+        container-type: size;  // <-- will allow .table-container to know its height, and therefore for overflow: auto to work
       }
 
       .table-controls-area {
@@ -52,7 +54,6 @@ export class BottomPanel extends SignalWatcher(LitElement) {
 
       .table-container {
         overflow: auto;
-        height: 100%;
         white-space: nowrap;
       }
 
@@ -197,6 +198,8 @@ export class BottomPanel extends SignalWatcher(LitElement) {
         <div class="table-container">
           ${this.renderTable(records)}
         </div>
+        <bottom-panel-action-buttons .dataProvider=${this.dataProvider}>
+        </bottom-panel-action-buttons>
       `;      
     }
 
