@@ -94,6 +94,27 @@
                 }
               }
             }
+          },
+          "columns" : {
+            "type": "array",
+            "description": "List of additional category groups avaliable for this view",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "column name"
+                },
+                "enabled": {
+                  "type": "boolean",
+                  "description": "Indicates if the column will be visible (enabled) by default"
+                },
+                "rank": {
+                  "type": "number",
+                  "description": "defines the column display order in ASC order"
+                }
+              }
+            }
           }
         }
       }

@@ -6,7 +6,7 @@
 			"label":"Antibiotic",
 			"filter_label":"concat(Antibiotic_name,' ',Antibiotic_abbreviation)"
 		},
-		"species":{
+		"gen_species":{
 			"dataset":"phenotype",
 			"id":"gen_species",
 			"label":"Genome",
@@ -80,11 +80,27 @@
 			"categoryGroups": [ { "name": "", "categories": ["Antibiotic_abbreviation"] } ],
       		"otherCategoryGroups": [
         		{ "name": "Phenotype", "categories": ["phenotype"] },
-        		{ "name": "Genome", "categories": ["species"] },
+        		{ "name": "Genome", "categories": ["gen_species"] },
         		{ "name": "Testing method", "categories": ["laboratory_typing_method"] },
         		{ "name": "Isolate Host", "categories": ["isolation_context"] },
         		{ "name": "Isolate attributes", "categories": [ "host_sex", "isolation_country"] }
-      		]
+      		],
+      		"columns":[
+      			{ "name": "Antibiotic_name", "enabled":true, "rank":1},
+      			{ "name": "Antibiotic_abbreviation", "enabled":true, "rank":2},
+      			{ "name": "phenotype", "enabled":true, "rank":3},
+      			{ "name": "gen_measurement", "enabled":true, "rank":4},
+      			{ "name": "gen_species", "enabled":true, "rank":5},
+      			{ "name": "Assembly_ID", "enabled":true, "rank":6},
+      			{ "name": "isolation_context", "enabled":true, "rank":7},
+      			{ "name": "BioSample_ID", "enabled":true, "rank":8},
+      			{ "name": "SRA_run", "enabled":true, "rank":9},
+      			{ "name": "platform", "enabled":true, "rank":10},
+      			{ "name": "laboratory_typing_method", "enabled":true, "rank":11},
+      			{ "name": "laboratory_typing_platform", "enabled":true, "rank":12},
+      			{ "name": "testing_standard", "enabled":true, "rank":13}
+      		],
+      		"other_columns":["phenotype"]
 		},
 		{
 			"name":"AMR genomes",
@@ -94,7 +110,19 @@
       			{ "name": "Antibiotic", "categories": ["drug_class"] },
         		{ "name": "Gene", "categories": ["gene_symbol"] },
         		{ "name": "Other", "categories": ["region","strand"] }
-      		]
+      		],
+      		"columns":[
+      			{ "name": "genome", "enabled":true, "rank":1},
+      			{ "name": "gene_symbol", "enabled":true, "rank":2},
+      			{ "name": "drug_class", "enabled":true, "rank":3},
+      			{ "name": "drug_subclass", "enabled":true, "rank":4},
+      			{ "name": "region", "enabled":true, "rank":5},
+      			{ "name": "region_start", "enabled":true, "rank":6},
+      			{ "name": "region_end", "enabled":true, "rank":7},
+      			{ "name": "strand", "enabled":true, "rank":8},
+      			{ "name": "id", "enabled":true, "rank":9}
+      		],
+      		"other_columns":["genotype"]
 		},
 		{
 			"name":"AMR isolates",
@@ -103,10 +131,26 @@
       		"otherCategoryGroups": [
       			{ "name": "Antibiotic", "categories": ["Antibiotic_abbreviation"] },
         		{ "name": "Phenotype", "categories": ["phenotype"] },
-        		{ "name": "Genome", "categories": ["species"] },
+        		{ "name": "Genome", "categories": ["gen_species"] },
         		{ "name": "Testing method", "categories": ["laboratory_typing_method"] },
         		{ "name": "Isolate attributes", "categories": ["host_sex", "isolation_country"] }
-      		]
+      		],
+      		"columns":[
+      			{ "name": "isolation_context", "enabled":true, "rank":1},
+      			{ "name": "gen_species", "enabled":true, "rank":2},
+      			{ "name": "Assembly_ID", "enabled":true, "rank":3},
+      			{ "name": "phenotype", "enabled":true, "rank":4},
+      			{ "name": "Antibiotic_name", "enabled":true, "rank":5},
+      			{ "name": "Antibiotic_abbreviation", "enabled":true, "rank":6},
+      			{ "name": "gen_measurement", "enabled":true, "rank":7},
+      			{ "name": "BioSample_ID", "enabled":true, "rank":8},
+      			{ "name": "SRA_run", "enabled":true, "rank":9},
+      			{ "name": "platform", "enabled":true, "rank":10},
+      			{ "name": "laboratory_typing_method", "enabled":true, "rank":11},
+      			{ "name": "laboratory_typing_platform", "enabled":true, "rank":12},
+      			{ "name": "testing_standard", "enabled":true, "rank":13}
+      		],
+      		"other_columns":["phenotype"]
 		}
 	],
 	"special_columns":{
@@ -125,6 +169,9 @@
             },
             "gen_species": {
             	"label":"Species"
+            },
+            "gen_measurement": {
+            	"label":"Measurement"
             },
             "species": {
             	"hidden": true

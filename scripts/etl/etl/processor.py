@@ -46,10 +46,21 @@ CREATE TABLE {} AS (
 )
 """
 
+SQL_GET_DATASET_COLUMNS = """
+select column_name from (describe {});
+"""
+
 SQL_CREATE_VIEW_TABLES = """
 CREATE TABLE view (
     view_id INTEGER PRIMARY KEY,
     name VARCHAR
+);
+
+CREATE TABLE view_column (
+  view_id INTEGER,
+  column_id VARCHAR,
+  rank INTEGER,
+  enable_by_default BOOL
 );
 
 CREATE TABLE category_group (
@@ -77,6 +88,11 @@ VALUES (?,?,?,?)
 SQL_LINK_CATEGORY_GROUP_AND_CATEGORY = """
 INSERT INTO category_group_category (category_group_id, column_id)
 VALUES (?,?)
+"""
+
+SQL_VIEW_COLUMN = """
+INSERT INTO view_column (view_id, column_id, rank, enable_by_default)
+VALUES (?,?,?,?)
 """
 
 SQL_CREATE_CATEGORIES_VIEW = """
@@ -184,13 +200,30 @@ def amr_release_to_duckdb(
     schema_sql = [
         SQL_CREATE_VIEW_TABLES,
         SQL_CREATE_VIEW_CATEGORIES,
-        SQL_CREATE_VIEW_CATEGORIES_JSON,
-        # SQL_CREATE_CATEGORIES_VIEW,
-        # SQL_CREATE_FILTERS_VIEW
+        SQL_CREATE_VIEW_CATEGORIES_JSON
     ]
 
     for sql in schema_sql:
         conn.execute(sql)
+        
+    # load datasets
+    datasets = find_parquets(
+        release_path,
+    )
+    for d in datasets:
+        print(
+            SQL_DATASETS.format(
+                d['dataset'],
+                d['path']
+            )
+        )
+
+        conn.execute(
+            SQL_DATASETS.format(
+                d['dataset'],
+                d['path']
+            )
+        )
 
     # setup views
     category_index = 1
@@ -201,6 +234,7 @@ def amr_release_to_duckdb(
             [view_index, v["name"]]
         )
 
+        # filter groups
         groups = [
             (True, c) for c in v["categoryGroups"]
         ]
@@ -220,24 +254,31 @@ def amr_release_to_duckdb(
                     [category_index, f"{v['dataset']}-{c}"]
                 )
             category_index += 1
+        # setup columns
+        columns_added = []
+        highest_rank = 0
+        for c in v["columns"]:
+            conn.execute(
+                SQL_VIEW_COLUMN,
+                [view_index, f"{v['dataset']}-{c['name']}", c['rank'], c['enabled']]
+            )
+            if c['rank'] > highest_rank:
+                highest_rank = c['rank']
+            columns_added.append(c['name'])
+        # pull in columns not detailed
+        for dataset in v["other_columns"]:
+            columns = conn.query(
+                SQL_GET_DATASET_COLUMNS.format(dataset)
+            ).fetchall()
+            
+            # loop through dataset, ommit 
+            for c in columns:
+                if c[0] not in columns_added:
+                    highest_rank += 1
+                    conn.execute(
+                        SQL_VIEW_COLUMN,
+                        [view_index, f"{dataset}-{c[0]}", highest_rank, False]
+                    )  
         view_index += 1
 
-    # load datasets
-    datasets = find_parquets(
-        release_path,
-    )
-    for d in datasets:
-        print(
-            SQL_DATASETS.format(
-                d['dataset'],
-                d['path']
-            )
-        )
-
-        conn.execute(
-            SQL_DATASETS.format(
-                d['dataset'],
-                d['path']
-            )
-        )
     return (True, "Success")
