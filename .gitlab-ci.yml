@@ -28,7 +28,7 @@ variables:
     - kubectl config use-context ${AGENT}
     - kubectl config set-context --current --namespace=${NS}
 
-SAST:
+sast:
   stage: sast
   variables:
     SEARCH_MAX_DEPTH: '5'
