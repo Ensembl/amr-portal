@@ -1,12 +1,50 @@
 from functools import lru_cache
-from pydantic_settings import BaseSettings
-from pydantic import ConfigDict
+from pathlib import Path
+
+from pydantic import Field, ValidationError, field_validator
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
 
 class Settings(BaseSettings):
-    duckdb_path: str = "amr_v2.parquet"
+    """
+    Application settings loaded from environment variable or .env file.
+    Requires DUCKDB_PATH to point to an existing DuckDB file.
+    """
+    duckdb_path: Path = Field(validation_alias="DUCKDB_PATH", description="Path to the DuckDB database file")
 
-    model_config = ConfigDict(env_file=".env")
+    model_config = SettingsConfigDict(
+        env_file=".env",            # load from .env if present
+        env_file_encoding="utf-8",
+        case_sensitive=False
+    )
 
-@lru_cache()
-def get_settings():
-    return Settings()
+    @field_validator("duckdb_path", mode="after")  # type: ignore[misc]
+    @classmethod
+    def _validate_duckdb_path(cls, v: Path) -> Path:
+        if not str(v).strip():
+            raise ValueError("DUCKDB_PATH cannot be empty.")
+        if not v.exists():
+            raise ValueError(f"DUCKDB_PATH points to a non-existent path: {v}")
+        if not v.is_file():
+            raise ValueError(f"DUCKDB_PATH must be a file, not a directory: {v}")
+        return v
+
+
+class SettingsError(RuntimeError):
+    """Raised when application settings are invalid or missing."""
+    pass
+
+
+@lru_cache(maxsize=1)
+def get_settings() -> Settings:
+    """
+    Load and cache Settings.
+    Raises SettingsError with a readable message on failure.
+    """
+    try:
+        return Settings()
+    except ValidationError as e:
+        details = "; ".join(
+            f"{err['loc'][0]}: {err['msg']}" for err in e.errors()
+        )
+        raise SettingsError(f"Invalid configuration: {details}") from e

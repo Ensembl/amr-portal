@@ -21,7 +21,13 @@ pip install -r requirements.txt
 2. Create a .env File
 ```
 # .env
-DUCKDB_PATH=backend/amr_v2.parquet
+DUCKDB_PATH=path/to/duckdb/file.duckdb
+```
+
+Or
+
+```shell
+export DUCKDB_PATH=path/to/duckdb/file.duckdb
 ```
 
 ```shell
@@ -47,6 +53,7 @@ curl -X 'GET' \
 ```
 
 ##### `/amr-records`
+###### Fetching _Phenotype_ data
 ```
 curl -X 'POST' \
   'http://localhost:8000/amr-records' \
@@ -54,9 +61,62 @@ curl -X 'POST' \
   -H 'Content-Type: application/json' \
   -d '{
   "selected_filters": [
-    { "category": "genus", "value": "Streptococcus" },
-    { "category": "Antibiotic_abbreviation", "value": "OXA" },
-    { "category": "Antibiotic_abbreviation", "value": "AMK" }
+    { "category": "phenotype-genus", "value": "Streptococcus" },
+    { "category": "phenotype-Antibiotic_abbreviation", "value": "OXA" },
+    { "category": "phenotype-Antibiotic_abbreviation", "value": "AMK" }
+  ],
+  "order_by": {
+    "category": "collection_date",
+    "order": "DESC"
+  }
+}'
+```
+
+###### Fetching _Genotype_ data
+```
+curl -X 'POST' \
+  'http://localhost:8000/amr-records' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "selected_filters": [
+    { "category": "genotype-genome", "value": "BU_CCUG35501" },
+    { "category": "genotype-genome", "value": "PV_WCA-389-WT-3C" }
+  ],
+  "order_by": {
+    "category": "genome",
+    "order": "DESC"
+  }
+}'
+```
+
+##### `/download`
+###### Download data in the current page in `CSV` format
+```
+curl -X 'POST' \
+  'http://localhost:8000/amr-records/download' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "selected_filters": [
+    { "category": "phenotype-genus", "value": "Streptococcus" },
+    { "category": "phenotype-Antibiotic_abbreviation", "value": "OXA" },
+    { "category": "phenotype-Antibiotic_abbreviation", "value": "AMK" }
+  ],
+  "order_by": {
+    "category": "collection_date",
+    "order": "DESC"
+  }
+}'
+```
+
+###### Download all matches in `JSON` format
+```
+curl -X 'POST' \
+  'http://localhost:8000/amr-records/download?scope=all&file_format=json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "selected_filters": [
+    { "category": "phenotype-genus", "value": "Streptococcus" }
   ],
   "order_by": {
     "category": "collection_date",
