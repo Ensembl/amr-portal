@@ -19,6 +19,13 @@ variables:
 #        - backend/**/*
       when: always
 
+.deploy-template:
+  <<: *be-code-change-rules
+  image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:latest
+  before_script:
+    - kubectl config use-context ${AGENT}
+    - kubectl config set-context --current --namespace=${NS}
+
 Build:BE:Docker:
   stage: build
   <<: *be-code-change-rules
@@ -34,19 +41,22 @@ Build:BE:Docker:
 container_scanning:
   stage: container_scanning
   variables:
-    CS_IMAGE: $CI_REGISTRY_IMAGE/tutorial-image
+    CS_IMAGE: $DOCKER_IMAGE
+    CS_DOCKERFILE_PATH: backend/Dockerfile
+    GIT_STRATEGY: fetch
 
 Deploy:BE:RC:
+  extends: .deploy-template
   stage: deploy_rc
   <<: *be-code-change-rules
-  image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:latest
+  environment:
+    name: development
   variables:
     AGENT: ${REVIEW_AGENT}
     NS: ${CI_COMMIT_REF_SLUG}
-  before_script:
-    - echo "Before Script Deploy RC"
   script:
     - echo "The Script Deploy Live"
+    - kubectl get ns
 
 QA:BE:
   stage: qa
@@ -62,13 +72,13 @@ QA:BE:
     - echo "QA"
 
 Deploy:BE:Live:
+  extends: .deploy-template
   stage: deploy
-  <<: *be-code-change-rules
-  image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:latest
+  environment:
+    name: production
   variables:
     AGENT: ${PROD_AGENT}
     NS: ${PROD_NS}
-  before_script:
-    - echo "Before Script Deploy Live"
   script:
     - echo "The Script Deploy Live"
+    - kubectl get ns
