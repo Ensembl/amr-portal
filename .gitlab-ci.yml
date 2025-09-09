@@ -1,7 +1,9 @@
 include:
   - template: Jobs/Container-Scanning.gitlab-ci.yml
+  - template: Security/SAST.gitlab-ci.yml
 
 stages:
+  - sast
   - build
   - container_scanning
   - deploy_rc
@@ -25,6 +27,11 @@ variables:
   before_script:
     - kubectl config use-context ${AGENT}
     - kubectl config set-context --current --namespace=${NS}
+
+SAST:
+  stage: sast
+  variables:
+    SEARCH_MAX_DEPTH: '5'
 
 Build:BE:Docker:
   stage: build
