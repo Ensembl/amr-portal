@@ -18,11 +18,14 @@ variables:
 Build:BE:Docker:
   stage: build
   <<: *be-code-change-rules
-  image: python-slim
+  image: docker
   before_script:
-    - echo "Before Script"
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - echo "The Script"
+    - docker build -t ${DOCKER_IMAGE} --no-cache .
+    - docker push ${DOCKER_IMAGE}
+    - docker rmi ${DOCKER_IMAGE}
+    - docker logout $CI_REGISTRY
 
 Deploy:BE:RC:
   stage: deploy_rc
