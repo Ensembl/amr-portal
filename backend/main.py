@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from backend.api.endpoints import router as api_router
 
-app = FastAPI(prefix="api")
+app = FastAPI(prefix="/api")
 
 app.add_middleware(
     CORSMiddleware,
