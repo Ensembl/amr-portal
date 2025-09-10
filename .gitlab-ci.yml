@@ -58,7 +58,7 @@ Build:FE:Assets:
   image: node:22.19
   script:
     - cd frontend
-    - npm install
+    - npm ci
     - npm run build
   artifacts:
     name: build_artifacts
