@@ -21,6 +21,13 @@ variables:
 #        - backend/**/*
       when: always
 
+.fe-rules: &fe-code-change-rules
+  rules:
+    - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "pipeline"'
+#      changes:
+#        - frontend/**/*
+      when: always
+
 .deploy-template:
   <<: *be-code-change-rules
   image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:latest
@@ -44,6 +51,20 @@ Build:BE:Docker:
     - docker push ${DOCKER_IMAGE}
     - docker rmi ${DOCKER_IMAGE}
     - docker logout $CI_REGISTRY
+
+Build:FE:Assets:
+  stage: build
+  <<: *fe-code-change-rules
+  image: node:22.19
+  script:
+    - cd frontend
+    - npm install
+    - npm run build
+  artifacts:
+    name: build_artifacts
+    paths:
+      - dist/
+
 
 container_scanning:
   stage: container_scanning
