@@ -13,6 +13,7 @@ stages:
 variables:
   DOCKER_TLS_CERTDIR: ""
   DOCKER_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}
+  GITLAB_ADVANCED_SAST_ENABLED: true
 
 .be-rules: &be-code-change-rules
   rules:
@@ -64,7 +65,6 @@ Build:FE:Assets:
     name: build_artifacts
     paths:
       - frontend/dist/
-
 
 container_scanning:
   stage: container_scanning
