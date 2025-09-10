@@ -4,7 +4,7 @@ import type { FiltersConfig } from '../types/filters/filtersConfig';
 export class ApiBackend implements BackendInterface {
   apiUrl: string;
 
-  constructor(apiUrl = 'http://localhost:8000') {
+  constructor(apiUrl = '/api') {
     this.apiUrl = apiUrl;
   }
 
