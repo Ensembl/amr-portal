@@ -63,7 +63,7 @@ Build:FE:Assets:
   artifacts:
     name: build_artifacts
     paths:
-      - dist/
+      - frontend/dist/
 
 
 container_scanning:
