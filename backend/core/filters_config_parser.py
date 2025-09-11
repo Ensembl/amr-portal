@@ -1,13 +1,12 @@
 from __future__ import annotations
 
-from pprint import pprint
-from typing import Dict, List, Any, Iterable, Tuple, DefaultDict
+from typing import Any, Iterable, Tuple
 from collections import defaultdict, OrderedDict
 
 from backend.core.database import db_conn as default_db_conn
 
 
-def _query_to_records(db, sql: str) -> List[Dict[str, Any]]:
+def _query_to_records(db, sql: str) -> list[dict[str, Any]]:
     """Run a SQL query and return a list of dict records.
 
     Args:
@@ -20,7 +19,7 @@ def _query_to_records(db, sql: str) -> List[Dict[str, Any]]:
     return db.query(sql).fetchdf().to_dict(orient="records")
 
 
-def _build_filter_categories(rows: Iterable[Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
+def _build_filter_categories(rows: Iterable[dict[str, Any]]) -> dict[str, dict[str, Any]]:
     """Transform raw `filter` table rows into the `filterCategories` structure.
 
     Args:
@@ -29,7 +28,7 @@ def _build_filter_categories(rows: Iterable[Dict[str, Any]]) -> Dict[str, Dict[s
     Returns:
         Dict[str, Dict[str, Any]]: Mapping of category-id -> category payload with its filters.
     """
-    categories: Dict[str, Dict[str, Any]] = OrderedDict()
+    categories: dict[str, dict[str, Any]] = OrderedDict()
 
     for r in rows:
         cat_id = r["column_id"]
@@ -51,11 +50,11 @@ def _build_filter_categories(rows: Iterable[Dict[str, Any]]) -> Dict[str, Dict[s
 
 
 def _ensure_group(
-    view: Dict[str, Any],
+    view: dict[str, Any],
     group_name: str,
     is_primary: bool,
-    group_index: Dict[Tuple[str, bool], int],
-) -> Dict[str, Any]:
+    group_index: dict[Tuple[str, bool], int],
+) -> dict[str, Any]:
     """Ensure a category group exists on a view and return it.
 
     Args:
@@ -122,7 +121,7 @@ def _build_columns_per_view(db):
     return columns_grouped_per_view
 
 
-def _build_filter_views(db, rows: Iterable[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def _build_filter_views(db, rows: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
     """Transform joined rows into the `filterViews` structure.
 
     Args:
@@ -132,9 +131,9 @@ def _build_filter_views(db, rows: Iterable[Dict[str, Any]]) -> List[Dict[str, An
         List[Dict[str, Any]]: List of view dictionaries ordered by view_id asc.
     """
     # Build views keyed by view_id to avoid assuming contiguous IDs.
-    views: Dict[Any, Dict[str, Any]] = OrderedDict()
+    views: dict[Any, dict[str, Any]] = OrderedDict()
     # Per-view index of groups to avoid O(n^2) lookups when appending.
-    per_view_group_index: Dict[Any, Dict[Tuple[str, bool], int]] = defaultdict(dict)
+    per_view_group_index: dict[Any, dict[Tuple[str, bool], int]] = defaultdict(dict)
 
     for r in rows:
         vid = r["view_id"]
@@ -176,7 +175,7 @@ def _build_filter_views(db, rows: Iterable[Dict[str, Any]]) -> List[Dict[str, An
     return [views[k] for k in sorted(views.keys())]
 
 
-def build_filters_config(db=default_db_conn) -> Dict[str, Any]:
+def build_filters_config(db=default_db_conn) -> dict[str, Any]:
     """Build the complete filters configuration document.
 
     This wraps two steps:

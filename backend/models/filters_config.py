@@ -1,4 +1,3 @@
-from typing import Dict, List
 from pydantic import BaseModel, Field, ConfigDict
 
 
@@ -13,7 +12,7 @@ class FilterCategory(BaseModel):
     label: str
     # e.g. "genotype" | "phenotype"
     dataset: str
-    filters: List[FilterOption]
+    filters: list[FilterOption]
 
 
 class Column(BaseModel):
@@ -28,18 +27,18 @@ class Column(BaseModel):
 class CategoryGroup(BaseModel):
     name: str
     # list of category ids (column_id strings), e.g. ["phenotype-Antibiotic_abbreviation"]
-    categories: List[str]
+    categories: list[str]
 
 
 class FilterView(BaseModel):
     name: str
-    categoryGroups: List[CategoryGroup]
-    otherCategoryGroups: List[CategoryGroup]
-    columns: List[Column]
+    categoryGroups: list[CategoryGroup]
+    otherCategoryGroups: list[CategoryGroup]
+    columns: list[Column]
 
 
 class FiltersConfig(BaseModel):
-    model_config = ConfigDict(validate_by_name=True, validate_by_alias=True)
+    model_config = ConfigDict(validate_by_name=True)
 
-    filterCategories: Dict[str, FilterCategory] = Field(alias="filterCategories")
-    filterViews: List[FilterView] = Field(alias="filterViews")
+    filter_categories: dict[str, FilterCategory] = Field(alias="filterCategories")
+    filter_views: list[FilterView] = Field(alias="filterViews")
