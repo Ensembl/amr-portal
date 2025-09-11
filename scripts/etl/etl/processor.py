@@ -4,39 +4,72 @@ import duckdb
 
 DATASET_PREFIX = "dataset-"
 SQL_CREATE_DATASET_COLUMNS = """
-CREATE TEMP TABLE dataset_columns_dump AS (
+CREATE TEMP TABLE column_dump AS (
 SELECT "table" AS dataset, unnest(columns, recursive:=true)
 FROM read_json([{}])
 );
-CREATE TABLE dataset_column AS (
-    SELECT concat(dataset,'-',id) as column_id,
+
+CREATE TEMP TABLE unique_datasets AS (
+    SELECT DISTINCT dataset from column_dump
+);
+
+CREATE SEQUENCE sq_column_id START 1;
+CREATE TABLE column_definition AS (
+    SELECT nextval('sq_column_id') as column_id,
+           concat(dataset,'-',id) as fullname,
            id as column_name,
            label,
            type,
            sortable,
            url
-    FROM dataset_columns_dump
+    FROM column_dump
+);
+
+CREATE SEQUENCE sq_dataset_id START 1;
+CREATE TABLE dataset AS (
+    SELECT nextval('sq_dataset_id') as dataset_id, dataset as name
+    FROM unique_datasets
+);
+
+CREATE TABLE dataset_column AS (
+    SELECT d.dataset_id, cd.column_id
+    FROM dataset as d
+    JOIN column_definition as cd
+    ON cd.fullname.starts_with(d.name)
+);
+"""
+
+SQL_DATASET_COLUMN_MAP = """
+SELECT map_from_entries(LIST(cols)) as col_map
+FROM (
+    SELECT ROW(fullname, {'id':column_id, 'name':column_name}) as cols
+    FROM column_definition
 );
 """
 
 FILTER_PREFIX = "filters-"
 SQL_CREATE_FILTERS = """
 CREATE TEMP TABLE filter_dump as (
-    SELECT id,dataset,title, unnest(filters, recursive:=true)
+    SELECT id, dataset,
+           title, unnest(filters, recursive:=true)
     FROM read_json([{}]));
 
 CREATE TABLE category AS (
     SELECT
-        distinct concat(dataset,'-',id) as column_id,
-        id as column_name,
+        distinct cd.column_id,
+        column_name,
         dataset,
         title
-    FROM filter_dump
+    FROM filter_dump as fd
+    JOIN column_definition as cd
+    ON (cd.fullname = CONCAT(fd.dataset,'-',fd.id))
 );
 
 CREATE TABLE filter AS (
-    SELECT concat(dataset,'-',id) as column_id, value, label
-    FROM filter_dump
+    SELECT cd.column_id, value, fd.label
+    FROM filter_dump as fd
+    JOIN column_definition as cd
+    ON (cd.fullname = CONCAT(fd.dataset,'-',fd.id))
 );
 """
 
@@ -58,7 +91,7 @@ CREATE TABLE view (
 
 CREATE TABLE view_column (
   view_id INTEGER,
-  column_id VARCHAR,
+  column_id BIGINT,
   rank INTEGER,
   enable_by_default BOOL
 );
@@ -72,7 +105,7 @@ CREATE TABLE category_group (
 
 CREATE TABLE category_group_category (
     category_group_id INTEGER,
-    column_id VARCHAR
+    column_id BIGINT
 );
 """
 
@@ -180,9 +213,12 @@ def amr_release_to_duckdb(
     if len(dataset_meta) == 0:
         return (False, "No dataset metadata found!")
 
+    # load column data and build map
     conn.execute(
         SQL_CREATE_DATASET_COLUMNS.format(",".join(dataset_meta))
         )
+    col_map = conn.query(SQL_DATASET_COLUMN_MAP).fetchone()[0]
+    print(col_map)
 
     # load filters
     filters = [f"'{f}'" for f in find_files(
@@ -205,7 +241,7 @@ def amr_release_to_duckdb(
 
     for sql in schema_sql:
         conn.execute(sql)
-        
+
     # load datasets
     datasets = find_parquets(
         release_path,
@@ -249,36 +285,41 @@ def amr_release_to_duckdb(
             )
 
             for c in cat["categories"]:
+                column_id = col_map[f"{v['dataset']}-{c}"]['id']
                 conn.execute(
                     SQL_LINK_CATEGORY_GROUP_AND_CATEGORY,
-                    [category_index, f"{v['dataset']}-{c}"]
+                    [category_index, column_id]  # COLUMN ID
                 )
             category_index += 1
         # setup columns
         columns_added = []
         highest_rank = 0
         for c in v["columns"]:
+            column_fullname = f"{v['dataset']}-{c['name']}"
+            column_id = col_map[column_fullname]['id']
             conn.execute(
-                SQL_VIEW_COLUMN,
-                [view_index, f"{v['dataset']}-{c['name']}", c['rank'], c['enabled']]
+                SQL_VIEW_COLUMN,  # COLUMN ID
+                [view_index, column_id, c['rank'], c['enabled']]
             )
             if c['rank'] > highest_rank:
                 highest_rank = c['rank']
-            columns_added.append(c['name'])
+            columns_added.append(column_fullname)
         # pull in columns not detailed
         for dataset in v["other_columns"]:
             columns = conn.query(
                 SQL_GET_DATASET_COLUMNS.format(dataset)
             ).fetchall()
-            
-            # loop through dataset, ommit 
+
+            # loop through dataset, ommit
             for c in columns:
-                if c[0] not in columns_added:
+                column_fullname = f"{dataset}-{c[0]}"
+                if column_fullname not in columns_added and column_fullname in col_map:
+                    column_id = col_map[column_fullname]['id']
                     highest_rank += 1
                     conn.execute(
-                        SQL_VIEW_COLUMN,
-                        [view_index, f"{dataset}-{c[0]}", highest_rank, False]
-                    )  
+                        SQL_VIEW_COLUMN,   # COLUMN ID
+                        [view_index, column_id, highest_rank, False]
+                    )
         view_index += 1
 
     return (True, "Success")
