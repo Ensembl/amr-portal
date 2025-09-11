@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Iterable, Tuple
+from typing import Any, Iterable
 from collections import defaultdict, OrderedDict
 
 from backend.core.database import db_conn as default_db_conn
@@ -53,7 +53,7 @@ def _ensure_group(
     view: dict[str, Any],
     group_name: str,
     is_primary: bool,
-    group_index: dict[Tuple[str, bool], int],
+    group_index: dict[tuple[str, bool], int],
 ) -> dict[str, Any]:
     """Ensure a category group exists on a view and return it.
 
@@ -133,7 +133,7 @@ def _build_filter_views(db, rows: Iterable[dict[str, Any]]) -> list[dict[str, An
     # Build views keyed by view_id to avoid assuming contiguous IDs.
     views: dict[Any, dict[str, Any]] = OrderedDict()
     # Per-view index of groups to avoid O(n^2) lookups when appending.
-    per_view_group_index: dict[Any, dict[Tuple[str, bool], int]] = defaultdict(dict)
+    per_view_group_index: dict[Any, dict[tuple[str, bool], int]] = defaultdict(dict)
 
     for r in rows:
         vid = r["view_id"]

@@ -1,5 +1,3 @@
-from typing import Dict
-
 from fastapi import APIRouter
 
 from backend.models.filters_config import FiltersConfig
@@ -10,7 +8,7 @@ router = APIRouter()
 
 @router.get("/filters-config", response_model=FiltersConfig)
 def get_filters_config() -> FiltersConfig:
-    filters: Dict = fetch_filters()
+    filters: dict = fetch_filters()
     return FiltersConfig(**filters)
 
 @router.post("/amr-records")
