@@ -56,6 +56,20 @@ Build:BE:Docker:
     - docker rmi ${DOCKER_IMAGE}
     - docker logout $CI_REGISTRY
 
+Build:FE:Docker:
+  stage: build
+  <<: *fe-code-change-rules
+  image: docker
+  variables:
+    DOCKER_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}-fe
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker build -t ${DOCKER_IMAGE} --no-cache -f frontend/Dockerfile .
+    - docker push ${DOCKER_IMAGE}
+    - docker rmi ${DOCKER_IMAGE}
+    - docker logout $CI_REGISTRY
+
 Build:FE:Assets:
   stage: build
   <<: *fe-code-change-rules
