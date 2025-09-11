@@ -100,7 +100,9 @@ Publish:Assets:RC:
     NS: amr
   script:
     - pod=$(kubectl -n $NS get pod -l "ensembl.platform.app.name=amr-data-copy" --no-headers -o custom-columns=":metadata.name")
-    - kubectl -n amr cp frontend/dist/ $pod:/usr/assets/
+    - echo $pod
+    - echo kubectl -n $NS cp frontend/dist/ $pod:/usr/assets/
+    - kubectl -n $NS cp frontend/dist/ $pod:/usr/assets/
 
 QA:BE:
   stage: qa
