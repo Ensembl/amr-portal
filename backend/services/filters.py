@@ -109,11 +109,6 @@ def filter_amr_records(payload: Payload):
         base_query += f" WHERE {where_sql}"
         count_query += f" WHERE {where_sql}"
 
-    meta_columns_query = ("""
-        SELECT column_id as id, label, sortable
-        FROM dataset_column
-    """)
-
     # Execute with parameters
     try:
         logger.info(f"selected_filters: {payload.selected_filters}")
@@ -133,16 +128,11 @@ def filter_amr_records(payload: Payload):
 
         result = [serialize_amr_record(row) for _, row in res_df.iterrows()]
 
-        meta_columns = db_conn.execute(meta_columns_query).fetchdf()
-        meta_columns_dict = meta_columns.to_dict('records')
-        logger.debug(meta_columns)
-
         return {
             "meta": {
                 "total_hits": total_hits,
                 "page": payload.page,
                 "per_page": payload.per_page,
-                "columns": meta_columns_dict
             },
             "data": result
         }

@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from typing import Dict, List, Any, Iterable, Tuple, DefaultDict
+from typing import Any, Iterable
 from collections import defaultdict, OrderedDict
 
 from backend.core.database import db_conn as default_db_conn
 
 
-def _query_to_records(db, sql: str) -> List[Dict[str, Any]]:
+def _query_to_records(db, sql: str) -> list[dict[str, Any]]:
     """Run a SQL query and return a list of dict records.
 
     Args:
@@ -19,7 +19,7 @@ def _query_to_records(db, sql: str) -> List[Dict[str, Any]]:
     return db.query(sql).fetchdf().to_dict(orient="records")
 
 
-def _build_filter_categories(rows: Iterable[Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
+def _build_filter_categories(rows: Iterable[dict[str, Any]]) -> dict[str, dict[str, Any]]:
     """Transform raw `filter` table rows into the `filterCategories` structure.
 
     Args:
@@ -28,7 +28,7 @@ def _build_filter_categories(rows: Iterable[Dict[str, Any]]) -> Dict[str, Dict[s
     Returns:
         Dict[str, Dict[str, Any]]: Mapping of category-id -> category payload with its filters.
     """
-    categories: Dict[str, Dict[str, Any]] = OrderedDict()
+    categories: dict[str, dict[str, Any]] = OrderedDict()
 
     for r in rows:
         cat_id = r["column_id"]
@@ -50,11 +50,11 @@ def _build_filter_categories(rows: Iterable[Dict[str, Any]]) -> Dict[str, Dict[s
 
 
 def _ensure_group(
-    view: Dict[str, Any],
+    view: dict[str, Any],
     group_name: str,
     is_primary: bool,
-    group_index: Dict[Tuple[str, bool], int],
-) -> Dict[str, Any]:
+    group_index: dict[tuple[str, bool], int],
+) -> dict[str, Any]:
     """Ensure a category group exists on a view and return it.
 
     Args:
@@ -78,7 +78,50 @@ def _ensure_group(
     return group
 
 
-def _build_filter_views(rows: Iterable[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def _build_columns_per_view(db):
+    """Builds a dictionary mapping view names to their column configurations.
+
+    Queries the database to retrieve column configurations for all views, including
+    column metadata such as labels, sortability, ranking, and default visibility.
+    The results are grouped by view name for easy access.
+
+    Args:
+        db: Database connection object used to execute the query.
+
+    Returns:
+        A dictionary where keys are view names and values are lists of column
+        configuration dictionaries. Each column dictionary contains:
+            - view_name: The view name teh column belongs to
+            - id: The column identifier
+            - label: The display label for the column
+            - sortable: Boolean indicating if the column is sortable
+            - rank: The display order/ranking of the column
+            - enable_by_default: Boolean indicating if column is enabled by default (for visibility)
+
+    Example:
+        >>> result = _build_columns_per_view(db)
+        >>> result['AMR antibiotics']
+        [{'view_name': 'AMR antibiotics', 'id': 'phenotype-Antibiotic_name, 'label': 'Antibiotic Name', 'sortable': True, 'rank': 1, 'enable_by_default': True},
+         {'view_name': 'AMR antibiotics', 'id': 'phenotype-Antibiotic_abbreviation', 'label': ''Antibiotic Abbreviation', 'sortable': True, 'rank': 2, 'enable_by_default': True}]
+    """
+    columns_per_view_query = """
+     SELECT v.name as view_name, vc.column_id AS id, label, sortable, rank, enable_by_default
+     FROM view_column as vc
+              JOIN dataset_column dc on vc.column_id = dc.column_id
+              JOIN view v on vc.view_id = v.view_id
+     ORDER BY rank
+     """
+
+    columns_per_view = _query_to_records(db, columns_per_view_query)
+    columns_grouped_per_view = defaultdict(list)
+
+    for col in columns_per_view:
+        columns_grouped_per_view[col["view_name"]].append(col)
+
+    return columns_grouped_per_view
+
+
+def _build_filter_views(db, rows: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
     """Transform joined rows into the `filterViews` structure.
 
     Args:
@@ -88,9 +131,9 @@ def _build_filter_views(rows: Iterable[Dict[str, Any]]) -> List[Dict[str, Any]]:
         List[Dict[str, Any]]: List of view dictionaries ordered by view_id asc.
     """
     # Build views keyed by view_id to avoid assuming contiguous IDs.
-    views: Dict[Any, Dict[str, Any]] = OrderedDict()
+    views: dict[Any, dict[str, Any]] = OrderedDict()
     # Per-view index of groups to avoid O(n^2) lookups when appending.
-    per_view_group_index: Dict[Any, Dict[Tuple[str, bool], int]] = defaultdict(dict)
+    per_view_group_index: dict[Any, dict[tuple[str, bool], int]] = defaultdict(dict)
 
     for r in rows:
         vid = r["view_id"]
@@ -113,12 +156,26 @@ def _build_filter_views(rows: Iterable[Dict[str, Any]]) -> List[Dict[str, Any]]:
         if r["column_id"] not in group["categories"]:
             group["categories"].append(r["column_id"])
 
+    # Add columns per view
+    columns_per_view = _build_columns_per_view(db)
+    for view_id, view in views.items():
+        view_name = view["name"]
+        if view_name in columns_per_view:
+            # Get columns and remove 'view_name' from each column dict
+            columns = columns_per_view[view_name]
+            for column in columns:
+                column.pop("view_name", None)  # Remove view_name if it exists
+            view["columns"] = columns
+        else:
+            # Handle case where view name doesn't exist
+            view["columns"] = []
+
     # Return views ordered by view_id (insertion order already reflects scan order,
     # but sorting is safer if the SQL loses ORDER BY in the future).
     return [views[k] for k in sorted(views.keys())]
 
 
-def build_filters_config(db=default_db_conn) -> Dict[str, Any]:
+def build_filters_config(db=default_db_conn) -> dict[str, Any]:
     """Build the complete filters configuration document.
 
     This wraps two steps:
@@ -154,7 +211,7 @@ def build_filters_config(db=default_db_conn) -> Dict[str, Any]:
         ORDER BY view_id, category_group_id
     """
     view_rows = _query_to_records(db, filters_view_query)
-    filter_views = _build_filter_views(view_rows)
+    filter_views = _build_filter_views(db, view_rows)
 
     return {
         "filterCategories": filter_categories,
