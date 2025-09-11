@@ -11,7 +11,7 @@ router = APIRouter()
 @router.get("/filters-config", response_model=FiltersConfig)
 def get_filters_config() -> FiltersConfig:
     filters: Dict = fetch_filters()
-    return FiltersConfig.model_validate(filters)
+    return FiltersConfig(**filters)
 
 @router.post("/amr-records")
 def get_amr_records(payload: Payload):
