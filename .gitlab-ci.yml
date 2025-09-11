@@ -1,6 +1,7 @@
 include:
   - template: Jobs/Container-Scanning.gitlab-ci.yml
   - template: Security/SAST.gitlab-ci.yml
+  - template: Security/DAST.gitlab-ci.yml
 
 stages:
   - sast
@@ -9,11 +10,13 @@ stages:
   - deploy_rc
   - qa
   - deploy
+  - dast
 
 variables:
   DOCKER_TLS_CERTDIR: ""
   DOCKER_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}
   GITLAB_ADVANCED_SAST_ENABLED: true
+  DAST_WEBSITE: amr.review.ensembl.org
 
 .be-rules: &be-code-change-rules
   rules:
@@ -81,10 +84,25 @@ Deploy:BE:RC:
     name: development
   variables:
     AGENT: ${REVIEW_AGENT}
-    NS: ${CI_COMMIT_REF_SLUG}
+    NS: amr
   script:
     - echo "The Script Deploy Live"
-    - kubectl get ns
+    - kubectl get deploy,pvc,service,ing
+
+Publish:Assets:RC:
+  extends: .deploy-template
+  stage: deploy_rc
+  <<: *fe-code-change-rules
+  environment:
+    name: development
+  variables:
+    AGENT: ${REVIEW_AGENT}
+    NS: amr
+  script:
+    - pod=$(kubectl -n $NS get pod -l "ensembl.platform.app.name=amr-data-copy" --no-headers -o custom-columns=":metadata.name")
+    - echo $pod
+    - ls -l frontend/dist/
+    - kubectl -n amr cp frontend/dist/* $pod:/usr/assets/
 
 QA:BE:
   stage: qa
