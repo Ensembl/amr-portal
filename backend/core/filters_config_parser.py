@@ -105,11 +105,11 @@ def _build_columns_per_view(db):
          {'view_name': 'AMR antibiotics', 'id': 'phenotype-Antibiotic_abbreviation', 'label': ''Antibiotic Abbreviation', 'sortable': True, 'rank': 2, 'enable_by_default': True}]
     """
     columns_per_view_query = """
-     SELECT v.name as view_name, vc.column_id AS id, label, sortable, rank, enable_by_default
-     FROM view_column as vc
-              JOIN dataset_column dc on vc.column_id = dc.column_id
-              JOIN view v on vc.view_id = v.view_id
-     ORDER BY rank
+        SELECT v.name as view_name, cd.fullname AS id, cd.label, cd.sortable, vc.rank, vc.enable_by_default
+        FROM view as v
+            JOIN view_column vc on v.view_id = vc.view_id
+            JOIN column_definition cd on vc.column_id = cd.column_id
+        ORDER BY vc.rank
      """
 
     columns_per_view = _query_to_records(db, columns_per_view_query)
@@ -172,7 +172,8 @@ def _build_filter_views(db, rows: Iterable[dict[str, Any]]) -> list[dict[str, An
 
     # Return views ordered by view_id (insertion order already reflects scan order,
     # but sorting is safer if the SQL loses ORDER BY in the future).
-    return [views[k] for k in sorted(views.keys())]
+    sorted_response = [views[k] for k in sorted(views.keys())]
+    return sorted_response
 
 
 def build_filters_config(db=default_db_conn) -> dict[str, Any]:
@@ -192,24 +193,50 @@ def build_filters_config(db=default_db_conn) -> dict[str, Any]:
     """
     # Categories
     filters_category_query = """
-        SELECT  f.label, f.value, c.dataset, c.column_id
+        SELECT f.label, f.value, d.name as dataset, cd.fullname as column_id
         FROM filter f
-        JOIN category AS c ON c.column_id = f.column_id
+        JOIN column_definition cd ON f.column_id = cd.column_id
+        JOIN dataset_column dc ON cd.column_id = dc.column_id
+        JOIN dataset d ON dc.dataset_id = d.dataset_id
     """
     category_rows = _query_to_records(db, filters_category_query)
     filter_categories = _build_filter_categories(category_rows)
 
     # Views
+    # TODO: broken query: view_categories duck db view needs to have fullname
+    # from column_definition instead of column_id
+    # filters_view_query = """
+    #     SELECT view_id,
+    #         category_group_id,
+    #         view_name,
+    #         category_name,
+    #         column_id,
+    #         category_group_is_primary
+    #     FROM view_categories
+    #     ORDER BY view_id, category_group_id
+    # """
+
+    # For now I'm using this temporary query
     filters_view_query = """
-        SELECT view_id,
-            category_group_id,
-            view_name,
-            category_name,
-            column_id,
-            category_group_is_primary
-        FROM view_categories
-        ORDER BY view_id, category_group_id
-    """
+         SELECT
+          v.view_id,
+          v.name AS view_name,
+          cg.category_group_id,
+          cg.name AS category_group_name,
+          cg.is_primary as category_group_is_primary,
+          c.title as category_name,
+          cd.fullname as column_id,
+          cd.name as column_name
+        FROM category_group as cg
+        JOIN category_group_category as cgc
+        ON (cgc.category_group_id = cg.category_group_id)
+        JOIN category AS c ON (cgc.category_id = c.category_id)
+        JOIN view_column AS vc ON (cg.view_id = vc.view_id AND c.column_id = vc.column_id)
+        JOIN view AS v on (vc.view_id = v.view_id)
+        JOIN column_definition AS cd on (c.column_id = cd.column_id)
+        ORDER BY v.view_id, cg.category_group_id;
+     """ # TODO: Eventually this will become a duck db view query..
+
     view_rows = _query_to_records(db, filters_view_query)
     filter_views = _build_filter_views(db, view_rows)
 
