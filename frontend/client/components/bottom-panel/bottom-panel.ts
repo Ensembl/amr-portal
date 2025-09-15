@@ -84,7 +84,11 @@ export class BottomPanel extends SignalWatcher(LitElement) {
   initialise() {
     this.unwatchFiltersStore = effect(() => {
       const filters = filtersStore.selectedFiltersForViewMode.get();
-      biosampleStore.setFilters(filters);
+      const view = filtersStore.viewMode.get();
+      biosampleStore.setFilters({
+        filters,
+        view: view as string
+      });
     });
 
     const biosamplesResource = biosampleStore.createBiosampleResource({
@@ -227,9 +231,21 @@ export class BottomPanel extends SignalWatcher(LitElement) {
    * 
    */
   renderTableColumnNames = (fields: AMRRecord) => {
+    const columnsMap = filtersStore.amrTableColumnsMap.get();
+
+    if (!columnsMap) {
+      // this should not happen
+      return null;
+    }
+
+    console.log('columnsMap', columnsMap);
+
     return repeat(fields, (field) => field.column_id, (field) => {
+      console.log('field.column_id', field.column_id);
+      const column = columnsMap[field.column_id];
+
       return html`
-        <th>${ field.column_id }</th>
+        <th>${ column.label }</th>
       `;
     });
   };

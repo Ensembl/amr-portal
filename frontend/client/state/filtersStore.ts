@@ -1,6 +1,6 @@
 import { Signal } from 'signal-polyfill';
 
-import type { FiltersConfig, FiltersView } from '../../types/filters/filtersConfig';
+import type { FiltersConfig, FiltersView, AMRTableColumn } from '../../types/filters/filtersConfig';
 
 export type SelectedFilter = {
   category: string;
@@ -30,6 +30,21 @@ const setViewMode = (mode: string) => {
 
 const filtersConfig = new Signal.State<FiltersConfig | null>(null);
 const setFiltersConfig = (config: FiltersConfig) => filtersConfig.set(config);
+
+const amrTableColumnsMap = new Signal.Computed(() => {
+  const viewConfig = currentViewConfig.get();
+
+  if (!viewConfig) {
+    return null;
+  }
+
+  const columns = viewConfig.columns;
+  const columnsMap: Record<string, AMRTableColumn> = {};
+  for (const column of columns) {
+    columnsMap[column.id] = column;
+  }
+  return columnsMap;
+});
 
 const selectedFilters = new Signal.State<SelectedFiltersForViewModes>({});
 const updateSelectedFilters = (payload: FiltersUpdatePayload) => {
@@ -187,6 +202,7 @@ const store = {
   activeFilterGroups,
   activeFilterGroup,
   setActiveFilterGroup,
+  amrTableColumnsMap
 };
 
 
