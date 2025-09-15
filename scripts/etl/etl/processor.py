@@ -14,16 +14,17 @@ CREATE TEMP TABLE unique_datasets AS (
 );
 
 CREATE SEQUENCE sq_column_id START 1;
-CREATE TABLE column_definition AS (
+CREATE TABLE column_definition AS
     SELECT nextval('sq_column_id') as column_id,
            concat(dataset,'-',id) as fullname,
-           id as column_name,
+           id as name,
            label,
            type,
            sortable,
            url
-    FROM column_dump
-);
+    FROM column_dump;
+
+ALTER TABLE column_definition ADD PRIMARY KEY (column_id);
 
 CREATE SEQUENCE sq_dataset_id START 1;
 CREATE TABLE dataset AS (
@@ -31,19 +32,30 @@ CREATE TABLE dataset AS (
     FROM unique_datasets
 );
 
+ALTER TABLE dataset ADD PRIMARY KEY (dataset_id);
+
 CREATE TABLE dataset_column AS (
     SELECT d.dataset_id, cd.column_id
     FROM dataset as d
     JOIN column_definition as cd
     ON cd.fullname.starts_with(d.name)
 );
+
 """
 
 SQL_DATASET_COLUMN_MAP = """
 SELECT map_from_entries(LIST(cols)) as col_map
 FROM (
-    SELECT ROW(fullname, {'id':column_id, 'name':column_name}) as cols
+    SELECT ROW(fullname, {'id':column_id, 'name':name}) as cols
     FROM column_definition
+);
+"""
+
+SQL_CATEGORY_MAP = """
+SELECT map_from_entries(LIST(cats)) as cat_map
+FROM (
+    SELECT ROW(name, {'id':category_id}) as cats
+    FROM category
 );
 """
 
@@ -54,16 +66,28 @@ CREATE TEMP TABLE filter_dump as (
            title, unnest(filters, recursive:=true)
     FROM read_json([{}]));
 
+CREATE TEMP TABLE category_dump as (
+    SELECT
+    distinct id, title, dataset
+    FROM filter_dump
+);
+
+CREATE SEQUENCE sq_category_id START 1;
 CREATE TABLE category AS (
     SELECT
-        distinct cd.column_id,
-        column_name,
-        dataset,
-        title
-    FROM filter_dump as fd
+        nextval('sq_category_id') as category_id,
+        dc.dataset_id,
+        cd.column_id,
+        cat_d.title,
+        cat_d.id as name
+    FROM category_dump as cat_d
     JOIN column_definition as cd
-    ON (cd.fullname = CONCAT(fd.dataset,'-',fd.id))
+    ON (cd.fullname = CONCAT(cat_d.dataset,'-',cat_d.id))
+    JOIN dataset_column as dc
+    ON (cd.column_id = dc.column_id)
 );
+
+ALTER TABLE category ADD PRIMARY KEY (category_id);
 
 CREATE TABLE filter AS (
     SELECT cd.column_id, value, fd.label
@@ -90,22 +114,22 @@ CREATE TABLE view (
 );
 
 CREATE TABLE view_column (
-  view_id INTEGER,
-  column_id BIGINT,
+  view_id INTEGER REFERENCES view(view_id),
+  column_id BIGINT REFERENCES column_definition(column_id),
   rank INTEGER,
   enable_by_default BOOL
 );
 
 CREATE TABLE category_group (
     category_group_id INTEGER PRIMARY KEY,
-    view_id INTEGER,
     name VARCHAR,
-    is_primary BOOL
+    is_primary BOOL,
+    view_id INTEGER REFERENCES view(view_id)
 );
 
 CREATE TABLE category_group_category (
-    category_group_id INTEGER,
-    column_id BIGINT
+    category_group_id INTEGER REFERENCES category_group(category_group_id),
+    category_id BIGINT REFERENCES category(category_id)
 );
 """
 
@@ -114,12 +138,12 @@ INSERT INTO view (view_id, name) VALUES (?,?)
 """
 
 SQL_ADD_CATEGORY_GROUPS = """
-INSERT INTO category_group (category_group_id, view_id, name, is_primary)
+INSERT INTO category_group (category_group_id, name, is_primary, view_id)
 VALUES (?,?,?,?)
 """
 
 SQL_LINK_CATEGORY_GROUP_AND_CATEGORY = """
-INSERT INTO category_group_category (category_group_id, column_id)
+INSERT INTO category_group_category (category_group_id, category_id)
 VALUES (?,?)
 """
 
@@ -138,41 +162,39 @@ CREATE VIEW view_categories as (
 
 SQL_CREATE_VIEW_CATEGORIES = """
 CREATE VIEW view_categories as (
-        SELECT
-          v.view_id,
-          cg.category_group_id,
-          v.name AS view_name,
-          cg.name AS category_group_name,
-          cg.is_primary as category_group_is_primary,
-          c.title as category_name,
-          c.column_id,
-          c.column_name
-        FROM view AS v
-        JOIN category_group AS cg ON v.view_id = cg.view_id
-        JOIN category_group_category AS cgc
-        ON cgc.category_group_id = cg.category_group_id
-        JOIN category AS c ON c.column_id = cgc.column_id
-        ORDER BY v.view_id, c.column_id
+    SELECT
+    v.view_id,
+    v.name AS view_name,
+    cg.category_group_id,
+    cg.name AS category_group_name,
+    cg.is_primary as category_group_is_primary,
+    c.title as category_name,
+    c.column_id,
+    cd.name as column_name
+    FROM category_group as cg
+    JOIN category_group_category as cgc
+    ON (cgc.category_group_id = cg.category_group_id)
+    JOIN category AS c ON (cgc.category_id = c.category_id)
+    JOIN view_column AS vc
+    ON (cg.view_id = vc.view_id AND c.column_id = vc.column_id)
+    JOIN view AS v on (vc.view_id = v.view_id)
+    JOIN column_definition AS cd on (c.column_id = cd.column_id)
+    ORDER BY v.view_id, cg.category_group_id
 )
 """
 
 SQL_CREATE_VIEW_CATEGORIES_JSON = """
 CREATE VIEW view_categories_json as (
     SELECT
-    {view_id: v.view_id,
-    category_group_id: cg.category_group_id,
-    view_name: v.name,
-    category_group_name: cg.name,
-    category_group_is_primary: cg.is_primary,
-    category_name: c.title,
-    column_id: c.column_id,
-    column_name: c.column_name}::JSON as json
-    FROM view AS v
-    JOIN category_group AS cg ON v.view_id = cg.view_id
-    JOIN category_group_category AS cgc
-    ON cgc.category_group_id = cg.category_group_id
-    JOIN category AS c ON c.column_id = cgc.column_id
-    ORDER BY v.view_id, c.column_id
+    {view_id: view_id,
+    category_group_id: category_group_id,
+    view_name: view_name,
+    category_group_name: category_group_name,
+    category_group_is_primary: category_group_is_primary,
+    category_name: category_name,
+    column_id: column_id,
+    column_name: column_name}::JSON as json
+    FROM view_categories
 );
 """
 
@@ -218,7 +240,6 @@ def amr_release_to_duckdb(
         SQL_CREATE_DATASET_COLUMNS.format(",".join(dataset_meta))
         )
     col_map = conn.query(SQL_DATASET_COLUMN_MAP).fetchone()[0]
-    print(col_map)
 
     # load filters
     filters = [f"'{f}'" for f in find_files(
@@ -231,6 +252,9 @@ def amr_release_to_duckdb(
         SQL_CREATE_FILTERS.format(
             ",".join(filters))
         )
+
+    # get category map
+    cat_map = conn.query(SQL_CATEGORY_MAP).fetchone()[0]
 
     # create view tables
     schema_sql = [
@@ -281,14 +305,14 @@ def amr_release_to_duckdb(
         for (is_prime, cat) in groups:
             conn.execute(
                 SQL_ADD_CATEGORY_GROUPS,
-                [category_index, view_index, cat['name'], is_prime]
+                [category_index, cat['name'], is_prime, view_index]
             )
 
             for c in cat["categories"]:
-                column_id = col_map[f"{v['dataset']}-{c}"]['id']
+                category_id = cat_map[c]['id']
                 conn.execute(
                     SQL_LINK_CATEGORY_GROUP_AND_CATEGORY,
-                    [category_index, column_id]  # COLUMN ID
+                    [category_index, category_id]
                 )
             category_index += 1
         # setup columns

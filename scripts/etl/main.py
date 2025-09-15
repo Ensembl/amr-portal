@@ -42,6 +42,9 @@ def etl_step_1(config: dict, data: dict, release_path: str, cli) -> (bool, str):
     if not results[0]:
         return results
 
+    # validate that all filters are used
+    # validate that datasets exist
+
     return (True, "Success")
 
 
