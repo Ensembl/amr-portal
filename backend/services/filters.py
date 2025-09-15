@@ -36,12 +36,10 @@ def get_table_columns(table_name: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Failed to get columns for table: {table_name}")
 
-def get_table_from_filters(grouped_filters, table_columns_dict):
-    for table, cols in table_columns_dict.items():
-        # check if selected filters are all  in table cols
-        if set(grouped_filters).issubset(cols):
-            return table
-    return None
+def check_selected_filters(grouped_filters, valid_columns):
+    if set(grouped_filters).issubset(valid_columns):
+        return True
+    return False
 
 
 def fetch_filters():
@@ -49,11 +47,22 @@ def fetch_filters():
 
 
 def filter_amr_records(payload: Payload):
-    # Build column map for allowed tables
-    table_columns_dict = {}
-    for table in ALLOWED_TABLES:
-        valid_columns = get_table_columns(table)
-        table_columns_dict[table] = valid_columns
+
+    selected_dataset = payload.view
+    # Check if the dataset is specified
+    if not selected_dataset:
+        raise HTTPException(
+            status_code=400,
+            detail="Please specify a view to filter by."
+        )
+    # And it's in the ALLOWED_TABLES to query
+    elif selected_dataset not in ALLOWED_TABLES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"'{selected_dataset}' is not a valid view. Please choose from: {', '.join(ALLOWED_TABLES)}"
+        )
+
+    valid_columns = get_table_columns(selected_dataset)
 
     # Gather the selected filters
     selected_filters = []
@@ -63,33 +72,29 @@ def filter_amr_records(payload: Payload):
     # group them together and trim the first dataset name part
     grouped_filters = defaultdict(list)
     for f in payload.selected_filters:
+        # TODO: I'm inclined to remove this trimming since we added view to the payload
+        # in other words, instead of filtering by "genotype-genome" we filter by "genome" and the view will be "genotype"
         trimmed_filter_category = f.category.split("-")[-1]
         grouped_filters[trimmed_filter_category].append(f.value)
 
-    # After getting the selected filters and grouping them together
-    # we need to pick the dataset/table from which we fetch the data
-    # based on the selected filters, for now, get_table_from_filters()
-    # returns one dataset/table name only, this means that all the
-    # selected filters should belong to the same dataset/table (genotype
-    # or phenotype) this can be changed later
-    selected_dataset = get_table_from_filters(grouped_filters, table_columns_dict)
+    # After getting the selected filters and grouping them together,
+    # we need to check if they are valid and do exist in the selected
+    # dataset, that's the job of check_selected_filters()
+    are_filters_valid = check_selected_filters(grouped_filters, valid_columns)
+    logger.info(f"are_filters_valid: {are_filters_valid}")
     logger.info(f"selected_dataset: {selected_dataset}")
     logger.info(f"grouped_filters: {grouped_filters}")
 
-    # Check if the selected dataset is in the whitelist
-    if selected_dataset not in ALLOWED_TABLES:
-        raise ValueError(f"Invalid dataset name: {selected_dataset}")
-
-    if not selected_dataset:
+    if not are_filters_valid:
         raise HTTPException(
             status_code=400,
-            detail="Something is wrong with the filters, double check the category values"
+            detail="Something is wrong with the filters, double check the category values."
         )
 
     # Validate order column
     if payload.order_by:
         ob_col = payload.order_by.category
-        if ob_col not in table_columns_dict[selected_dataset]:
+        if ob_col not in valid_columns:
             raise HTTPException(status_code=400, detail=f"Invalid order_by column: {ob_col!r}")
 
     where_clauses = []

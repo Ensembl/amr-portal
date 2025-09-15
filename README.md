@@ -61,10 +61,11 @@ curl -X 'POST' \
   -H 'Content-Type: application/json' \
   -d '{
   "selected_filters": [
-    { "category": "phenotype-genus", "value": "Streptococcus" },
-    { "category": "phenotype-Antibiotic_abbreviation", "value": "OXA" },
+    { "category": "genus", "value": "Streptococcus" },
+    { "category": "Antibiotic_abbreviation", "value": "OXA" },
     { "category": "phenotype-Antibiotic_abbreviation", "value": "AMK" }
   ],
+  "view": "phenotype",
   "order_by": {
     "category": "collection_date",
     "order": "DESC"
@@ -80,9 +81,10 @@ curl -X 'POST' \
   -H 'Content-Type: application/json' \
   -d '{
   "selected_filters": [
-    { "category": "genotype-genome", "value": "BU_CCUG35501" },
-    { "category": "genotype-genome", "value": "PV_WCA-389-WT-3C" }
+    { "category": "genome", "value": "BU_CCUG35501" },
+    { "category": "genome", "value": "PV_WCA-389-WT-3C" }
   ],
+  "view": "genotype",
   "order_by": {
     "category": "genome",
     "order": "DESC"
@@ -98,10 +100,11 @@ curl -X 'POST' \
   -H 'Content-Type: application/json' \
   -d '{
   "selected_filters": [
-    { "category": "phenotype-genus", "value": "Streptococcus" },
-    { "category": "phenotype-Antibiotic_abbreviation", "value": "OXA" },
-    { "category": "phenotype-Antibiotic_abbreviation", "value": "AMK" }
+    { "category": "genus", "value": "Streptococcus" },
+    { "category": "Antibiotic_abbreviation", "value": "OXA" },
+    { "category": "Antibiotic_abbreviation", "value": "AMK" }
   ],
+  "view": "phenotype",
   "order_by": {
     "category": "collection_date",
     "order": "DESC"
@@ -116,8 +119,9 @@ curl -X 'POST' \
   -H 'Content-Type: application/json' \
   -d '{
   "selected_filters": [
-    { "category": "phenotype-genus", "value": "Streptococcus" }
+    { "category": "genus", "value": "Streptococcus" }
   ],
+  "view": "phenotype",
   "order_by": {
     "category": "collection_date",
     "order": "DESC"
