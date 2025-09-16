@@ -1,78 +1,72 @@
 {
-	"filterCategories":{
-		"Antibiotic_abbreviation":{
+	"filterCategories":[
+		{
 			"dataset":"phenotype",
 			"id":"Antibiotic_abbreviation",
 			"label":"Antibiotic",
 			"filter_label":"concat(Antibiotic_name,' ',Antibiotic_abbreviation)"
 		},
-		"gen_species":{
+		{
 			"dataset":"phenotype",
 			"id":"gen_species",
 			"label":"Genome",
 			"filter_label":"gen_species"
 		},
-		"isolation_context":{
+		{
 			"dataset":"phenotype",
 			"id":"isolation_context",
 			"label":"Isolation Host",
 			"filter_label":"isolation_context"
 		},
-		"phenotype":{
+		{
 			"dataset":"phenotype",
 			"id":"phenotype",
 			"label":"Phenotype",
 			"filter_label":"phenotype"
 		},
-		"host_sex":{
+		{
 			"dataset":"phenotype",
 			"id":"host_sex",
 			"label":"Host Sex",
 			"filter_label":"host_sex"
 		},
-		"isolation_country":{
+		{
 			"dataset":"phenotype",
 			"id":"isolation_country",
 			"label":"Isolation Location",
 			"filter_label":"isolation_country"
 		},
-		"laboratory_typing_method":{
+		{
 			"dataset":"phenotype",
 			"id":"laboratory_typing_method",
 			"label":"Testing method",
 			"filter_label":"laboratory_typing_method"
 		},
-		"genome":{
+		{
 			"dataset":"genotype",
-			"id":"genome",
-			"label":"Genomes",
-			"filter_label":"genome"
+			"id":"Contig_id",
+			"label":"Contig",
+			"filter_label":"Contig_id"
 		},
-		"gene_symbol":{
+		{
 			"dataset":"genotype",
-			"id":"gene_symbol",
-			"label":"Genes",
-			"filter_label":"gene_symbol"
+			"id":"Element_symbol",
+			"label":"Element Symbol",
+			"filter_label":"Element_symbol"
 		},
-		"drug_class":{
+		{
 			"dataset":"genotype",
-			"id":"drug_class",
-			"label":"Antibiotic",
-			"filter_label":"drug_class"
+			"id":"Type",
+			"label":"Type",
+			"filter_label":"Type"
 		},
-		"strand":{
+		{
 			"dataset":"genotype",
-			"id":"strand",
-			"label":"Strand",
-			"filter_label":"strand"
-		},
-		"region":{
-			"dataset":"genotype",
-			"id":"region",
-			"label":"Region",
-			"filter_label":"region"
+			"id":"Method",
+			"label":"Method",
+			"filter_label":"Method"
 		}
-	},
+	],
 	"views":[
 		{
 			"name":"AMR antibiotics",
@@ -105,22 +99,22 @@
 		{
 			"name":"AMR genomes",
 			"dataset":"genotype",
-			"categoryGroups": [ { "name": "", "categories": ["genome"] } ],
+			"categoryGroups": [ { "name": "", "categories": ["Contig_id"] } ],
       		"otherCategoryGroups": [
-      			{ "name": "Antibiotic", "categories": ["drug_class"] },
-        		{ "name": "Gene", "categories": ["gene_symbol"] },
-        		{ "name": "Other", "categories": ["region","strand"] }
+      			{ "name": "Element", "categories": ["Element_symbol"] },
+        		{ "name": "Type", "categories": ["Type"] },
+        		{ "name": "Method", "categories": ["Method"] }
       		],
       		"columns":[
-      			{ "name": "genome", "enabled":true, "rank":1},
-      			{ "name": "gene_symbol", "enabled":true, "rank":2},
-      			{ "name": "drug_class", "enabled":true, "rank":3},
-      			{ "name": "drug_subclass", "enabled":true, "rank":4},
-      			{ "name": "region", "enabled":true, "rank":5},
-      			{ "name": "region_start", "enabled":true, "rank":6},
-      			{ "name": "region_end", "enabled":true, "rank":7},
-      			{ "name": "strand", "enabled":true, "rank":8},
-      			{ "name": "id", "enabled":true, "rank":9}
+      			{ "name": "Protein_id", "enabled":true, "rank":1},
+      			{ "name": "Contig_id", "enabled":true, "rank":2},
+      			{ "name": "Strand", "enabled":true, "rank":3},
+      			{ "name": "Element_symbol", "enabled":true, "rank":4},
+      			{ "name": "Element_name", "enabled":true, "rank":5},
+      			{ "name": "Scope", "enabled":true, "rank":6},
+      			{ "name": "Type", "enabled":true, "rank":7},
+      			{ "name": "Class", "enabled":true, "rank":8},
+      			{ "name": "Method", "enabled":true, "rank":9}
       		],
       		"other_columns":["genotype"]
 		},

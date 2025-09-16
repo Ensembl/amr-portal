@@ -7,8 +7,8 @@
   ],
   "properties": {
     "filterCategories": {
-      "type": "object",
-      "additionalProperties": {
+      "type": "array",
+      "items": {
         "type": "object",
         "required": [
           "id",

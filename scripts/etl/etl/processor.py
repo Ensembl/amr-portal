@@ -170,7 +170,9 @@ CREATE VIEW view_categories as (
     cg.is_primary as category_group_is_primary,
     c.title as category_name,
     c.column_id,
-    cd.name as column_name
+    cd.name as column_name,
+    cd.fullname as column_fullname,
+    d.name as dataset_name
     FROM category_group as cg
     JOIN category_group_category as cgc
     ON (cgc.category_group_id = cg.category_group_id)
@@ -179,6 +181,7 @@ CREATE VIEW view_categories as (
     ON (cg.view_id = vc.view_id AND c.column_id = vc.column_id)
     JOIN view AS v on (vc.view_id = v.view_id)
     JOIN column_definition AS cd on (c.column_id = cd.column_id)
+    JOIN dataset as d on (d.dataset_id = c.dataset_id)
     ORDER BY v.view_id, cg.category_group_id
 )
 """
@@ -193,7 +196,10 @@ CREATE VIEW view_categories_json as (
     category_group_is_primary: category_group_is_primary,
     category_name: category_name,
     column_id: column_id,
-    column_name: column_name}::JSON as json
+    column_name: column_name,
+    column_fullname: column_fullname,
+    dataset_name: dataset_name
+    }::JSON as json
     FROM view_categories
 );
 """
