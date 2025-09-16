@@ -41,6 +41,21 @@ def check_selected_filters(grouped_filters, valid_columns):
         return True
     return False
 
+def get_dataset_from_view(view_id: int):
+    dataset_from_view_query = f"""
+        SELECT DISTINCT (d.name)
+        FROM view as v
+        JOIN view_column vc on v.view_id = vc.view_id
+        JOIN column_definition cd on vc.column_id = cd.column_id
+        JOIN dataset_column dc on cd.column_id = dc.column_id
+        JOIN dataset d on dc.dataset_id = d.dataset_id
+        WHERE v.view_id = {view_id};
+    """
+    try:
+        dataset = db_conn.execute(dataset_from_view_query).fetchone()[0]
+        return dataset
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to get dataset from view ID: {view_id}")
 
 def fetch_filters():
     return build_filters_config()
@@ -48,18 +63,22 @@ def fetch_filters():
 
 def filter_amr_records(payload: Payload):
 
-    selected_dataset = payload.view
-    # Check if the dataset is specified
-    if not selected_dataset:
+    selected_view_id = payload.view_id
+    # Check if the view_id is specified
+    if not selected_view_id:
         raise HTTPException(
             status_code=400,
-            detail="Please specify a view to filter by."
+            detail="Please specify a view ID to filter by."
         )
+
+    # Now we use the selected view to infer which dataset to query data from
+    selected_dataset = get_dataset_from_view(selected_view_id)
+
     # And it's in the ALLOWED_TABLES to query
-    elif selected_dataset not in ALLOWED_TABLES:
+    if selected_dataset not in ALLOWED_TABLES:
         raise HTTPException(
             status_code=400,
-            detail=f"'{selected_dataset}' is not a valid view. Please choose from: {', '.join(ALLOWED_TABLES)}"
+            detail=f"'{selected_view_id}' is not a valid view ID"
         )
 
     valid_columns = get_table_columns(selected_dataset)
@@ -72,8 +91,6 @@ def filter_amr_records(payload: Payload):
     # group them together and trim the first dataset name part
     grouped_filters = defaultdict(list)
     for f in payload.selected_filters:
-        # TODO: I'm inclined to remove this trimming since we added view to the payload
-        # in other words, instead of filtering by "genotype-genome" we filter by "genome" and the view will be "genotype"
         trimmed_filter_category = f.category.split("-")[-1]
         grouped_filters[trimmed_filter_category].append(f.value)
 
@@ -82,6 +99,7 @@ def filter_amr_records(payload: Payload):
     # dataset, that's the job of check_selected_filters()
     are_filters_valid = check_selected_filters(grouped_filters, valid_columns)
     logger.info(f"are_filters_valid: {are_filters_valid}")
+    logger.info(f"selected_view_id: {selected_view_id}")
     logger.info(f"selected_dataset: {selected_dataset}")
     logger.info(f"grouped_filters: {grouped_filters}")
 
@@ -150,12 +168,12 @@ def flatten_record(record):
     """Convert list-of-dicts into {column_id: value}."""
     return {entry["column_id"]: entry.get("value") for entry in record}
 
-def fetch_filtered_records(payload: Payload, scope: str = "page", file_format: str = "csv"):
+def fetch_filtered_records(payload: Payload, scope: str = "all", file_format: str = "csv"):
     """
     Download filtered AMR records in CSV or JSON format.
     scope: "page" (current page) or "all" (all matches)
     """
-    scope = (scope or "page").lower()
+    scope = (scope or "all").lower()
     if scope not in {"page", "all"}:
         raise HTTPException(status_code=400, detail="scope must be 'page' or 'all'")
 

@@ -139,6 +139,7 @@ def _build_filter_views(db, rows: Iterable[dict[str, Any]]) -> list[dict[str, An
         vid = r["view_id"]
         if vid not in views:
             views[vid] = {
+                "id": r["view_id"],
                 "name": r["view_name"],
                 "categoryGroups": [],
                 "otherCategoryGroups": [],
