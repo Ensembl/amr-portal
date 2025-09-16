@@ -204,39 +204,18 @@ def build_filters_config(db=default_db_conn) -> dict[str, Any]:
     filter_categories = _build_filter_categories(category_rows)
 
     # Views
-    # TODO: broken query: view_categories duck db view needs to have fullname
-    # from column_definition instead of column_id
-    # filters_view_query = """
-    #     SELECT view_id,
-    #         category_group_id,
-    #         view_name,
-    #         category_name,
-    #         column_id,
-    #         category_group_is_primary
-    #     FROM view_categories
-    #     ORDER BY view_id, category_group_id
-    # """
-
-    # For now I'm using this temporary query
     filters_view_query = """
-         SELECT
-          v.view_id,
-          v.name AS view_name,
-          cg.category_group_id,
-          cg.name AS category_group_name,
-          cg.is_primary as category_group_is_primary,
-          c.title as category_name,
-          cd.fullname as column_id,
-          cd.name as column_name
-        FROM category_group as cg
-        JOIN category_group_category as cgc
-        ON (cgc.category_group_id = cg.category_group_id)
-        JOIN category AS c ON (cgc.category_id = c.category_id)
-        JOIN view_column AS vc ON (cg.view_id = vc.view_id AND c.column_id = vc.column_id)
-        JOIN view AS v on (vc.view_id = v.view_id)
-        JOIN column_definition AS cd on (c.column_id = cd.column_id)
-        ORDER BY v.view_id, cg.category_group_id;
-     """ # TODO: Eventually this will become a duck db view query..
+        SELECT view_id,
+            view_name,
+            category_group_id,
+            category_group_name,
+            category_group_is_primary,
+            category_name,
+            column_fullname as column_id,
+            column_name,
+        FROM view_categories
+        ORDER BY view_id, category_group_id;
+    """
 
     view_rows = _query_to_records(db, filters_view_query)
     filter_views = _build_filter_views(db, view_rows)

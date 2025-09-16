@@ -42,15 +42,7 @@ def check_selected_filters(grouped_filters, valid_columns):
     return False
 
 def get_dataset_from_view(view_id: int):
-    dataset_from_view_query = f"""
-        SELECT DISTINCT (d.name)
-        FROM view as v
-        JOIN view_column vc on v.view_id = vc.view_id
-        JOIN column_definition cd on vc.column_id = cd.column_id
-        JOIN dataset_column dc on cd.column_id = dc.column_id
-        JOIN dataset d on dc.dataset_id = d.dataset_id
-        WHERE v.view_id = {view_id};
-    """
+    dataset_from_view_query = f"SELECT DISTINCT (dataset_name) FROM view_categories WHERE view_id = {view_id};"
     try:
         dataset = db_conn.execute(dataset_from_view_query).fetchone()[0]
         return dataset
