@@ -140,6 +140,7 @@ def filter_amr_records(payload: Payload):
 
         res_df = db_conn.execute(base_query).fetchdf()
         res_df = res_df.replace({np.nan: None, np.inf: None, -np.inf: None})
+        res_df = res_df.add_prefix(f"{selected_dataset}-")
 
         result = [serialize_amr_record(row) for _, row in res_df.iterrows()]
 
