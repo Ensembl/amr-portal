@@ -1,6 +1,6 @@
-import { html, css, LitElement } from 'lit';
+import { html, css, render, LitElement, PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import {repeat} from 'lit/directives/repeat.js';
+import { repeat } from 'lit/directives/repeat.js';
 import { SignalWatcher } from '@lit-labs/signals';
 import { effect } from 'signal-utils/subtle/microtask-effect';
 
@@ -64,6 +64,10 @@ export class BottomPanel extends SignalWatcher(LitElement) {
       .per-page-label {
         font-weight: var(--font-weight-light);
       }
+
+      .error {
+        color: var(--color-red);
+      }
     `
   ];
 
@@ -77,9 +81,17 @@ export class BottomPanel extends SignalWatcher(LitElement) {
     this.initialise();
   }
 
-  disconnectedCallback(): void {
+  disconnectedCallback() {
     this.unwatchFiltersStore?.();
     super.disconnectedCallback();
+  }
+
+  protected update(changedProperties: PropertyValues) {
+    try {
+      super.update(changedProperties);
+    } catch (e) {
+      render(this.#renderError(), this.renderRoot, this.renderOptions);
+    }    
   }
 
   initialise() {
@@ -135,6 +147,18 @@ export class BottomPanel extends SignalWatcher(LitElement) {
     }
   }
 
+  #renderError({ isLoadingError }: { isLoadingError?: boolean } = {}) {
+    if (isLoadingError) {
+      return html`
+        <p class="error">There has been an error retrieving the data.</p>
+      `;
+    } else {
+      return html`
+        <p class="error">An error occurred during the rendering of the data.</p>
+      `;
+    }
+  }
+
   #doRender({
     isError,
     isLoading,
@@ -149,9 +173,7 @@ export class BottomPanel extends SignalWatcher(LitElement) {
     data: AMRRecordsResponse | null;
   }) {
     if (isError) {
-      return html`
-        <p>There has been an error retrieving the data</p>
-      `
+      return this.#renderError({ isLoadingError: true });
     }
 
     if (isLoading) {
@@ -278,7 +300,7 @@ export class BottomPanel extends SignalWatcher(LitElement) {
       return null;
     }
 
-    return repeat(fields, (field) => field.column_id, (field) => {
+    return repeat(fields, (field) => field.column_id, (field) => {      
       const column = columnsMap[field.column_id];
 
       return html`
