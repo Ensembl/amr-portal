@@ -49,6 +49,42 @@ def get_dataset_from_view(view_id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Failed to get dataset from view ID: {view_id}")
 
+def get_columns_to_display(view_id: int):
+    """Retrieves the display columns associated with a specific view ID from the database.
+
+    This function queries the database to get the column names that should be displayed
+    for a given view ID. It joins multiple tables (view, view_column, and column_definition)
+    to get the full column names and orders them by rank.
+
+    Args:
+        view_id (int): The ID of the view to get columns for.
+
+    Returns:
+        set: A set of column names (strings) to be displayed, with the dataset prefix removed.
+
+    Raises:
+        HTTPException: If there is an error retrieving the columns from the database,
+            with status code 400 and an error message.
+    TODO: Think of how to refactor this function and _build_columns_per_view(), they have some logic in common.
+    """
+
+    columns_to_display_query = f"""
+        SELECT cd.fullname
+        FROM view as v
+            JOIN view_column vc on v.view_id = vc.view_id
+            JOIN column_definition cd on vc.column_id = cd.column_id
+        WHERE v.view_id = 1
+        ORDER BY vc.rank;
+    """
+    try:
+        columns = db_conn.execute(columns_to_display_query).fetchall()
+        columns_to_display = set()
+        for column in columns:
+            columns_to_display.add(column[0].split("-")[-1])
+        return columns_to_display
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to get columns to display from view ID: {view_id}")
+
 def fetch_filters():
     return build_filters_config()
 
@@ -74,6 +110,11 @@ def filter_amr_records(payload: Payload):
         )
 
     valid_columns = get_table_columns(selected_dataset)
+    # not all valid columns are eventually displayed
+    # We need to keep only the ones we are interested
+    columns_to_display = get_columns_to_display(selected_view_id)
+    # This will be used below in the SQL query to select only columns we are interested in
+    columns_to_display_str = ", ".join(columns_to_display)
 
     # Gather the selected filters
     selected_filters = []
@@ -94,6 +135,7 @@ def filter_amr_records(payload: Payload):
     logger.info(f"selected_view_id: {selected_view_id}")
     logger.info(f"selected_dataset: {selected_dataset}")
     logger.info(f"grouped_filters: {grouped_filters}")
+    logger.info(f"columns_to_display: {columns_to_display}")
 
     if not are_filters_valid:
         raise HTTPException(
@@ -117,7 +159,7 @@ def filter_amr_records(payload: Payload):
     where_sql = " AND ".join(where_clauses)
 
     # Build queries
-    base_query = f"SELECT * FROM {selected_dataset}"
+    base_query = f"SELECT {columns_to_display_str} FROM {selected_dataset}"
     count_query = f"SELECT COUNT(*) AS count FROM {selected_dataset}"
 
     if where_sql:
