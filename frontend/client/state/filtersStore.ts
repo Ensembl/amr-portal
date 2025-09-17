@@ -1,6 +1,6 @@
 import { Signal } from 'signal-polyfill';
 
-import type { FiltersConfig, FiltersView } from '../../types/filters/filtersConfig';
+import type { FiltersConfig, FiltersView, AMRTableColumn } from '../../types/filters/filtersConfig';
 
 export type SelectedFilter = {
   category: string;
@@ -16,20 +16,35 @@ export type FiltersUpdatePayload = {
 
 
 
-const viewMode = new Signal.State<string | null>(null);
-const setViewMode = (mode: string) => {
-  viewMode.set(mode);
+const viewMode = new Signal.State<FiltersView['id'] | null>(null);
+const setViewMode = (viewId: FiltersView['id']) => {
+  viewMode.set(viewId);
   isViewingExtraFilters.set(false);
   const currentActiveFilterGroups = activeFilterGroups.get();
 
   activeFilterGroups.set({
     ...currentActiveFilterGroups,
-    [mode]: null
+    [viewId]: null
   });
 };
 
 const filtersConfig = new Signal.State<FiltersConfig | null>(null);
 const setFiltersConfig = (config: FiltersConfig) => filtersConfig.set(config);
+
+const amrTableColumnsMap = new Signal.Computed(() => {
+  const viewConfig = currentViewConfig.get();
+
+  if (!viewConfig) {
+    return null;
+  }
+
+  const columns = viewConfig.columns;
+  const columnsMap: Record<string, AMRTableColumn> = {};
+  for (const column of columns) {
+    columnsMap[column.id] = column;
+  }
+  return columnsMap;
+});
 
 const selectedFilters = new Signal.State<SelectedFiltersForViewModes>({});
 const updateSelectedFilters = (payload: FiltersUpdatePayload) => {
@@ -84,7 +99,7 @@ const filterGroupsForViewMode = new Signal.Computed(() => {
   const currentViewMode = viewMode.get();
   const filtersConfigValue = filtersConfig.get() as FiltersConfig;
   const filtersView = filtersConfigValue
-    .filterViews.find(view => view.name === currentViewMode) as FiltersView;
+    .filterViews.find(view => view.id === currentViewMode) as FiltersView;
 
   return filtersView.otherCategoryGroups;
 });
@@ -92,7 +107,7 @@ const filterGroupsForViewMode = new Signal.Computed(() => {
 
 const activeFilterGroups = new Signal.State<Record<string, string | null>>({});
 const activeFilterGroup = new Signal.Computed<string | null>(() => {
-  const currentViewMode: string | null = viewMode.get();
+  const currentViewMode = viewMode.get();
   const currentActiveFilterGroups: Record<string, string | null> = activeFilterGroups.get();
   if (!currentViewMode) {
     return null;
@@ -113,7 +128,7 @@ const currentViewConfig = new Signal.Computed(() => {
   const currentViewMode = viewMode.get();
   const filtersConfigValue = filtersConfig.get() as FiltersConfig;
 
-  return filtersConfigValue.filterViews.find(view => view.name === currentViewMode) ?? null;
+  return filtersConfigValue.filterViews.find(view => view.id === currentViewMode) ?? null;
 });
 
 
@@ -187,6 +202,7 @@ const store = {
   activeFilterGroups,
   activeFilterGroup,
   setActiveFilterGroup,
+  amrTableColumnsMap
 };
 
 

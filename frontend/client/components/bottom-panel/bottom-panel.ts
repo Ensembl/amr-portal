@@ -17,6 +17,7 @@ import tableStyles from '@ensembl/ensembl-elements-common/styles/constructable-s
 import type { BackendInterface } from '../../../data-provider/dataProvider';
 import type { AMRRecord, AMRRecordField, LinkData } from '../../../types/amrRecord';
 import type { AMRRecordsResponse } from '../../../data-provider/backendInterface';
+import type { FiltersView } from '../../../types/filters/filtersConfig';
 
 import { panelStyles } from '../panel/shared-panel-styles';
 
@@ -84,7 +85,11 @@ export class BottomPanel extends SignalWatcher(LitElement) {
   initialise() {
     this.unwatchFiltersStore = effect(() => {
       const filters = filtersStore.selectedFiltersForViewMode.get();
-      biosampleStore.setFilters(filters);
+      const view = filtersStore.viewMode.get();
+      biosampleStore.setFilters({
+        filters,
+        viewId: view as FiltersView['id']
+      });
     });
 
     const biosamplesResource = biosampleStore.createBiosampleResource({
@@ -110,31 +115,70 @@ export class BottomPanel extends SignalWatcher(LitElement) {
  
   render() {
     const biosamplesResource = this.biosamplesResource;
+    const isComplete = biosamplesResource?.status === 'complete'
     const hasData = Boolean(biosamplesResource?.value?.data.length);
+    const isError = Boolean(biosamplesResource?.error);
+    const isLoading = !biosamplesResource || biosamplesResource?.status === 'pending' && !hasData;
 
-    if (!biosamplesResource || biosamplesResource?.status === 'pending' && !hasData) {
+    try {
+      return this.#doRender({
+        isError,
+        isComplete,
+        hasData,
+        isLoading,
+        data: biosamplesResource?.value as AMRRecordsResponse ?? null
+      })
+    } catch {
+      return html`
+        <p>There has been an error rendering the table</p>
+      `
+    }
+  }
+
+  #doRender({
+    isError,
+    isLoading,
+    isComplete,
+    hasData,
+    data
+  }: {
+    isError: boolean;
+    isComplete: boolean;
+    hasData: boolean;
+    isLoading: boolean;
+    data: AMRRecordsResponse | null;
+  }) {
+    if (isError) {
+      return html`
+        <p>There has been an error retrieving the data</p>
+      `
+    }
+
+    if (isLoading) {
       return html`
         <p>Loading...</p>
       `
     }
 
-    if (biosamplesResource.status === 'complete' || hasData) {
-      if (!hasData) {
-        return html`
-          <p>No data</p>
-        `
-      }
+    if (isComplete && !hasData) {
+      return html`
+        <p>No data</p>
+      `
+    }
 
-      const { meta, data } = biosamplesResource.value as AMRRecordsResponse;
+    if (data) {
+      const { meta, data: records } = data;
 
       return html`
         ${this.renderTableControlsArea({ responseMeta: meta })}
         <div class="table-container">
-          ${this.renderTable(data)}
+          ${this.renderTable(records)}
         </div>
       `;      
     }
+
   }
+
 
   renderTableControlsArea({
     responseMeta
@@ -227,9 +271,18 @@ export class BottomPanel extends SignalWatcher(LitElement) {
    * 
    */
   renderTableColumnNames = (fields: AMRRecord) => {
+    const columnsMap = filtersStore.amrTableColumnsMap.get();
+
+    if (!columnsMap) {
+      // this should not happen
+      return null;
+    }
+
     return repeat(fields, (field) => field.column_id, (field) => {
+      const column = columnsMap[field.column_id];
+
       return html`
-        <th>${ field.column_id }</th>
+        <th>${ column.label }</th>
       `;
     });
   };

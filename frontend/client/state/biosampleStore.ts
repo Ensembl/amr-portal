@@ -3,7 +3,7 @@ import { AsyncComputed } from 'signal-utils/async-computed';
 
 import type { SelectedFilter } from '../index';
 import type { BackendInterface, AMRRecordsFetchParams } from '../../data-provider/backendInterface';
-
+import type { FiltersView } from '../../types/filters/filtersConfig';
 
 type SortingOrder = 'asc' | 'desc';
 
@@ -16,6 +16,7 @@ const DEFAULT_NUM_ITEMS_PER_PAGE = 100;
 
 type QueryState = {
   filters: SelectedFilter[];
+  viewId: FiltersView['id'];
   page: number;
   perPage: number;
   orderBy: OrderPayload | null;
@@ -23,6 +24,7 @@ type QueryState = {
 
 const initialQueryState: QueryState = {
   filters: [] as SelectedFilter[],
+  viewId: '',
   page: 1,
   perPage: DEFAULT_NUM_ITEMS_PER_PAGE,
   orderBy: null
@@ -30,9 +32,16 @@ const initialQueryState: QueryState = {
 
 const amrQueryState = new Signal.State(initialQueryState);
 
-const setFilters = (filters: SelectedFilter[]) => {
+const setFilters = ({
+  filters,
+  viewId
+}: {
+  filters: SelectedFilter[];
+  viewId: FiltersView['id'];
+}) => {
   amrQueryState.set({
     ...initialQueryState,
+    viewId,
     filters
   });
 };
@@ -103,6 +112,7 @@ const createBiosampleResource = ({
 
     const requestParams: AMRRecordsFetchParams = {
       filters: selectedFilters,
+      viewId: queryParams.viewId,
       page: queryParams.page,
       perPage: queryParams.perPage
     };

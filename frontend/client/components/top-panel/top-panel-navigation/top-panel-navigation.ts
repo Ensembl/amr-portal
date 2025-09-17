@@ -55,7 +55,7 @@ export class TopPanelNavigation extends SignalWatcher(LitElement) {
     }
   `;
 
-  #onViewModeChange = (mode: string) => {
+  #onViewModeChange = (mode: FiltersView['id']) => {
     filtersStore.setViewMode(mode);
   }
 
@@ -69,6 +69,11 @@ export class TopPanelNavigation extends SignalWatcher(LitElement) {
     const isViewingExtraFilters = filtersStore.isViewingExtraFilters.get();
     const selectedFilters = filtersStore.selectedFiltersForViewMode.get();
     const hasSelectedFilters = selectedFilters.length > 0;
+
+    if (!currentViewMode) {
+      // this should not happen
+      return null;
+    }
 
     const viewModeButtons = this.renderViewModeButtons({
       filterViews: filtersConfig!.filterViews,
@@ -107,17 +112,17 @@ export class TopPanelNavigation extends SignalWatcher(LitElement) {
     isViewingExtraFilters
   }: {
     filterViews: FiltersView[];
-    currentViewMode: string | null;
+    currentViewMode: FiltersView['id'] | null;
     isViewingExtraFilters: boolean;
   }) {
     const filtersCount = filtersStore.primaryFiltersCount.get();
 
     const viewModeButtons = filterViews.map(view => {
-      const isActiveView = currentViewMode === view.name;
+      const isActiveView = currentViewMode === view.id;
       return html`
         <div class="nav-item">
           <ens-text-button
-            @click=${() => this.#onViewModeChange(view.name)}
+            @click=${() => this.#onViewModeChange(view.id)}
             ?disabled=${isActiveView && !isViewingExtraFilters}
           >
             ${view.name}
