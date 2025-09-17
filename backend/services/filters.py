@@ -73,7 +73,7 @@ def get_columns_to_display(view_id: int):
         FROM view as v
             JOIN view_column vc on v.view_id = vc.view_id
             JOIN column_definition cd on vc.column_id = cd.column_id
-        WHERE v.view_id = 1
+        WHERE v.view_id = {view_id}
         ORDER BY vc.rank;
     """
     try:
@@ -84,6 +84,15 @@ def get_columns_to_display(view_id: int):
         return columns_to_display
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Failed to get columns to display from view ID: {view_id}")
+
+def quote_column_name(column_name):
+    """Quote column names that contain special characters or are reserved keywords."""
+    # List of characters that require quoting
+    special_chars = ['%', '-', ' ', '(', ')', '/', '@', '#', '$']
+    # Check if column name contains any special characters or is a reserved keyword
+    if any(char in column_name for char in special_chars):
+        return f'"{column_name}"'
+    return column_name
 
 def fetch_filters():
     return build_filters_config()
@@ -113,8 +122,11 @@ def filter_amr_records(payload: Payload):
     # not all valid columns are eventually displayed
     # We need to keep only the ones we are interested
     columns_to_display = get_columns_to_display(selected_view_id)
+
     # This will be used below in the SQL query to select only columns we are interested in
-    columns_to_display_str = ", ".join(columns_to_display)
+    # Properly quote column names for SQL query
+    quoted_columns = [quote_column_name(col) for col in columns_to_display]
+    columns_to_display_str = ", ".join(quoted_columns)
 
     # Gather the selected filters
     selected_filters = []
