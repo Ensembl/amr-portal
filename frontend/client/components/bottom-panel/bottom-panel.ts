@@ -17,6 +17,7 @@ import tableStyles from '@ensembl/ensembl-elements-common/styles/constructable-s
 import type { BackendInterface } from '../../../data-provider/dataProvider';
 import type { AMRRecord, AMRRecordField, LinkData } from '../../../types/amrRecord';
 import type { AMRRecordsResponse } from '../../../data-provider/backendInterface';
+import type { FiltersView } from '../../../types/filters/filtersConfig';
 
 import { panelStyles } from '../panel/shared-panel-styles';
 
@@ -87,7 +88,7 @@ export class BottomPanel extends SignalWatcher(LitElement) {
       const view = filtersStore.viewMode.get();
       biosampleStore.setFilters({
         filters,
-        view: view as string
+        viewId: view as FiltersView['id']
       });
     });
 

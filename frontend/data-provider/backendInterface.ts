@@ -1,10 +1,10 @@
 import type { AMRRecord } from '../types/amrRecord';
 import type { SelectedFilter } from '../client';
-import type { FiltersConfig } from '../types/filters/filtersConfig';
+import type { FiltersConfig, FiltersView } from '../types/filters/filtersConfig';
 
 export type AMRRecordsFetchParams = {
   filters: SelectedFilter[];
-  view: string;
+  viewId: FiltersView['id'];
   page: number;
   perPage: number;
   orderBy?: { category: string; order: 'ASC' | 'DESC' }

@@ -16,15 +16,15 @@ export type FiltersUpdatePayload = {
 
 
 
-const viewMode = new Signal.State<string | null>(null);
-const setViewMode = (mode: string) => {
-  viewMode.set(mode);
+const viewMode = new Signal.State<FiltersView['id'] | null>(null);
+const setViewMode = (viewId: FiltersView['id']) => {
+  viewMode.set(viewId);
   isViewingExtraFilters.set(false);
   const currentActiveFilterGroups = activeFilterGroups.get();
 
   activeFilterGroups.set({
     ...currentActiveFilterGroups,
-    [mode]: null
+    [viewId]: null
   });
 };
 
@@ -99,7 +99,7 @@ const filterGroupsForViewMode = new Signal.Computed(() => {
   const currentViewMode = viewMode.get();
   const filtersConfigValue = filtersConfig.get() as FiltersConfig;
   const filtersView = filtersConfigValue
-    .filterViews.find(view => view.name === currentViewMode) as FiltersView;
+    .filterViews.find(view => view.id === currentViewMode) as FiltersView;
 
   return filtersView.otherCategoryGroups;
 });
@@ -107,7 +107,7 @@ const filterGroupsForViewMode = new Signal.Computed(() => {
 
 const activeFilterGroups = new Signal.State<Record<string, string | null>>({});
 const activeFilterGroup = new Signal.Computed<string | null>(() => {
-  const currentViewMode: string | null = viewMode.get();
+  const currentViewMode = viewMode.get();
   const currentActiveFilterGroups: Record<string, string | null> = activeFilterGroups.get();
   if (!currentViewMode) {
     return null;
@@ -128,7 +128,7 @@ const currentViewConfig = new Signal.Computed(() => {
   const currentViewMode = viewMode.get();
   const filtersConfigValue = filtersConfig.get() as FiltersConfig;
 
-  return filtersConfigValue.filterViews.find(view => view.name === currentViewMode) ?? null;
+  return filtersConfigValue.filterViews.find(view => view.id === currentViewMode) ?? null;
 });
 
 
