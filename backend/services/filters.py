@@ -157,9 +157,9 @@ def filter_amr_records(payload: Payload):
 
     # Validate order column
     if payload.order_by:
-        ob_col = payload.order_by.category
-        if ob_col not in valid_columns:
-            raise HTTPException(status_code=400, detail=f"Invalid order_by column: {ob_col!r}")
+        order_by_col = payload.order_by.category.split("-")[-1]
+        if order_by_col not in valid_columns:
+            raise HTTPException(status_code=400, detail=f"Invalid order_by column: {order_by_col!r}")
 
     where_clauses = []
     for category, values in grouped_filters.items():
@@ -181,7 +181,6 @@ def filter_amr_records(payload: Payload):
     # Execute with parameters
     try:
         logger.info(f"selected_filters: {payload.selected_filters}")
-        logger.info(f"base_query: {base_query}")
         logger.info(f"count_query: {count_query}")
 
         total_hits = db_conn.execute(count_query).fetchone()[0]
@@ -189,8 +188,9 @@ def filter_amr_records(payload: Payload):
         # Add pagination (LIMIT/OFFSET values can be parameterized in some databases)
         offset = (payload.page - 1) * payload.per_page
         if payload.order_by:
-            base_query += f" ORDER BY {payload.order_by.category} {payload.order_by.order}"
+            base_query += f" ORDER BY {order_by_col} {payload.order_by.order}"
         base_query += f" LIMIT {payload.per_page} OFFSET {offset}"
+        logger.info(f"base_query: {base_query}")
 
         res_df = db_conn.execute(base_query).fetchdf()
         res_df = res_df.replace({np.nan: None, np.inf: None, -np.inf: None})
