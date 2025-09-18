@@ -3,6 +3,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { SignalWatcher } from '@lit-labs/signals';
 import { effect } from 'signal-utils/subtle/microtask-effect';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 import biosampleStore from '../../state/biosampleStore';
 import filtersStore from '../../state/filtersStore';
@@ -91,7 +92,7 @@ export class BottomPanel extends SignalWatcher(LitElement) {
       super.update(changedProperties);
     } catch (e) {
       render(this.#renderError(), this.renderRoot, this.renderOptions);
-    }    
+    }
   }
 
   initialise() {
@@ -300,8 +301,21 @@ export class BottomPanel extends SignalWatcher(LitElement) {
       return null;
     }
 
-    return repeat(fields, (field) => field.column_id, (field) => {      
+    return repeat(fields, (field) => field.column_id, (field) => {
       const column = columnsMap[field.column_id];
+
+      if (column.sortable) {
+        return html`
+          <th>
+            <ens-table-sortable-column-head
+              sort-order=${ifDefined(this.getSortOrderFor(field.column_id))}
+              @click=${() => this.onOrderChange(field.column_id)}
+            >
+              ${ column.label }
+            </ens-table-sortable-column-head>
+          </th>
+        `;
+      }
 
       return html`
         <th>${ column.label }</th>
