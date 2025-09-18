@@ -67,7 +67,7 @@ curl -X 'POST' \
   ],
   "view_id": 1,
   "order_by": {
-    "category": "collection_date",
+    "category": "phenotype-collection_date",
     "order": "DESC"
   }
 }'
@@ -86,7 +86,7 @@ curl -X 'POST' \
   ],
   "view_id": 2,
   "order_by": {
-    "category": "Contig_id",
+    "category": "genotype-Contig_id",
     "order": "DESC"
   }
 }'
@@ -106,7 +106,7 @@ curl -X 'POST' \
   ],
   "view_id": 1,
   "order_by": {
-    "category": "collection_date",
+    "category": "phenotype-collection_date",
     "order": "DESC"
   }
 }'
@@ -123,7 +123,7 @@ curl -X 'POST' \
   ],
   "view_id": 1,
   "order_by": {
-    "category": "collection_date",
+    "category": "phenotype-collection_date",
     "order": "DESC"
   }
 }'
