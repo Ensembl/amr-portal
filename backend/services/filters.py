@@ -36,24 +36,92 @@ def get_table_columns(table_name: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Failed to get columns for table: {table_name}")
 
-def get_table_from_filters(grouped_filters, table_columns_dict):
-    for table, cols in table_columns_dict.items():
-        # check if selected filters are all  in table cols
-        if set(grouped_filters).issubset(cols):
-            return table
-    return None
+def check_selected_filters(grouped_filters, valid_columns):
+    if set(grouped_filters).issubset(valid_columns):
+        return True
+    return False
 
+def get_dataset_from_view(view_id: int):
+    dataset_from_view_query = f"SELECT DISTINCT (dataset_name) FROM view_categories WHERE view_id = {view_id};"
+    try:
+        dataset = db_conn.execute(dataset_from_view_query).fetchone()[0]
+        return dataset
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to get dataset from view ID: {view_id}")
+
+def get_columns_to_display(view_id: int):
+    """Retrieves the display columns associated with a specific view ID from the database.
+
+    This function queries the database to get the column names that should be displayed
+    for a given view ID. It joins multiple tables (view, view_column, and column_definition)
+    to get the full column names and orders them by rank.
+
+    Args:
+        view_id (int): The ID of the view to get columns for.
+
+    Returns:
+        set: A set of column names (strings) to be displayed, with the dataset prefix removed.
+
+    Raises:
+        HTTPException: If there is an error retrieving the columns from the database,
+            with status code 400 and an error message.
+    TODO: Think of how to refactor this function and _build_columns_per_view(), they have some logic in common.
+    """
+
+    columns_to_display_query = f"""
+        SELECT cd.fullname
+        FROM view as v
+            JOIN view_column vc on v.view_id = vc.view_id
+            JOIN column_definition cd on vc.column_id = cd.column_id
+        WHERE v.view_id = {view_id}
+        ORDER BY vc.rank;
+    """
+    try:
+        columns = db_conn.execute(columns_to_display_query).fetchall()
+        columns_to_display = []
+        for column in columns:
+            columns_to_display.append(column[0].split("-")[-1])
+        return columns_to_display
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to get columns to display from view ID: {view_id}")
+
+def quote_column_name(column_name):
+    """Quote column names."""
+    return f'"{column_name}"'
 
 def fetch_filters():
     return build_filters_config()
 
 
 def filter_amr_records(payload: Payload):
-    # Build column map for allowed tables
-    table_columns_dict = {}
-    for table in ALLOWED_TABLES:
-        valid_columns = get_table_columns(table)
-        table_columns_dict[table] = valid_columns
+
+    selected_view_id = payload.view_id
+    # Check if the view_id is specified
+    if not selected_view_id:
+        raise HTTPException(
+            status_code=400,
+            detail="Please specify a view ID to filter by."
+        )
+
+    # Now we use the selected view to infer which dataset to query data from
+    selected_dataset = get_dataset_from_view(selected_view_id)
+
+    # And it's in the ALLOWED_TABLES to query
+    if selected_dataset not in ALLOWED_TABLES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"'{selected_view_id}' is not a valid view ID"
+        )
+
+    valid_columns = get_table_columns(selected_dataset)
+    # not all valid columns are eventually displayed
+    # We need to keep only the ones we are interested
+    columns_to_display = get_columns_to_display(selected_view_id)
+
+    # This will be used below in the SQL query to select only columns we are interested in
+    # Properly quote column names for SQL query
+    quoted_columns = [quote_column_name(col) for col in columns_to_display]
+    columns_to_display_str = ", ".join(quoted_columns)
 
     # Gather the selected filters
     selected_filters = []
@@ -66,31 +134,27 @@ def filter_amr_records(payload: Payload):
         trimmed_filter_category = f.category.split("-")[-1]
         grouped_filters[trimmed_filter_category].append(f.value)
 
-    # After getting the selected filters and grouping them together
-    # we need to pick the dataset/table from which we fetch the data
-    # based on the selected filters, for now, get_table_from_filters()
-    # returns one dataset/table name only, this means that all the
-    # selected filters should belong to the same dataset/table (genotype
-    # or phenotype) this can be changed later
-    selected_dataset = get_table_from_filters(grouped_filters, table_columns_dict)
+    # After getting the selected filters and grouping them together,
+    # we need to check if they are valid and do exist in the selected
+    # dataset, that's the job of check_selected_filters()
+    are_filters_valid = check_selected_filters(grouped_filters, valid_columns)
+    logger.info(f"are_filters_valid: {are_filters_valid}")
+    logger.info(f"selected_view_id: {selected_view_id}")
     logger.info(f"selected_dataset: {selected_dataset}")
     logger.info(f"grouped_filters: {grouped_filters}")
+    logger.info(f"columns_to_display: {columns_to_display}")
 
-    # Check if the selected dataset is in the whitelist
-    if selected_dataset not in ALLOWED_TABLES:
-        raise ValueError(f"Invalid dataset name: {selected_dataset}")
-
-    if not selected_dataset:
+    if not are_filters_valid:
         raise HTTPException(
             status_code=400,
-            detail="Something is wrong with the filters, double check the category values"
+            detail="Something is wrong with the filters, double check the category values."
         )
 
     # Validate order column
     if payload.order_by:
-        ob_col = payload.order_by.category
-        if ob_col not in table_columns_dict[selected_dataset]:
-            raise HTTPException(status_code=400, detail=f"Invalid order_by column: {ob_col!r}")
+        order_by_col = payload.order_by.category.split("-")[-1]
+        if order_by_col not in valid_columns:
+            raise HTTPException(status_code=400, detail=f"Invalid order_by column: {order_by_col!r}")
 
     where_clauses = []
     for category, values in grouped_filters.items():
@@ -102,7 +166,7 @@ def filter_amr_records(payload: Payload):
     where_sql = " AND ".join(where_clauses)
 
     # Build queries
-    base_query = f"SELECT * FROM {selected_dataset}"
+    base_query = f"SELECT {columns_to_display_str} FROM {selected_dataset}"
     count_query = f"SELECT COUNT(*) AS count FROM {selected_dataset}"
 
     if where_sql:
@@ -112,7 +176,6 @@ def filter_amr_records(payload: Payload):
     # Execute with parameters
     try:
         logger.info(f"selected_filters: {payload.selected_filters}")
-        logger.info(f"base_query: {base_query}")
         logger.info(f"count_query: {count_query}")
 
         total_hits = db_conn.execute(count_query).fetchone()[0]
@@ -120,11 +183,13 @@ def filter_amr_records(payload: Payload):
         # Add pagination (LIMIT/OFFSET values can be parameterized in some databases)
         offset = (payload.page - 1) * payload.per_page
         if payload.order_by:
-            base_query += f" ORDER BY {payload.order_by.category} {payload.order_by.order}"
+            base_query += f" ORDER BY {order_by_col} {payload.order_by.order}"
         base_query += f" LIMIT {payload.per_page} OFFSET {offset}"
+        logger.info(f"base_query: {base_query}")
 
         res_df = db_conn.execute(base_query).fetchdf()
         res_df = res_df.replace({np.nan: None, np.inf: None, -np.inf: None})
+        res_df = res_df.add_prefix(f"{selected_dataset}-")
 
         result = [serialize_amr_record(row) for _, row in res_df.iterrows()]
 
@@ -145,12 +210,12 @@ def flatten_record(record):
     """Convert list-of-dicts into {column_id: value}."""
     return {entry["column_id"]: entry.get("value") for entry in record}
 
-def fetch_filtered_records(payload: Payload, scope: str = "page", file_format: str = "csv"):
+def fetch_filtered_records(payload: Payload, scope: str = "all", file_format: str = "csv"):
     """
     Download filtered AMR records in CSV or JSON format.
     scope: "page" (current page) or "all" (all matches)
     """
-    scope = (scope or "page").lower()
+    scope = (scope or "all").lower()
     if scope not in {"page", "all"}:
         raise HTTPException(status_code=400, detail="scope must be 'page' or 'all'")
 

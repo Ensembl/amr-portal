@@ -66,7 +66,7 @@ export class FiltersArea extends SignalWatcher(LitElement) {
     const viewMode = filtersStore.viewMode.get();
     const activeFiltersGroup = filtersStore.activeFilterGroup.get();
 
-    const filterView = filtersConfig.filterViews.find(view => view.name === viewMode) as FiltersView;
+    const filterView = filtersConfig.filterViews.find(view => view.id === viewMode) as FiltersView;
 
     if (activeFiltersGroup) {
       return filterView.otherCategoryGroups
