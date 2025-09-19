@@ -86,13 +86,8 @@ def get_columns_to_display(view_id: int):
         raise HTTPException(status_code=400, detail=f"Failed to get columns to display from view ID: {view_id}")
 
 def quote_column_name(column_name):
-    """Quote column names that contain special characters or are reserved keywords."""
-    # List of characters that require quoting
-    special_chars = ['%', '-', ' ', '(', ')', '/', '@', '#', '$']
-    # Check if column name contains any special characters or is a reserved keyword
-    if any(char in column_name for char in special_chars):
-        return f'"{column_name}"'
-    return column_name
+    """Quote column names."""
+    return f'"{column_name}"'
 
 def fetch_filters():
     return build_filters_config()
