@@ -1,4 +1,4 @@
-import { html, css } from 'lit';
+import { html, css, nothing } from 'lit';
 
 import { actionView, setActionView } from './state';
 
@@ -14,6 +14,10 @@ export const styles = css`
     background-color: var(--buttons-column-color, transparent);
     padding: 30px 15px 30px 0;
     border-radius: var(--panel-border-radius);
+
+    .active {
+      --icon-button-disabled-color: var(--color-black);
+    }
   }
 `;
 
@@ -36,14 +40,18 @@ export const renderButtonsColumn = () => {
     <div class="buttons-column">
       <ens-table-view-button
         @click=${onTableButtonClick}
+        ?disabled=${view === null}
+        class=${view === null ? 'active' : nothing}
       ></ens-table-view-button>
       <ens-delete-button
         @click=${onDeleteButtonClick}
         ?disabled=${view === 'clear'}
+        class=${view === 'clear' ? 'active' : nothing}
         label="Clear filters"
       ></ens-delete-button>
       <ens-download-button
         @click=${onDownloadButtonClick}
+        class=${view === 'download' ? 'active' : nothing}
         ?disabled=${view === 'download'}
       ></ens-download-button>
     </div>

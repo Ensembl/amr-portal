@@ -29,6 +29,10 @@ export class ActionButtons extends SignalWatcher(LitElement) {
         transform: translateX(calc(100% - 10px));
         z-index: 1;
       }
+
+      :host([inert]) {
+        --icon-button-color: var(--color-grey);
+      }
     `
   ]
 

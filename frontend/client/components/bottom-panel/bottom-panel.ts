@@ -12,6 +12,9 @@ import '@ensembl/ensembl-elements-common/components/external-link/external-link.
 import '@ensembl/ensembl-elements-common/components/select/select.js';
 import '@ensembl/ensembl-elements-common/components/paginator/paginator.js';
 import '@ensembl/ensembl-elements-common/components/table/sortable-column-header.js';
+import '@ensembl/ensembl-elements-common/components/icon-buttons/delete-button/delete-button.js';
+import '@ensembl/ensembl-elements-common/components/icon-buttons/download-button/download-button.js';
+import '@ensembl/ensembl-elements-common/components/icon-buttons/table-view-button/table-view-button.js';
 import './action-buttons/action-buttons';
 
 import tableStyles from '@ensembl/ensembl-elements-common/styles/constructable-stylesheets/table.js';
@@ -69,6 +72,20 @@ export class BottomPanel extends SignalWatcher(LitElement) {
 
       .error {
         color: var(--color-red);
+      }
+
+      .initial-content {
+        --icon-button-height: 20px;
+        --icon-button-width: 20px;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        column-gap: 30px;
+        row-gap: 30px;
+
+        .strong {
+          --icon-button-disabled-color: var(--color-black);
+          font-weight: var(--font-weight-bold);
+        }
       }
     `
   ];
@@ -129,6 +146,7 @@ export class BottomPanel extends SignalWatcher(LitElement) {
  
   render() {
     const biosamplesResource = this.biosamplesResource;
+    const selectedFilters = filtersStore.selectedFiltersForViewMode.get();
     const isComplete = biosamplesResource?.status === 'complete'
     const hasData = Boolean(biosamplesResource?.value?.data.length);
     const isError = Boolean(biosamplesResource?.error);
@@ -136,6 +154,7 @@ export class BottomPanel extends SignalWatcher(LitElement) {
 
     try {
       return this.#doRender({
+        isInitial: !selectedFilters.length,
         isError,
         isComplete,
         hasData,
@@ -150,30 +169,38 @@ export class BottomPanel extends SignalWatcher(LitElement) {
   }
 
   #renderError({ isLoadingError }: { isLoadingError?: boolean } = {}) {
-    if (isLoadingError) {
-      return html`
+    const errorMessage = isLoadingError
+      ? html`
         <p class="error">There has been an error retrieving the data.</p>
-      `;
-    } else {
-      return html`
+      ` : html`
         <p class="error">An error occurred during the rendering of the data.</p>
       `;
-    }
+
+    return html`
+      ${errorMessage}
+      ${this.#renderActionButtons({ disabled: true })}
+    `;
   }
 
   #doRender({
+    isInitial,
     isError,
     isLoading,
     isComplete,
     hasData,
     data
   }: {
+    isInitial: boolean;
     isError: boolean;
     isComplete: boolean;
     hasData: boolean;
     isLoading: boolean;
     data: AMRRecordsResponse | null;
   }) {
+    if (isInitial) {
+      return this.#renderInitial();
+    }
+
     if (isError) {
       return this.#renderError({ isLoadingError: true });
     }
@@ -181,12 +208,14 @@ export class BottomPanel extends SignalWatcher(LitElement) {
     if (isLoading) {
       return html`
         <p>Loading...</p>
+        ${this.#renderActionButtons({ disabled: true })}
       `
     }
 
     if (isComplete && !hasData) {
       return html`
         <p>No data</p>
+        ${this.#renderActionButtons({ disabled: true })}
       `
     }
 
@@ -198,11 +227,38 @@ export class BottomPanel extends SignalWatcher(LitElement) {
         <div class="table-container">
           ${this.renderTable(records)}
         </div>
-        <bottom-panel-action-buttons .dataProvider=${this.dataProvider}>
-        </bottom-panel-action-buttons>
+        ${this.#renderActionButtons()}
       `;      
     }
 
+  }
+
+  #renderActionButtons({
+    disabled
+  }: { disabled?: boolean } = {}) {
+    return html`
+      <bottom-panel-action-buttons
+        ?inert=${disabled}
+        .dataProvider=${this.dataProvider}
+      >
+      </bottom-panel-action-buttons>
+    `;
+  }
+
+  #renderInitial() {
+    return html`
+      <div class="initial-content">
+        <ens-table-view-button disabled class="strong"></ens-table-view-button>
+        <span class="strong">Select data above</span>
+
+        <ens-delete-button disabled></ens-delete-button>
+        <span>Select to clear</span>
+
+        <ens-download-button disabled></ens-download-button>
+        <span>Select to download</span>
+       </div>
+       ${this.#renderActionButtons({ disabled: true })}
+    `;
   }
 
 
