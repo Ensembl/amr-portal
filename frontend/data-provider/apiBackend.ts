@@ -45,6 +45,7 @@ export class ApiBackend implements BackendInterface {
    */
   getAMRRecordsAsBlob = async (params: AMRRecordsFetchParams): Promise<Blob> => {
     const payload: Record<string, unknown> = {
+      view_id: params.viewId,
       selected_filters: params.filters,
       page: params.page,
       per_page: params.perPage

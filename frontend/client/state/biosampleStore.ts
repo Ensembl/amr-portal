@@ -139,8 +139,10 @@ const createBiosampleResource = ({
 }
 
 const downloadAMRData = async ({
-  dataProvider
+  dataProvider,
+  viewId
 }: {
+  viewId: FiltersView['id'];
   dataProvider: BackendInterface;
 }) => {
   const queryParams = amrQueryState.get();
@@ -149,6 +151,7 @@ const downloadAMRData = async ({
   const requestStarted = performance.now();
 
   const requestParams: AMRRecordsFetchParams = {
+    viewId,
     filters: selectedFilters,
     page: queryParams.page,
     perPage: queryParams.perPage

@@ -16,6 +16,7 @@ import {
 } from './buttons-column';
 
 import type { BackendInterface } from '../../../../data-provider/dataProvider';
+import type { FiltersView } from '../../../../types/filters/filtersConfig';
 
 /**
  * Ideally, this would use the html popover api,
@@ -140,7 +141,9 @@ export class ActionButtonsPopover extends SignalWatcher(LitElement) {
   }
 
   #onDownload() {
+    const viewId = filtersStore.viewMode.get();
     biosampleStore.downloadAMRData({
+      viewId: viewId as FiltersView['id'],
       dataProvider: this.dataProvider
     });
   }
