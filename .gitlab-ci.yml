@@ -20,14 +20,14 @@ variables:
 
 .be-rules: &be-code-change-rules
   rules:
-    - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "pipeline"'
+    - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "nginx-restructure"'
 #      changes:
 #        - backend/**/*
       when: always
 
 .fe-rules: &fe-code-change-rules
   rules:
-    - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "pipeline"'
+    - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "nginx-restructure"'
 #      changes:
 #        - frontend/**/*
       when: always
@@ -78,10 +78,14 @@ Build:FE:Assets:
     - cd frontend
     - npm ci
     - npm run build
+  after_script:
+    - echo "BUILD_JOB_ID=${CI_JOB_ID}" >> build_static.env
   artifacts:
     name: build_artifacts
     paths:
       - frontend/dist/
+    reports:
+      dotenv: build_static.env
 
 container_scanning:
   stage: container_scanning
@@ -113,10 +117,13 @@ Publish:Assets:RC:
     AGENT: ${REVIEW_AGENT}
     NS: amr
   script:
-    - pod=$(kubectl -n $NS get pod -l "ensembl.platform.app.name=amr-data-copy" --no-headers -o custom-columns=":metadata.name")
-    - echo $pod
-    - echo kubectl -n $NS cp frontend/dist/ $pod:/usr/assets/
-    - kubectl -n $NS cp frontend/dist/ $pod:/usr/assets/
+    - cd k8s/
+    - sed -i "s#<PROJECT_ID>#${CI_PROJECT_ID}#g" publish_assets.yaml
+    - sed -i "s#<JOB_ID>#${BUILD_JOB_ID}#g" publish_assets.yaml
+    - kustomize edit set namesuffix -- -${CI_PROJECT_ID}-${BUILD_JOB_ID}
+    - kubectl apply -k .
+
+
 
 QA:BE:
   stage: qa
