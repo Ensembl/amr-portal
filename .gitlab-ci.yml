@@ -104,8 +104,8 @@ Deploy:BE:RC:
     AGENT: ${REVIEW_AGENT}
     NS: amr
   script:
-    - echo "The Script Deploy Live"
-    - kubectl get deploy,pvc,service,ing
+    - kustomize edit set image DOCKER_IMAGE=${DOCKER_IMAGE}
+    - kubectl apply -f k8s/deployment.yaml
 
 Publish:Assets:RC:
   extends: .deploy-template
