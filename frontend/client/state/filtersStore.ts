@@ -81,6 +81,10 @@ const selectedFiltersForViewMode = new Signal.Computed(() => {
   }
   return allSelectedFilters[currentViewMode] ?? [];
 });
+const clearAllFilters = () => {
+  selectedFilters.set({}); // clears all filters for all views
+  isViewingExtraFilters.set(false); // makes sure that additional filters aren't shown
+}
 
 const isViewingExtraFilters = new Signal.State<boolean>(false);
 const toggleExtraFilters = () => {
@@ -194,6 +198,7 @@ const store = {
   selectedFilters,
   selectedFiltersForViewMode,
   updateSelectedFilters,
+  clearAllFilters,
   primaryFiltersCount,
   otherFiltersCount,
   isViewingExtraFilters,

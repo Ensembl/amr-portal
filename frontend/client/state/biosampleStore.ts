@@ -1,6 +1,8 @@
 import { Signal } from 'signal-polyfill';
 import { AsyncComputed } from 'signal-utils/async-computed';
 
+import { downloadBlobAsFile } from '../utils/download';
+
 import type { SelectedFilter } from '../index';
 import type { BackendInterface, AMRRecordsFetchParams } from '../../data-provider/backendInterface';
 import type { FiltersView } from '../../types/filters/filtersConfig';
@@ -136,6 +138,41 @@ const createBiosampleResource = ({
   return asyncResource;
 }
 
+const downloadAMRData = async ({
+  dataProvider,
+  viewId
+}: {
+  viewId: FiltersView['id'];
+  dataProvider: BackendInterface;
+}) => {
+  const queryParams = amrQueryState.get();
+  const selectedFilters = queryParams.filters;
+
+  const requestStarted = performance.now();
+
+  const requestParams: AMRRecordsFetchParams = {
+    viewId,
+    filters: selectedFilters,
+    page: queryParams.page,
+    perPage: queryParams.perPage
+  };
+
+  // const currentOrder = queryParams.orderBy;
+
+  // if (currentOrder) {
+  //   requestParams.orderBy = {
+  //     category: currentOrder.category,
+  //     order: currentOrder.order.toUpperCase() as 'ASC' | 'DESC'
+  //   }
+  // }
+
+  const amrRecordsBlob = await dataProvider.getAMRRecordsAsBlob(requestParams);
+
+  console.log('Time spent fetching data', Math.round(performance.now() - requestStarted), 'milliseconds');
+
+  await downloadBlobAsFile(amrRecordsBlob, 'table.csv');
+}
+
 const store = {
   page,
   setPage,
@@ -144,7 +181,8 @@ const store = {
   order,
   setOrder,
   setFilters,
-  createBiosampleResource
+  createBiosampleResource,
+  downloadAMRData
 };
 
 export default store;
