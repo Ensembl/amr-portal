@@ -20,14 +20,14 @@ variables:
 
 .be-rules: &be-code-change-rules
   rules:
-    - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "nginx-restructure"'
+    - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "pipeline"'
 #      changes:
 #        - backend/**/*
       when: always
 
 .fe-rules: &fe-code-change-rules
   rules:
-    - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "nginx-restructure"'
+    - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "pipeline"'
 #      changes:
 #        - frontend/**/*
       when: always
@@ -122,8 +122,6 @@ Publish:Assets:RC:
     - sed -i "s#<JOB_ID>#${BUILD_JOB_ID}#g" publish_assets.yaml
     - kustomize edit set namesuffix -- -${CI_PROJECT_ID}-${BUILD_JOB_ID}
     - kubectl apply -k .
-
-
 
 QA:BE:
   stage: qa
