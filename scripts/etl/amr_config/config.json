@@ -15,7 +15,7 @@
 		{
 			"dataset":"phenotype",
 			"id":"isolation_context",
-			"label":"Isolation Host",
+			"label":"Isolation host",
 			"filter_label":"isolation_context"
 		},
 		{
@@ -27,13 +27,13 @@
 		{
 			"dataset":"phenotype",
 			"id":"host_sex",
-			"label":"Host Sex",
+			"label":"Host sex",
 			"filter_label":"host_sex"
 		},
 		{
 			"dataset":"phenotype",
 			"id":"isolation_country",
-			"label":"Isolation Location",
+			"label":"Isolation location",
 			"filter_label":"isolation_country"
 		},
 		{
@@ -57,7 +57,7 @@
 		{
 			"dataset":"genotype",
 			"id":"Element_symbol",
-			"label":"Element Symbol",
+			"label":"Element symbol",
 			"filter_label":"Element_symbol"
 		},
 		{
@@ -82,7 +82,7 @@
         		{ "name": "Phenotype", "categories": ["phenotype"] },
         		{ "name": "Genome", "categories": ["gen_species"] },
         		{ "name": "Testing method", "categories": ["laboratory_typing_method"] },
-        		{ "name": "Isolate Host", "categories": ["isolation_context"] },
+        		{ "name": "Isolate host", "categories": ["isolation_context"] },
         		{ "name": "Isolate attributes", "categories": [ "host_sex", "isolation_country"] }
       		],
       		"columns":[

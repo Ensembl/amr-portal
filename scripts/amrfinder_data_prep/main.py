@@ -7,11 +7,6 @@ import csv
 import requests
 import duckdb
 
-# steps
-# 1 load ini that defines url, file format, samplesheet
-# 2 pull GCA and example_sheet from FTP into release folder
-# 3 find species details
-# 4 merge all
 
 def get_delimiter(path):
     if path.endswith("tsv"):
