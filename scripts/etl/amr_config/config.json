@@ -107,7 +107,7 @@
 			"dataset":"genotype",
 			"categoryGroups": [ { "name": "", "categories": ["organism_name"] } ],
       		"otherCategoryGroups": [
-      			{ "name": "", "categories": ["Contig_id"] },
+      			{ "name": "Contig", "categories": ["Contig_id"] },
       			{ "name": "Element", "categories": ["Element_symbol"] },
         		{ "name": "Type", "categories": ["Type"] },
         		{ "name": "Method", "categories": ["Method"] }
