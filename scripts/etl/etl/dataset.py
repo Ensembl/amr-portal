@@ -21,7 +21,9 @@ def map_sortable(col_name: str, col_type: str, specials: dict) -> bool:
 def format_column_name(col_name: str, specials: dict) -> str:
     if col_name in specials and "label" in specials[col_name]:
         return specials[col_name]["label"]
-    return col_name.replace('_', ' ').title()
+    col_name = col_name.replace('_', ' ')
+    col_name = col_name[0].upper() + col_name[1:]
+    return col_name
 
 
 def build_dataset(parquet: str, table: str, release_path: str, specials: dict) -> dict:

@@ -21,7 +21,8 @@ CREATE TABLE column_definition AS
            label,
            type,
            sortable,
-           url
+           url,
+           delimiter
     FROM column_dump;
 
 ALTER TABLE column_definition ADD PRIMARY KEY (column_id);
@@ -204,6 +205,12 @@ CREATE VIEW view_categories_json as (
 );
 """
 
+SQL_CREATE_RELEASE = """
+CREATE TABLE release AS (
+    SELECT strftime(current_date(),'%Y-%m') as release_label
+);
+"""
+
 
 def find_files(target_path: str, prefix: str, extension: str) -> [str]:
     return [
@@ -262,11 +269,12 @@ def amr_release_to_duckdb(
     # get category map
     cat_map = conn.query(SQL_CATEGORY_MAP).fetchone()[0]
 
-    # create view tables
+    # create views and other tables
     schema_sql = [
         SQL_CREATE_VIEW_TABLES,
         SQL_CREATE_VIEW_CATEGORIES,
-        SQL_CREATE_VIEW_CATEGORIES_JSON
+        SQL_CREATE_VIEW_CATEGORIES_JSON,
+        SQL_CREATE_RELEASE
     ]
 
     for sql in schema_sql:

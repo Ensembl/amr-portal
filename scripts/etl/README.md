@@ -117,11 +117,16 @@ erDiagram
         varchar type
         bool sortable
         varchar url
+        varchar delimiter
     }
 
     dataset_column {
         int dataset_id
         int column_id
+    }
+    
+    release {
+        varchar release_label
     }
 
     view ||--|{ category_group: view_id 

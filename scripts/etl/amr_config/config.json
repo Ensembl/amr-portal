@@ -44,6 +44,12 @@
 		},
 		{
 			"dataset":"genotype",
+			"id":"organism_name",
+			"label":"Species",
+			"filter_label":"organism_name"
+		},
+		{
+			"dataset":"genotype",
 			"id":"Contig_id",
 			"label":"Contig",
 			"filter_label":"Contig_id"
@@ -99,22 +105,25 @@
 		{
 			"name":"AMR genomes",
 			"dataset":"genotype",
-			"categoryGroups": [ { "name": "", "categories": ["Contig_id"] } ],
+			"categoryGroups": [ { "name": "", "categories": ["organism_name"] } ],
       		"otherCategoryGroups": [
+      			{ "name": "", "categories": ["Contig_id"] },
       			{ "name": "Element", "categories": ["Element_symbol"] },
         		{ "name": "Type", "categories": ["Type"] },
         		{ "name": "Method", "categories": ["Method"] }
       		],
       		"columns":[
-      			{ "name": "Protein_id", "enabled":true, "rank":1},
-      			{ "name": "Contig_id", "enabled":true, "rank":2},
-      			{ "name": "Strand", "enabled":true, "rank":3},
-      			{ "name": "Element_symbol", "enabled":true, "rank":4},
-      			{ "name": "Element_name", "enabled":true, "rank":5},
-      			{ "name": "Scope", "enabled":true, "rank":6},
-      			{ "name": "Type", "enabled":true, "rank":7},
-      			{ "name": "Class", "enabled":true, "rank":8},
-      			{ "name": "Method", "enabled":true, "rank":9}
+      			{ "name": "organism_name", "enabled":true, "rank":1},
+      			{ "name": "tax_id", "enabled":true, "rank":2},
+      			{ "name": "Protein_id", "enabled":true, "rank":3},
+      			{ "name": "Contig_id", "enabled":true, "rank":4},
+      			{ "name": "Strand", "enabled":true, "rank":5},
+      			{ "name": "Element_symbol", "enabled":true, "rank":6},
+      			{ "name": "Element_name", "enabled":true, "rank":7},
+      			{ "name": "Scope", "enabled":true, "rank":8},
+      			{ "name": "Type", "enabled":true, "rank":9},
+      			{ "name": "Class", "enabled":true, "rank":10},
+      			{ "name": "Method", "enabled":true, "rank":11}
       		],
       		"other_columns":["genotype"]
 		},
@@ -155,7 +164,8 @@
             },
             "Pubmed_ID":{
                 "sortable":0,
-                "type":"link",
+                "type":"array-link",
+                "delimiter":"|",
                 "url":"https://pubmed.ncbi.nlm.nih.gov/{}"
             },
             "database":{
@@ -178,6 +188,12 @@
             },
             "measurement_unit": {
             	"hidden": true
+            }
+        },
+        "genotype":
+        {
+        	"organism_name":{
+                "label":"Species"
             }
         }
     }
