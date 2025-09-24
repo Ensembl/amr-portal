@@ -17,7 +17,7 @@ def etl_step_1(config: dict, data: dict, release_path: str, cli) -> (bool, str):
     """
     Validate config and dataset
     """
-    # check schema's exist
+    # check schemas exist
     config_schema = os.path.join(cli.schema, CONFIG_SCHEMA_FILE)
     if not os.path.exists(config_schema):
         return (
@@ -112,7 +112,8 @@ def create_release(release) -> str:
     if not os.path.exists(release_path):
         os.mkdir(release_path)
     else:
-        print("TODO, fail on existing release")
+        print("ERROR! Release already exists!")
+        sys.exit(-1)
     return release_path
 
 

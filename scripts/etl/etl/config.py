@@ -18,19 +18,33 @@ def validate_config(config: dict, schema_path: str) -> (bool, str):
 
     hasCheckFailed = False
     err = ""
+    filter_ids = [f['id'] for f in config["filterCategories"]]
+    used_filters = {
+        f:False for f in filter_ids
+    }
 
     # Check filter names
     for view in config["views"]:
         for cat_grp in view["categoryGroups"]:
             for cat in cat_grp["categories"]:
-                if cat not in config["filterCategories"].keys():
+                if cat not in filter_ids:
                     err = f"Unknown Category: {cat} found for {view['name']}"
                     hasCheckFailed = True
+                else:
+                    used_filters[cat] = True
         for other in view["otherCategoryGroups"]:
             for cat in other["categories"]:
-                if cat not in config["filterCategories"].keys():
+                if cat not in filter_ids:
                     err = f"Unknown Category: {cat} found for {view['name']}"
                     hasCheckFailed = True
+                else:
+                    used_filters[cat] = True
+    # check for unused filter
+    for f,used in used_filters.items():
+        if not used:
+            err = f"Category {f} is not used by any of the views!"
+            hasCheckFailed = True
+            break
 
     # check datasets
     if hasCheckFailed:

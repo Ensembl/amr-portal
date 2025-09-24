@@ -22,10 +22,12 @@ def generate_filters(
 
     for dataset in datasets:
         # generate filter values
+        print("building", dataset)
         filters = []
-        for id, f in filter_config.items():
+        for f in filter_config:
             if f['dataset'] != dataset['name']:
                 continue
+
 
             filter = dict(f)
             # rename label to prevent using label to mean multiple things
@@ -38,6 +40,7 @@ def generate_filters(
                 dataset["parquet"],
                 f["id"]
                 )
+            print(sql)
             results = conn.sql(sql)
             cols = results.columns
             filter_values = results.fetchall()
@@ -45,11 +48,12 @@ def generate_filters(
             filter["filters"] = [
                 {cols[0]: str(r[0]), cols[1]: str(r[1])} for r in filter_values
                 ]
-            if len(filter["filters"]) == 0:
+            value_count = len(filter["filters"])
+            if value_count == 0:
                 print(f"Warning! {f['id']} has no values")
 
-            if len(filter["filters"]) > 60:
-                print(f"Warning! {f['id']} has over 60 ({len(filter['filters'])}) values")
+            if value_count > 60:
+                print(f"Warning! {f['id']} has over 60 ({value_count}) values")
             del filter["filter_label"]
             filters.append(filter)
 
