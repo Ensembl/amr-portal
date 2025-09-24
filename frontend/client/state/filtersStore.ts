@@ -83,20 +83,30 @@ const selectedFiltersForViewMode = new Signal.Computed(() => {
 });
 const clearAllFilters = () => {
   selectedFilters.set({}); // clears all filters for all views
-  isViewingExtraFilters.set(false); // makes sure that additional filters aren't shown
+  closeExtraFilters();
 }
 
 const isViewingExtraFilters = new Signal.State<boolean>(false);
+
 const toggleExtraFilters = () => {
   const isViewing = isViewingExtraFilters.get();
   if (isViewing) {
-    setActiveFilterGroup(null);
+    closeExtraFilters();
   } else {
-    const filterGroups = filterGroupsForViewMode.get();
-    const firstFilterGroup = filterGroups[0];
-    setActiveFilterGroup(firstFilterGroup.name);
+    openExtraFilters();
   }
-  isViewingExtraFilters.set(!isViewing);
+};
+
+const openExtraFilters = () => {
+  const filterGroups = filterGroupsForViewMode.get();
+  const firstFilterGroup = filterGroups[0];
+  setActiveFilterGroup(firstFilterGroup.name);
+  isViewingExtraFilters.set(true);
+};
+
+const closeExtraFilters = () => {
+  setActiveFilterGroup(null);
+  isViewingExtraFilters.set(false);
 };
 
 const filterGroupsForViewMode = new Signal.Computed(() => {

@@ -340,18 +340,6 @@ export class BottomPanel extends SignalWatcher(LitElement) {
     `;
   }
 
-  /**
-   * The implementation is temporary, until we start getting the list of columns from the backend
-   * 
-   * Remember that when we want to add sorting by columns, to put something like this inside of th elements: 
-   *  <ens-table-sortable-column-head
-        sort-order=${ifDefined(this.getSortOrderFor('Antibiotic_name'))}
-        @click=${() => this.onOrderChange('Antibiotic_name')}
-      >
-        Antibiotic
-      </ens-table-sortable-column-head>
-   * 
-   */
   renderTableColumnNames = (fields: AMRRecord) => {
     const columnsMap = filtersStore.amrTableColumnsMap.get();
 
