@@ -29,6 +29,12 @@ export class Footer extends LitElement {
     .bold {
       font-weight: var(--font-weight-bold);
     }
+
+    a {
+      color: inherit;
+      text-decoration: underline;
+      text-decoration-style: dashed;
+    }
   `;
 
   render() {
@@ -46,7 +52,18 @@ export class Footer extends LitElement {
           </span>
         </div>
         <div class="section">
-          EMBL-EBI is part of the European Molecular Biology Laboratory
+          <span>
+            <span class="bold">
+              EMBL-EBI ${' '}
+            </span>
+            is part of the European Molecular Biology Laboratory
+          </span>
+          <a href="https://www.ebi.ac.uk/about/terms-of-use" rel="noreferrer">
+            Terms of use
+          </a>
+          <a href="https://www.embl.org/info/privacy-policy" rel="noreferrer">
+            Privacy notice
+          </a>
         </div>
       </footer>
     `;
