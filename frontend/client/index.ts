@@ -41,7 +41,7 @@ export class AMRApp extends SignalWatcher(LitElement) {
       height: 100%;
       padding-top: 10px;
       display: grid;
-      grid-template-rows: minmax(auto, 35%) 1fr;
+      grid-template-rows: auto 1fr;
       row-gap: 20px;
       overflow: hidden;
     }
