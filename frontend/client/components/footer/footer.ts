@@ -61,7 +61,7 @@ export class Footer extends LitElement {
           <a href="https://www.ebi.ac.uk/about/terms-of-use" rel="noreferrer">
             Terms of use
           </a>
-          <a href="https://www.embl.org/info/privacy-policy" rel="noreferrer">
+          <a href="https://www.ebi.ac.uk/data-protection/privacy-notice/embl-ebi-public-website" rel="noreferrer">
             Privacy notice
           </a>
         </div>
