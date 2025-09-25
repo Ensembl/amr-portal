@@ -220,7 +220,7 @@ def build_filters_config(db=default_db_conn) -> dict[str, Any]:
     """
 
     # Release
-    release_query = "SELECT * FROM release"
+    release_query = "SELECT release_label as label FROM release"
 
     view_rows = _query_to_records(db, filters_view_query)
     filter_views = _build_filter_views(db, view_rows)
