@@ -60,7 +60,8 @@ def get_display_column_details(view_id: int):
         view_id (int): The ID of the view to get columns for.
 
     Returns:
-        set: A set of column names (strings) to be displayed, with the dataset prefix removed.
+        set: Pandas dataframe containing all column definitions for a given view.
+             Includes fields fullname, name, type, sortable, url, delimiter
 
     Raises:
         HTTPException: If there is an error retrieving the columns from the database,
@@ -194,7 +195,6 @@ def filter_amr_records(payload: Payload):
         res_df = db_conn.execute(base_query).fetchdf()
         res_df = res_df.replace({np.nan: None, np.inf: None, -np.inf: None})
         res_df = res_df.add_prefix(f"{selected_dataset}-")
-
         result = [serialize_amr_record(row, display_column_details) for _, row in res_df.iterrows()]
 
         return {

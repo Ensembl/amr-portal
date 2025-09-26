@@ -7,6 +7,7 @@ def test_amr_records_basic():
     payload = {
         "selected_filters": [],
         "page": 1,
+        "view_id":1,
         "per_page": 10
     }
     response = client.post("/amr-records", json=payload)
