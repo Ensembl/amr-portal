@@ -180,9 +180,10 @@ def _build_filter_views(db, rows: Iterable[dict[str, Any]]) -> list[dict[str, An
 def build_filters_config(db=default_db_conn) -> dict[str, Any]:
     """Build the complete filters configuration document.
 
-    This wraps two steps:
+    This wraps three steps:
       1) Build `filterCategories` from the `filter` and `category` tables.
       2) Build `filterViews` from `view_categories` DuckDB view.
+      3) Finally we get the release info from release table and put it in `release`.
 
     Args:
         db: Database connection object. Defaults to the shared `db_conn`.
@@ -191,6 +192,7 @@ def build_filters_config(db=default_db_conn) -> dict[str, Any]:
         Dict[str, Any]: A dictionary with keys:
             - "filterCategories": {category_id: {...}}
             - "filterViews": [ {...}, ... ]
+            - "release": {...}
     """
     # Categories
     filters_category_query = """
@@ -217,10 +219,16 @@ def build_filters_config(db=default_db_conn) -> dict[str, Any]:
         ORDER BY view_id, category_group_id;
     """
 
+    # Release
+    release_query = "SELECT release_label as label FROM release"
+
     view_rows = _query_to_records(db, filters_view_query)
     filter_views = _build_filter_views(db, view_rows)
+    release_rows = _query_to_records(db, release_query)
+    release = release_rows[0] if release_rows else None
 
     return {
         "filterCategories": filter_categories,
         "filterViews": filter_views,
+        "release": release
     }

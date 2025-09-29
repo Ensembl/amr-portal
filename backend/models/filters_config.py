@@ -43,3 +43,4 @@ class FiltersConfig(BaseModel):
 
     filter_categories: dict[str, FilterCategory] = Field(alias="filterCategories")
     filter_views: list[FilterView] = Field(alias="filterViews")
+    release: dict = Field()
