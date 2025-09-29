@@ -13,8 +13,6 @@ def serialize_amr_record(row, column_details:dict):
     for col in keys:
         v = val(col)
         
-        # TODO handle empty values
-        
         if col in column_details:
             # Add column detail attributes to cell
             cd = column_details[col]
@@ -25,8 +23,10 @@ def serialize_amr_record(row, column_details:dict):
             
             # handle types
             if cell_obj["type"] == "link":
-                if "url" in cell_obj:
+                if "url" in cell_obj and v:
                     cell_obj["url"] = cell_obj["url"].format(v)
+                else:
+                    cell_obj["url"] = None
                 cell_obj["value"] = v
             elif cell_obj["type"] == "array-link":
                 cell_obj["test"] = set(("delimiter","url")) <=  cell_obj.keys()
@@ -39,9 +39,11 @@ def serialize_amr_record(row, column_details:dict):
                         }
                         for vb in v_bits
                     ]
-                    del cell_obj["url"]
-                    del cell_obj["delimiter"]
                     cell_obj["values"] = elements
+                else:
+                    cell_obj["values"] = []
+                del cell_obj["url"]
+                del cell_obj["delimiter"]     
             else:
                 cell_obj["value"] = v
 
