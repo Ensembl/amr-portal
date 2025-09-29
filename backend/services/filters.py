@@ -60,7 +60,7 @@ def get_display_column_details(view_id: int):
         view_id (int): The ID of the view to get columns for.
 
     Returns:
-        set: Pandas dataframe containing all column definitions for a given view.
+        DataFrame: Pandas dataframe containing all column definitions for a given view.
              Includes fields fullname, name, type, sortable, url, delimiter
 
     Raises:
