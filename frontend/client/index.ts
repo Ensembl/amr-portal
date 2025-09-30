@@ -11,6 +11,9 @@ import './components/top-panel/top-panel';
 import './components/bottom-panel/bottom-panel';
 import './components/footer/footer';
 
+import '@ensembl/ensembl-elements-common/embl-ebi-components/page-header/page-header.js';
+import '@ensembl/ensembl-elements-common/embl-ebi-components/page-footer/page-footer.js';
+
 import '@ensembl/ensembl-elements-common/styles/resets.css';
 import '@ensembl/ensembl-elements-common/styles/custom-properties.css';
 import '@ensembl/ensembl-elements-common/styles/global.css';
@@ -31,15 +34,12 @@ export class AMRApp extends SignalWatcher(LitElement) {
   static styles = css`
     :host {
       box-sizing: border-box;
-      height: 100%;
-      display: grid;
-      grid-template-rows: auto 1fr auto;
     }
 
     main {
       box-sizing: border-box;
-      height: 100%;
       padding-top: 10px;
+      padding-bottom: 20px;
       display: grid;
       grid-template-rows: auto 1fr;
       row-gap: 20px;
@@ -68,13 +68,9 @@ export class AMRApp extends SignalWatcher(LitElement) {
     // const provider = 'local';
     const provider = 'api';
     this.dataProvider = await getDataProvider({ provider });
-
-    console.log(`Using data provider: ${provider}`);
   }  
 
   render() {
-    console.log('re-rendering index component')
-
     const filtersConfig = filtersStore.filtersConfig.get();
 
     if (!this.dataProvider || !filtersConfig) {
@@ -87,7 +83,8 @@ export class AMRApp extends SignalWatcher(LitElement) {
 
     return html`
       <header>
-        <amr-header></amr-header>
+        <embl-ebi-page-header>
+        </embl-ebi-page-header>
       </header>
       <main>
         <top-panel></top-panel>
@@ -97,7 +94,8 @@ export class AMRApp extends SignalWatcher(LitElement) {
         ></bottom-panel>
       </main>
       <footer>
-        <amr-footer></amr-footer>
+        <embl-ebi-page-footer>
+        </embl-ebi-page-footer>
       </footer>
     `;
   }

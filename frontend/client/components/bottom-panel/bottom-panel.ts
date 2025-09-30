@@ -40,11 +40,10 @@ export class BottomPanel extends SignalWatcher(LitElement) {
         box-sizing: border-box;
         display: grid;
         grid-template-rows: auto 1fr;
-        height: 100%;
         padding-top: 24px;
         padding-left: 30px;
         padding-right: 30px;
-        container-type: size;  // <-- will allow .table-container to know its height, and therefore for overflow: auto to work
+        min-height: 400px;
       }
 
       .table-controls-area {
@@ -56,7 +55,7 @@ export class BottomPanel extends SignalWatcher(LitElement) {
       }
 
       .table-container {
-        overflow: auto;
+        overflow-x: auto;
         white-space: nowrap;
       }
 
