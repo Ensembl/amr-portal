@@ -20,7 +20,9 @@ def serialize_amr_record(row, column_details:dict):
                 cd_k:cd_v for cd_k, cd_v in cd.items() 
                 if cd_k in KNOWN_ATTRIBUTES and cd_v is not None
             }
-            
+            # set default type if missing
+            cell_obj["type"] = cell_obj.get("type") or "string"
+
             # handle types
             if cell_obj["type"] == "link":
                 if "url" in cell_obj and v:
@@ -29,7 +31,6 @@ def serialize_amr_record(row, column_details:dict):
                     cell_obj["url"] = None
                 cell_obj["value"] = v
             elif cell_obj["type"] == "array-link":
-                cell_obj["test"] = set(("delimiter","url")) <=  cell_obj.keys()
                 if set(("delimiter","url")) <=  cell_obj.keys() and v:
                     v_bits = v.split(cell_obj["delimiter"])
                     elements = [
