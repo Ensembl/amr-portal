@@ -1,6 +1,8 @@
 import numpy as np
 
-def serialize_amr_record(row):
+KNOWN_ATTRIBUTES = ["type","sortable", "url", "delimiter"]
+
+def serialize_amr_record(row, column_details:dict):
     def val(key):
         v = row.get(key)
         return None if v in [None, "nan", np.nan, np.inf, -np.inf] else v
@@ -8,35 +10,51 @@ def serialize_amr_record(row):
     result = []
     keys = row.keys()
 
-    skip_fields = {
-        "genus", "species",
-        "measurement_value", "measurement_unit", "measurement_sign"
-    }
-
     for col in keys:
-        if col in skip_fields:
-            continue
-
         v = val(col)
+        
+        if col in column_details:
+            # Add column detail attributes to cell
+            cd = column_details[col]
+            cell_obj = {
+                cd_k:cd_v for cd_k, cd_v in cd.items() 
+                if cd_k in KNOWN_ATTRIBUTES and cd_v is not None
+            }
+            # set default type if missing
+            cell_obj["type"] = cell_obj.get("type") or "string"
 
-        if col.lower() in {"assembly", "assembly_id"}:
-            result.append({
-                "type": "link",
-                "column_id": "assembly",
-                "value": v,
-                "url": f"https://www.ebi.ac.uk/ena/browser/view/{v}" if v else None
-            })
-        elif col.lower().endswith("_date") or col.lower() == "collection_date":
-            result.append({
-                "type": "string",
-                "column_id": col,
-                "value": str(v) if v is not None else None
-            })
+            # handle types
+            if cell_obj["type"] == "link":
+                if "url" in cell_obj and v:
+                    cell_obj["url"] = cell_obj["url"].format(v)
+                else:
+                    cell_obj["url"] = None
+                cell_obj["value"] = v
+            elif cell_obj["type"] == "array-link":
+                if set(("delimiter","url")) <=  cell_obj.keys() and v:
+                    v_bits = v.split(cell_obj["delimiter"])
+                    elements = [
+                        { 
+                            "value": vb, 
+                            "url": cell_obj["url"].format(vb) 
+                        }
+                        for vb in v_bits
+                    ]
+                    cell_obj["values"] = elements
+                else:
+                    cell_obj["values"] = []
+                del cell_obj["url"]
+                del cell_obj["delimiter"]     
+            else:
+                cell_obj["value"] = v
+
+            cell_obj["column_id"] = col
+            result.append(cell_obj)
         else:
             result.append({
                 "type": "string",
                 "column_id": col,
                 "value": v
             })
-
+        
     return result

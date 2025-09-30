@@ -49,7 +49,7 @@ def get_dataset_from_view(view_id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Failed to get dataset from view ID: {view_id}")
 
-def get_columns_to_display(view_id: int):
+def get_display_column_details(view_id: int):
     """Retrieves the display columns associated with a specific view ID from the database.
 
     This function queries the database to get the column names that should be displayed
@@ -60,7 +60,8 @@ def get_columns_to_display(view_id: int):
         view_id (int): The ID of the view to get columns for.
 
     Returns:
-        set: A set of column names (strings) to be displayed, with the dataset prefix removed.
+        DataFrame: Pandas dataframe containing all column definitions for a given view.
+             Includes fields fullname, name, type, sortable, url, delimiter
 
     Raises:
         HTTPException: If there is an error retrieving the columns from the database,
@@ -69,7 +70,7 @@ def get_columns_to_display(view_id: int):
     """
 
     columns_to_display_query = f"""
-        SELECT cd.fullname
+        SELECT cd.fullname, cd.name, cd.type, cd.sortable, cd.url, cd.delimiter
         FROM view as v
             JOIN view_column vc on v.view_id = vc.view_id
             JOIN column_definition cd on vc.column_id = cd.column_id
@@ -77,11 +78,9 @@ def get_columns_to_display(view_id: int):
         ORDER BY vc.rank;
     """
     try:
-        columns = db_conn.execute(columns_to_display_query).fetchall()
-        columns_to_display = []
-        for column in columns:
-            columns_to_display.append(column[0].split("-")[-1])
-        return columns_to_display
+        columns = db_conn.execute(columns_to_display_query).fetchdf()
+
+        return columns
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Failed to get columns to display from view ID: {view_id}")
 
@@ -116,13 +115,19 @@ def filter_amr_records(payload: Payload):
     valid_columns = get_table_columns(selected_dataset)
     # not all valid columns are eventually displayed
     # We need to keep only the ones we are interested
-    columns_to_display = get_columns_to_display(selected_view_id)
+    columns_to_display = get_display_column_details(selected_view_id)
 
     # This will be used below in the SQL query to select only columns we are interested in
     # Properly quote column names for SQL query
-    quoted_columns = [quote_column_name(col) for col in columns_to_display]
+    quoted_columns = [quote_column_name(col) for col in columns_to_display["name"]]
     columns_to_display_str = ", ".join(quoted_columns)
-
+    
+    # Build dict of column details for serializer
+    columns_to_display_dict = columns_to_display.to_dict('records')
+    display_column_details = {
+        r["fullname"]:r for r in columns_to_display_dict
+    }
+    
     # Gather the selected filters
     selected_filters = []
     for f in payload.selected_filters:
@@ -142,7 +147,7 @@ def filter_amr_records(payload: Payload):
     logger.info(f"selected_view_id: {selected_view_id}")
     logger.info(f"selected_dataset: {selected_dataset}")
     logger.info(f"grouped_filters: {grouped_filters}")
-    logger.info(f"columns_to_display: {columns_to_display}")
+    logger.info(f"quoted_columns: {quoted_columns}")
 
     if not are_filters_valid:
         raise HTTPException(
@@ -190,8 +195,7 @@ def filter_amr_records(payload: Payload):
         res_df = db_conn.execute(base_query).fetchdf()
         res_df = res_df.replace({np.nan: None, np.inf: None, -np.inf: None})
         res_df = res_df.add_prefix(f"{selected_dataset}-")
-
-        result = [serialize_amr_record(row) for _, row in res_df.iterrows()]
+        result = [serialize_amr_record(row, display_column_details) for _, row in res_df.iterrows()]
 
         return {
             "meta": {
