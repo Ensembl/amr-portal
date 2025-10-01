@@ -20,7 +20,7 @@ import './action-buttons/action-buttons';
 import tableStyles from '@ensembl/ensembl-elements-common/styles/constructable-stylesheets/table.js';
 
 import type { BackendInterface } from '../../../data-provider/dataProvider';
-import type { AMRRecord, AMRRecordField, LinkData } from '../../../types/amrRecord';
+import type { AMRRecord, AMRRecordField, LinkData, LinkArrayData } from '../../../types/amrRecord';
 import type { AMRRecordsResponse } from '../../../data-provider/backendInterface';
 import type { FiltersView } from '../../../types/filters/filtersConfig';
 
@@ -373,7 +373,9 @@ export class BottomPanel extends SignalWatcher(LitElement) {
   renderTableRow = (record: AMRRecord) => {
     const cells = repeat(record, (field) => field.column_id, (field) => {
       let cellContent;
-      if (this.isLink(field)) {
+      if (isLinkArray(field)) {
+        cellContent = this.renderLinks(field);
+      } else if (isLink(field)) {
         cellContent = this.renderLink(field);
       } else {
         cellContent = field.value;
@@ -391,10 +393,6 @@ export class BottomPanel extends SignalWatcher(LitElement) {
     `;
   };
 
-  isLink(data: AMRRecordField): data is LinkData {
-    return data.type === 'link';
-  }
-
   renderLink(data: LinkData) {
     if (!data.value) {
       return null;
@@ -408,6 +406,23 @@ export class BottomPanel extends SignalWatcher(LitElement) {
         ${data.value}
       </ens-external-link>
     `;
+  }
+
+  renderLinks(data: LinkArrayData) {
+    if (!data.values.length) {
+      return null;
+    }
+
+    return data.values.map((linkData, index) => {
+      const isLastLink = index === data.values.length - 1;
+
+      return html`
+        <ens-external-link href="${linkData.url}">
+          ${linkData.value}
+        </ens-external-link>
+        ${!isLastLink ? ', ' : null}
+      `;
+    });
   }
 
   renderTotalHitsCount = ({
@@ -436,4 +451,13 @@ export class BottomPanel extends SignalWatcher(LitElement) {
     }
   };
 
+}
+
+
+const isLinkArray = (data: AMRRecordField): data is LinkArrayData => {
+  return data.type === 'array-link';
+}
+
+const isLink = (data: AMRRecordField): data is LinkData => {
+  return data.type === 'link';
 }
