@@ -1,17 +1,26 @@
 export type StringData = {
-  type: "string";
+  type: 'string';
   column_id: string;
   value: string | null;
 };
 
 export type LinkData = {
-  type: "link";
+  type: 'link';
   column_id: string;
   value: string | null;
   url: string | null;
 };
 
-export type AMRRecordField = StringData | LinkData;
+export type LinkArrayData = {
+  type: 'array-link';
+  column_id: string;
+  values: Array<{
+    value: string;
+    url: string;
+  }>;
+};
+
+export type AMRRecordField = StringData | LinkData | LinkArrayData;
 
 export type AMRRecord = Array<AMRRecordField>;
 
