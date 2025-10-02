@@ -158,6 +158,7 @@ QA:BE:
 # Deploy backend to live environment
 Deploy:BE:Live:
   extends: .deploy-be-template
+  <<: *be-code-change-rules
   stage: deploy
   environment:
     name: production

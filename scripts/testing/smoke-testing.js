@@ -11,32 +11,32 @@ let hostName = 'http://amr.review.ensembl.org';
 
 async function checkAMRAPI(hostName) {
   let host = '';
-  let api_path = '';
+  let apiPath = '';
   let endpoint = '';
   let url = '';
   let checksum = '';
-  let genome_id = '';
+  let genomeId = '';
 
   host = hostName;
-  api_path = 'api';
+  apiPath = 'api';
 
-  const filters_config = `${host}/${api_path}/filters-config`;
+  const filtersConfigEndpoint = `${host}/${apiPath}/filters-config`;
   group (`/filters_config`, function () {
-    let filters_config_response = http.get(filters_config);
+    let filtersConfigEndpointResponse = http.get(filtersConfigEndpoint);
 
     try{
-      check(filters_config_response, {
+      check(filtersConfigEndpointResponse, {
         [`is status 200`] : (r) => r.status === 200,
         [`contains genotype dataset`] : (r) => r.json().filterCategories["genotype-organism_name"]["dataset"] == "genotype",
       },
       );
     }
     finally{
-      filters_config_response = null;
+      filtersConfigEndpointResponse = null;
     }
   });
 
-  const amr_records = `${host}/${api_path}/amr-records`;
+  const amrRecordsEndpoint = `${host}/${apiPath}/amr-records`;
   group (`/amr_records`, function () {
   let params = {
       headers: {
@@ -49,7 +49,7 @@ async function checkAMRAPI(hostName) {
 
    let resp = http.request(
       "POST",
-      amr_records,
+      amrRecordsEndpoint,
       JSON.stringify({
         "selected_filters": [
           { "category": "phenotype-genus", "value": "Streptococcus" },
@@ -71,7 +71,7 @@ async function checkAMRAPI(hostName) {
 
     resp = http.request(
       "POST",
-      amr_records,
+      amrRecordsEndpoint,
       JSON.stringify({
         "selected_filters": [
           { "category": "genotype-Contig_id", "value": "CQKJ01000001.1" },
@@ -92,7 +92,7 @@ async function checkAMRAPI(hostName) {
 
     resp = http.request(
       "POST",
-      amr_records,
+      amrRecordsEndpoint,
       JSON.stringify({
         "selected_filters": [
           { "category": "phenotype-genus", "value": "Streptococcus" },
