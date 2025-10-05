@@ -5,9 +5,10 @@
 __pycache__
 venv
 
-# Node directories
+# Frontend directories to ignore
 node_modules
 dist
+_site
 
 # Data files
 *.parquet
