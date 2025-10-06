@@ -22,7 +22,8 @@ CREATE TABLE column_definition AS
            type,
            sortable,
            url,
-           delimiter
+           delimiter,
+           url_label
     FROM column_dump;
 
 ALTER TABLE column_definition ADD PRIMARY KEY (column_id);

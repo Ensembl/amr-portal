@@ -5,7 +5,6 @@ from ftplib import FTP
 import csv
 
 import requests
-import duckdb
 
 
 def get_delimiter(path):

@@ -1,0 +1,206 @@
+{
+	"filterCategories":[
+		{
+			"dataset":"phenotype",
+			"id":"antibiotic_Name",
+			"label":"Antibiotic",
+			"filter_label":"trim(concat(antibiotic_Name,' ',antibiotic_Abbreviation))"
+		},
+		{
+			"dataset":"phenotype",
+			"id":"organism",
+			"label":"Genome",
+			"filter_label":"organism"
+		},
+		{
+			"dataset":"phenotype",
+			"id":"host",
+			"label":"Host",
+			"filter_label":"host"
+		},
+		{
+			"dataset":"phenotype",
+			"id":"resistance_Phenotype",
+			"label":"Phenotype",
+			"filter_label":"resistance_Phenotype"
+		},
+		{
+			"dataset":"phenotype",
+			"id":"host_sex",
+			"label":"Host sex",
+			"filter_label":"host_sex"
+		},
+		{
+			"dataset":"phenotype",
+			"id":"ISO_country_code",
+			"label":"Isolation location",
+			"filter_label":"ISO_country_code"
+		},
+		{
+			"dataset":"phenotype",
+			"id":"laboratory_Typing_Method",
+			"label":"Testing method",
+			"filter_label":"laboratory_Typing_Method"
+		},
+		{
+			"dataset":"genotype",
+			"id":"organism_name",
+			"label":"Species",
+			"filter_label":"organism_name"
+		},
+		{
+			"dataset":"genotype",
+			"id":"Contig_id",
+			"label":"Contig",
+			"filter_label":"Contig_id"
+		},
+		{
+			"dataset":"genotype",
+			"id":"Element_symbol",
+			"label":"Element symbol",
+			"filter_label":"Element_symbol"
+		},
+		{
+			"dataset":"genotype",
+			"id":"Type",
+			"label":"Type",
+			"filter_label":"Type"
+		},
+		{
+			"dataset":"genotype",
+			"id":"Method",
+			"label":"Method",
+			"filter_label":"Method"
+		}
+	],
+	"views":[
+		{
+			"name":"AMR antibiotics",
+			"dataset":"phenotype",
+			"categoryGroups": [ { "name": "", "categories": ["antibiotic_Name"] } ],
+      		"otherCategoryGroups": [
+        		{ "name": "Phenotype", "categories": ["resistance_Phenotype"] },
+        		{ "name": "Genome", "categories": ["organism"] },
+        		{ "name": "Testing method", "categories": ["laboratory_Typing_Method"] },
+        		{ "name": "Isolate host", "categories": ["host"] },
+        		{ "name": "Isolate attributes", "categories": [ "host_sex", "ISO_country_code"] }
+      		],
+      		"columns":[
+      			{ "name": "antibiotic_Name", "enabled":true, "rank":1},
+      			{ "name": "antibiotic_Abbreviation", "enabled":true, "rank":2},
+      			{ "name": "resistance_Phenotype", "enabled":true, "rank":3},
+      			{ "name": "gen_measurement", "enabled":true, "rank":4},
+      			{ "name": "organism", "enabled":true, "rank":5},
+      			{ "name": "assembly_ID", "enabled":true, "rank":6},
+      			{ "name": "host", "enabled":true, "rank":7},
+      			{ "name": "BioSample_ID", "enabled":true, "rank":8},
+      			{ "name": "INSDC_secondary_accession", "enabled":true, "rank":9},
+      			{ "name": "laboratory_Typing_Method", "enabled":true, "rank":10},
+      			{ "name": "platform", "enabled":true, "rank":11},
+      			{ "name": "ast_Standard", "enabled":true, "rank":12}
+      		],
+      		"other_columns":["phenotype"]
+		},
+		{
+			"name":"AMR genomes",
+			"dataset":"genotype",
+			"categoryGroups": [ { "name": "", "categories": ["organism_name"] } ],
+      		"otherCategoryGroups": [
+      			{ "name": "Contig", "categories": ["Contig_id"] },
+      			{ "name": "Element", "categories": ["Element_symbol"] },
+        		{ "name": "Type", "categories": ["Type"] },
+        		{ "name": "Method", "categories": ["Method"] }
+      		],
+      		"columns":[
+      			{ "name": "organism_name", "enabled":true, "rank":1},
+      			{ "name": "tax_id", "enabled":true, "rank":2},
+      			{ "name": "Protein_id", "enabled":true, "rank":3},
+      			{ "name": "Contig_id", "enabled":true, "rank":4},
+      			{ "name": "Strand", "enabled":true, "rank":5},
+      			{ "name": "Element_symbol", "enabled":true, "rank":6},
+      			{ "name": "Element_name", "enabled":true, "rank":7},
+      			{ "name": "Scope", "enabled":true, "rank":8},
+      			{ "name": "Type", "enabled":true, "rank":9},
+      			{ "name": "Class", "enabled":true, "rank":10},
+      			{ "name": "Method", "enabled":true, "rank":11}
+      		],
+      		"other_columns":["genotype"]
+		},
+		{
+			"name":"AMR isolates",
+			"dataset":"phenotype",
+			"categoryGroups": [ { "name": "", "categories": ["host"] } ],
+      		"otherCategoryGroups": [
+      			{ "name": "Antibiotic", "categories": ["antibiotic_Name"] },
+        		{ "name": "Phenotype", "categories": ["resistance_Phenotype"] },
+        		{ "name": "Genome", "categories": ["organism"] },
+        		{ "name": "Testing method", "categories": ["laboratory_Typing_Method"] },
+        		{ "name": "Isolate attributes", "categories": ["host_sex", "ISO_country_code"] }
+      		],
+      		"columns":[
+      			{ "name": "host", "enabled":true, "rank":1},
+      			{ "name": "organism", "enabled":true, "rank":2},
+      			{ "name": "assembly_ID", "enabled":true, "rank":3},
+      			{ "name": "resistance_Phenotype", "enabled":true, "rank":4},
+      			{ "name": "antibiotic_Name", "enabled":true, "rank":5},
+      			{ "name": "antibiotic_Abbreviation", "enabled":true, "rank":6},
+      			{ "name": "gen_measurement", "enabled":true, "rank":7},
+      			{ "name": "BioSample_ID", "enabled":true, "rank":8},
+      			{ "name": "INSDC_secondary_accession", "enabled":true, "rank":9},
+      			{ "name": "platform", "enabled":true, "rank":10},
+      			{ "name": "laboratory_Typing_Method", "enabled":true, "rank":11},
+      			{ "name": "ast_Standard", "enabled":true, "rank":12}
+      		],
+      		"other_columns":["phenotype"]
+		}
+	],
+	"special_columns":{
+        "phenotype":{
+            "assembly_ID":{
+            	"sortable":0,
+                "type":"link",
+                "url":"https://www.ebi.ac.uk/ena/browser/view/{}"
+            },
+            "pubmed_id":{
+                "sortable":0,
+                "type":"array-link",
+                "delimiter":"|",
+                "url":"https://pubmed.ncbi.nlm.nih.gov/{}"
+            },
+            "database":{
+                "label":"Source"
+            },
+            "organism": {
+            	"label":"Species"
+            },
+            "gen_measurement": {
+            	"label":"Measurement",
+            	"sortable":0
+            },
+            "antibiotic_ontology_link":{
+            	"sortable":0,
+            	"type":"link",
+            	"url":"{}",
+            	"url_label":"ols4/ontologies"
+            },
+            "species": {
+            	"hidden": true
+            },
+            "measurementSign": {
+            	"hidden": true
+            },
+            "measurement": {
+            	"hidden": true
+            },
+            "measurementUnits": {
+            	"hidden": true
+            }
+        },
+        "genotype":
+        {
+        	"organism_name":{
+                "label":"Species"
+            }
+        }
+    }
+}
