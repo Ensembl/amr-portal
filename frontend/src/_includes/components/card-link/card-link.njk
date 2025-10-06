@@ -1,7 +1,12 @@
 {% macro cardLink(params) %}
 <div class="card-link">
   <a href="{{ params.href }}">
-    {{ params.linkText }}
+    <span>
+      {{ params.linkText }}
+    </span>
+    <svg viewBox="0 0 24 24">
+      <use href="/assets/images/icons/arrow-circle-right.svg"></use>
+    </svg>
   </a>
 </div>
 {% endmacro %}

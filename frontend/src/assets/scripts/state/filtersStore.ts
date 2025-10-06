@@ -1,6 +1,6 @@
 import { Signal } from 'signal-polyfill';
 
-import type { FiltersConfig, FiltersView, AMRTableColumn } from '../../types/filters/filtersConfig';
+import type { FiltersConfig, FiltersView, AMRTableColumn } from '../types/filters/filtersConfig';
 
 export type SelectedFilter = {
   category: string;

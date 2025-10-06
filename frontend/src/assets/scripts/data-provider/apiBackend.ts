@@ -4,8 +4,14 @@ import type { FiltersConfig } from '../types/filters/filtersConfig';
 export class ApiBackend implements BackendInterface {
   apiUrl: string;
 
-  constructor(apiUrl = '/api') {
-    this.apiUrl = apiUrl;
+  constructor() {
+    const hostname = window.location.hostname;
+    const isDev = hostname === 'localhost';
+
+    const devApiUrl = 'http://localhost:8000';
+    const prodApiUrl = '/api';    
+
+    this.apiUrl = isDev ? devApiUrl : prodApiUrl;
   }
 
   getFiltersConfig = async (): Promise<FiltersConfig> => {

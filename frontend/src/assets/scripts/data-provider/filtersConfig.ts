@@ -1,4 +1,4 @@
-import type { FiltersConfig } from "../types/filters/filtersConfig"
+import type { FiltersConfig } from "../src/assets/scripts/types/filters/filtersConfig"
 
 export const filtersConfig = {
   "filterCategories": {

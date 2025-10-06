@@ -4,8 +4,9 @@
   "type": "module",
   "scripts": {
     "dev": "npx @11ty/eleventy --serve --incremental",
+    "build": "npx @11ty/eleventy",
     "xdev": "vite",
-    "build": "vite build",
+    "xbuild": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {

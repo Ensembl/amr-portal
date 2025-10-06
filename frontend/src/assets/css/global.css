@@ -5,8 +5,6 @@ html {
 }
 
 body {
-  margin: 0;
-  padding: 0;
   background: var(--color-off-white);
   font-family: var(--font-family-body);
   font-weight: normal;
@@ -15,12 +13,6 @@ body {
   color: var(--color-black);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-html,
-body {
-  height: 100%;
-  width: 100%;
 }
 
 /* Make sure textarea takes on height automatically */
