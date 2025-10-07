@@ -57,6 +57,7 @@ variables:
     - cd k8s/backend/
     - kustomize edit set image DOCKER_IMAGE=${DOCKER_IMAGE}
     - kubectl apply -k .
+  when: on_success
 
 # template for deploy context for frontend
 # publish static assets to appropriate environment
@@ -68,6 +69,7 @@ variables:
     - sed -i "s#<JOB_ID>#${BUILD_JOB_ID}#g" publish_assets.yaml
     - kustomize edit set namesuffix -- -${CI_PROJECT_ID}-${BUILD_JOB_ID}
     - kubectl apply -k .
+  when: on_success
 
 # Build docker image for backend
 Build:BE:Docker:
@@ -143,17 +145,23 @@ QA:BE:
   stage: qa
   <<: *be-code-change-rules
   image:
-    name: grafana/k6:latest
+    name: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:latest
     entrypoint: [ '' ]
   variables:
     HOSTNAME: http://amr.review.ensembl.org
   script:
     - k6 run scripts/testing/smoke-testing.js
+    - qa_passed=1
+    - successful_checks=$(jq '.["metrics"]["checks"]["values"]["passes"]' amr-smoke-test-summary.json)
+    - if [ $successful_checks == 7 ]; then qa_passed=0; else qa_passed=1; fi
+    - return $qa_passed
   artifacts:
     paths:
       - amr-smoke-test-summary.json
       - amr-smoke-test-summary.html
+    when: always
     expire_in: 1 week
+  when: on_success
 
 # Deploy backend to live environment
 Deploy:BE:Live:
@@ -165,6 +173,7 @@ Deploy:BE:Live:
   variables:
     AGENT: ${PROD_AGENT}
     NS: amr
+  when: manual
 
 # Publish static assets to live environment
 Publish:Assets:Live:
@@ -176,3 +185,4 @@ Publish:Assets:Live:
   variables:
     AGENT: ${PROD_AGENT}
     NS: amr
+  when: manual
