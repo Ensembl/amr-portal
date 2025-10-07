@@ -19,7 +19,7 @@ def clean_column_names(columns:[str]) -> [str]:
                 index = 0
                 for h in hits:
                     i = f.index(h,index)
-                    n += f[index:i] + h[0] + '_' + h[1:]
+                    n += f[index:i] + h[0] + '_' + h[1].lower() + h[2]
                     index = i + len(h)
                 n += f[index:]
         # remove asterisk

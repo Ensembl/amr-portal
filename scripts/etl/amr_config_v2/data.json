@@ -1,11 +1,11 @@
 [
 	{
 		"name":"phenotype",
-		"path":"/Users/jon/Data/amr/25-10-06/sub_CABBAGE - Ensembl_input_final_clean.csv",
+		"path":"/Users/jon/Data/amr/25-10-07/cabbage.csv",
 		"create_columns": [
 			{
 				"name":"gen_measurement",
-				"command":"TRIM(CONCAT(measurement_Sign, ' ', measurement,' ', measurement_Units))"
+				"command":"TRIM(CONCAT(measurement_sign, ' ', measurement,' ', measurement_units))"
 			}
 		]
 	},

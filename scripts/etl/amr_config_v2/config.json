@@ -2,7 +2,7 @@
 	"filterCategories":[
 		{
 			"dataset":"phenotype",
-			"id":"antibiotic_Name",
+			"id":"antibiotic_name",
 			"label":"Antibiotic",
 			"filter_label":"trim(concat(antibiotic_Name,' ',antibiotic_Abbreviation))"
 		},
@@ -20,9 +20,9 @@
 		},
 		{
 			"dataset":"phenotype",
-			"id":"resistance_Phenotype",
+			"id":"resistance_phenotype",
 			"label":"Phenotype",
-			"filter_label":"resistance_Phenotype"
+			"filter_label":"resistance_phenotype"
 		},
 		{
 			"dataset":"phenotype",
@@ -38,9 +38,9 @@
 		},
 		{
 			"dataset":"phenotype",
-			"id":"laboratory_Typing_Method",
+			"id":"laboratory_typing_method",
 			"label":"Testing method",
-			"filter_label":"laboratory_Typing_Method"
+			"filter_label":"laboratory_typing_method"
 		},
 		{
 			"dataset":"genotype",
@@ -77,27 +77,28 @@
 		{
 			"name":"AMR antibiotics",
 			"dataset":"phenotype",
-			"categoryGroups": [ { "name": "", "categories": ["antibiotic_Name"] } ],
+			"categoryGroups": [ { "name": "", "categories": ["antibiotic_name"] } ],
       		"otherCategoryGroups": [
-        		{ "name": "Phenotype", "categories": ["resistance_Phenotype"] },
+        		{ "name": "Phenotype", "categories": ["resistance_phenotype"] },
         		{ "name": "Genome", "categories": ["organism"] },
-        		{ "name": "Testing method", "categories": ["laboratory_Typing_Method"] },
+        		{ "name": "Testing method", "categories": ["laboratory_typing_method"] },
         		{ "name": "Isolate host", "categories": ["host"] },
         		{ "name": "Isolate attributes", "categories": [ "host_sex", "ISO_country_code"] }
       		],
       		"columns":[
-      			{ "name": "antibiotic_Name", "enabled":true, "rank":1},
-      			{ "name": "antibiotic_Abbreviation", "enabled":true, "rank":2},
-      			{ "name": "resistance_Phenotype", "enabled":true, "rank":3},
+      			{ "name": "antibiotic_name", "enabled":true, "rank":1},
+      			{ "name": "antibiotic_abbreviation", "enabled":true, "rank":2},
+      			{ "name": "resistance_phenotype", "enabled":true, "rank":3},
       			{ "name": "gen_measurement", "enabled":true, "rank":4},
       			{ "name": "organism", "enabled":true, "rank":5},
       			{ "name": "assembly_ID", "enabled":true, "rank":6},
       			{ "name": "host", "enabled":true, "rank":7},
       			{ "name": "BioSample_ID", "enabled":true, "rank":8},
       			{ "name": "INSDC_secondary_accession", "enabled":true, "rank":9},
-      			{ "name": "laboratory_Typing_Method", "enabled":true, "rank":10},
+      			{ "name": "laboratory_typing_method", "enabled":true, "rank":10},
       			{ "name": "platform", "enabled":true, "rank":11},
-      			{ "name": "ast_Standard", "enabled":true, "rank":12}
+      			{ "name": "ast_standard", "enabled":true, "rank":12},
+      			{ "name": "antibiotic_ontology", "enabled":true, "rank":13}
       		],
       		"other_columns":["phenotype"]
 		},
@@ -131,25 +132,25 @@
 			"dataset":"phenotype",
 			"categoryGroups": [ { "name": "", "categories": ["host"] } ],
       		"otherCategoryGroups": [
-      			{ "name": "Antibiotic", "categories": ["antibiotic_Name"] },
-        		{ "name": "Phenotype", "categories": ["resistance_Phenotype"] },
+      			{ "name": "Antibiotic", "categories": ["antibiotic_name"] },
+        		{ "name": "Phenotype", "categories": ["resistance_phenotype"] },
         		{ "name": "Genome", "categories": ["organism"] },
-        		{ "name": "Testing method", "categories": ["laboratory_Typing_Method"] },
+        		{ "name": "Testing method", "categories": ["laboratory_typing_method"] },
         		{ "name": "Isolate attributes", "categories": ["host_sex", "ISO_country_code"] }
       		],
       		"columns":[
       			{ "name": "host", "enabled":true, "rank":1},
       			{ "name": "organism", "enabled":true, "rank":2},
       			{ "name": "assembly_ID", "enabled":true, "rank":3},
-      			{ "name": "resistance_Phenotype", "enabled":true, "rank":4},
-      			{ "name": "antibiotic_Name", "enabled":true, "rank":5},
-      			{ "name": "antibiotic_Abbreviation", "enabled":true, "rank":6},
+      			{ "name": "resistance_phenotype", "enabled":true, "rank":4},
+      			{ "name": "antibiotic_name", "enabled":true, "rank":5},
+      			{ "name": "antibiotic_abbreviation", "enabled":true, "rank":6},
       			{ "name": "gen_measurement", "enabled":true, "rank":7},
       			{ "name": "BioSample_ID", "enabled":true, "rank":8},
       			{ "name": "INSDC_secondary_accession", "enabled":true, "rank":9},
       			{ "name": "platform", "enabled":true, "rank":10},
-      			{ "name": "laboratory_Typing_Method", "enabled":true, "rank":11},
-      			{ "name": "ast_Standard", "enabled":true, "rank":12}
+      			{ "name": "laboratory_typing_method", "enabled":true, "rank":11},
+      			{ "name": "ast_standard", "enabled":true, "rank":12}
       		],
       		"other_columns":["phenotype"]
 		}
@@ -177,22 +178,21 @@
             	"label":"Measurement",
             	"sortable":0
             },
-            "antibiotic_ontology_link":{
+            "antibiotic_ontology":{
             	"sortable":0,
             	"type":"link",
-            	"url":"{}",
-            	"url_label":"ols4/ontologies"
+            	"url":"https://www.ebi.ac.uk/ols4/ontologies/aro/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2F{}"
             },
             "species": {
             	"hidden": true
             },
-            "measurementSign": {
+            "measurement_sign": {
             	"hidden": true
             },
             "measurement": {
             	"hidden": true
             },
-            "measurementUnits": {
+            "measurement_units": {
             	"hidden": true
             }
         },
