@@ -12,10 +12,6 @@ let hostName = 'http://amr.review.ensembl.org';
 async function checkAMRAPI(hostName) {
   let host = '';
   let apiPath = '';
-  let endpoint = '';
-  let url = '';
-  let checksum = '';
-  let genomeId = '';
 
   host = hostName;
   apiPath = 'api';
