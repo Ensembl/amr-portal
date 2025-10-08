@@ -1,33 +1,65 @@
 import { HtmlBasePlugin } from '@11ty/eleventy';
 import EleventyVitePlugin from '@11ty/eleventy-plugin-vite';
 
-export default async function(eleventyConfig) {
-  eleventyConfig.addPassthroughCopy('src/assets');
+import { buildAssets } from './utils/build.js';
+import { getAssetOutputPath } from './utils/eleventy-filters.js';
 
+// https://www.aleksandrhovhannisyan.com/notes/cache-busting-assets-in-eleventy/
+// https://github.com/AleksandrHovhannisyan/aleksandrhovhannisyan.com/blob/master/packages/web/.eleventy.js
+
+// const pathPrefix = '/amr/';
+const pathPrefix = undefined;
+const outputRoot = 'dist';
+
+export default async function(eleventyConfig) {
+  // console.log('HERE', 'eleventyConfig.directories.input', eleventyConfig.directories.input)
+
+  // Global data
+  eleventyConfig.addGlobalData('assetsManifest', async () => {
+    const assetsManifest = await buildAssets({
+      pathPrefix,
+      outputRoot
+    });
+    console.log(`[build:assets]: added assets manifest to global data`, assetsManifest);
+    return assetsManifest;
+  });
+
+  // eleventyConfig.addPassthroughCopy('src/assets');
+  eleventyConfig.addPassthroughCopy("src/assets/css");
+  eleventyConfig.addPassthroughCopy("src/assets/images");
   // Copy fonts distributed via npm
   eleventyConfig.addPassthroughCopy({
     'node_modules/@ensembl/ensembl-elements-common/fonts': 'assets/fonts',
   });
 
+  eleventyConfig.addFilter('getAssetOutputPath', getAssetOutputPath);
+
+  // eleventyConfig.addPassthroughCopy({
+  //   'src/assets': 'amr/assets'
+  // });
+
+
+
 
 
   eleventyConfig.addPlugin(HtmlBasePlugin);
-  eleventyConfig.addPlugin(EleventyVitePlugin, {
+  // eleventyConfig.addPlugin(EleventyVitePlugin, {
     // viteOptions: {
-    //   base: '/amr',
+    //   base: '/amr/',
     // }
-  });
+  // });
 };
 
 
 export const config = {
   dir: {
-    input: 'src'
+    input: 'src',
+    output: outputRoot
   },
   templateFormats: ['html', 'njk', 'md', '11ty.js'],
   markdownTemplateEngine: 'njk',
 	htmlTemplateEngine: 'njk',
-  pathPrefix: '/amr/'
+  pathPrefix
 };
 
 
