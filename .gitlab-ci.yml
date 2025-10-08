@@ -36,7 +36,7 @@ variables:
 # This will be used to build/deploy pipeline for nginx conf
 .static-rules: &static-code-change-rules
   rules:
-    - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "test-qa"'
       changes:
         - frontend/nginx-conf/**/*
       when: always
@@ -57,7 +57,6 @@ variables:
     - cd k8s/backend/
     - kustomize edit set image DOCKER_IMAGE=${DOCKER_IMAGE}
     - kubectl apply -k .
-  when: on_success
 
 # template for deploy context for frontend
 # publish static assets to appropriate environment
@@ -69,7 +68,6 @@ variables:
     - sed -i "s#<JOB_ID>#${BUILD_JOB_ID}#g" publish_assets.yaml
     - kustomize edit set namesuffix -- -${CI_PROJECT_ID}-${BUILD_JOB_ID}
     - kubectl apply -k .
-  when: on_success
 
 # Build docker image for backend
 Build:BE:Docker:
@@ -164,6 +162,8 @@ QA:BE:
   when: on_success
 
 # Deploy backend to live environment
+# This is manual step it explicitly needs to be triggered by pressing a button in gitlab interface
+# The job is scheduled only for main branch and when deploy freeze is not in place
 Deploy:BE:Live:
   extends: .deploy-be-template
   <<: *be-code-change-rules
@@ -173,9 +173,15 @@ Deploy:BE:Live:
   variables:
     AGENT: ${PROD_AGENT}
     NS: amr
-  when: manual
+  rules:
+    - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "main"'
+      changes:
+        - backend/**/*
+      when: manual
 
 # Publish static assets to live environment
+# This is manual step it explicitly needs to be triggered by pressing a button in gitlab interface
+# The job is scheduled only for main branch and when deploy freeze is not in place
 Publish:Assets:Live:
   extends: .deploy-fe-template
   stage: deploy
@@ -185,4 +191,8 @@ Publish:Assets:Live:
   variables:
     AGENT: ${PROD_AGENT}
     NS: amr
-  when: manual
+  rules:
+    - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "main"'
+      changes:
+        - frontend/**/*
+      when: manual
