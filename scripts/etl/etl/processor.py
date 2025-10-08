@@ -80,7 +80,7 @@ CREATE TABLE category AS (
         dc.dataset_id,
         cd.column_id,
         cat_d.title,
-        cat_d.id as name
+        CONCAT(cat_d.dataset,'-',cat_d.id) as name
     FROM category_dump as cat_d
     JOIN column_definition as cd
     ON (cd.fullname = CONCAT(cat_d.dataset,'-',cat_d.id))
@@ -323,7 +323,8 @@ def amr_release_to_duckdb(
             )
 
             for c in cat["categories"]:
-                category_id = cat_map[c]['id']
+                cat_id = f"{v['dataset']}-{c}"
+                category_id = cat_map[cat_id]['id']
                 conn.execute(
                     SQL_LINK_CATEGORY_GROUP_AND_CATEGORY,
                     [category_index, category_id]

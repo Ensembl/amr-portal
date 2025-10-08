@@ -50,27 +50,27 @@
 		},
 		{
 			"dataset":"genotype",
-			"id":"Contig_id",
-			"label":"Contig",
-			"filter_label":"Contig_id"
+			"id":"gene_symbol",
+			"label":"Gene symbol",
+			"filter_label":"gene_symbol"
 		},
 		{
 			"dataset":"genotype",
-			"id":"Element_symbol",
+			"id":"amrfinderplus_element_symbol",
 			"label":"Element symbol",
-			"filter_label":"Element_symbol"
+			"filter_label":"amrfinderplus_element_symbol"
 		},
 		{
 			"dataset":"genotype",
-			"id":"Type",
-			"label":"Type",
-			"filter_label":"Type"
+			"id":"drug_class",
+			"label":"Drug class",
+			"filter_label":"drug_class"
 		},
 		{
 			"dataset":"genotype",
-			"id":"Method",
-			"label":"Method",
-			"filter_label":"Method"
+			"id":"antibiotic_name",
+			"label":"Antibiotic",
+			"filter_label":"antibiotic_name"
 		}
 	],
 	"views":[
@@ -107,23 +107,29 @@
 			"dataset":"genotype",
 			"categoryGroups": [ { "name": "", "categories": ["organism_name"] } ],
       		"otherCategoryGroups": [
-      			{ "name": "Contig", "categories": ["Contig_id"] },
-      			{ "name": "Element", "categories": ["Element_symbol"] },
-        		{ "name": "Type", "categories": ["Type"] },
-        		{ "name": "Method", "categories": ["Method"] }
+      			{ "name": "Genes", "categories": ["gene_symbol"] },
+      			{ "name": "Element", "categories": ["amrfinderplus_element_symbol"] },
+        		{ "name": "Drug class", "categories": ["drug_class"] },
+        		{ "name": "Antibiotic", "categories": ["antibiotic_name"] }
       		],
       		"columns":[
       			{ "name": "organism_name", "enabled":true, "rank":1},
-      			{ "name": "tax_id", "enabled":true, "rank":2},
-      			{ "name": "Protein_id", "enabled":true, "rank":3},
-      			{ "name": "Contig_id", "enabled":true, "rank":4},
-      			{ "name": "Strand", "enabled":true, "rank":5},
-      			{ "name": "Element_symbol", "enabled":true, "rank":6},
-      			{ "name": "Element_name", "enabled":true, "rank":7},
-      			{ "name": "Scope", "enabled":true, "rank":8},
-      			{ "name": "Type", "enabled":true, "rank":9},
-      			{ "name": "Class", "enabled":true, "rank":10},
-      			{ "name": "Method", "enabled":true, "rank":11}
+      			{ "name": "strain", "enabled":true, "rank":2},
+      			{ "name": "taxon_id", "enabled":true, "rank":3},
+      			{ "name": "assembly_ID", "enabled":true, "rank":4},
+      			{ "name": "gene_symbol", "enabled":true, "rank":5},
+      			{ "name": "id", "enabled":true, "rank":6},
+      			{ "name": "region", "enabled":true, "rank":7},
+      			{ "name": "region_start", "enabled":true, "rank":8},
+      			{ "name": "region_end", "enabled":true, "rank":9},
+      			{ "name": "strand", "enabled":true, "rank":10},
+      			{ "name": "amrfinderplus_element_symbol", "enabled":true, "rank":11},
+      			{ "name": "element_type", "enabled":true, "rank":12},
+      			{ "name": "drug_class", "enabled":true, "rank":13},
+      			{ "name": "antibiotic_name", "enabled":true, "rank":14},
+      			{ "name": "evidence_accession", "enabled":true, "rank":15},
+      			{ "name": "evidence_type", "enabled":true, "rank":16},
+      			{ "name": "evidence_description", "enabled":true, "rank":17}
       		],
       		"other_columns":["genotype"]
 		},
@@ -200,6 +206,22 @@
         {
         	"organism_name":{
                 "label":"Species"
+            },
+            "antibiotic_ontology":{
+            	"sortable":0,
+            	"type":"link",
+            	"url":"https://www.ebi.ac.uk/ols4/ontologies/aro/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2F{}"
+            },
+            "evidence_accession":{
+            	"sortable":0,
+            	"type":"link",
+            	"url":"https://www.ncbi.nlm.nih.gov/genome/annotation_prok/evidence/{}/"
+            },
+            "evidence_link":{
+            	"hidden":true
+            },
+            "antibiotic_ontology_link":{
+            	"hidden":true
             }
         }
     }

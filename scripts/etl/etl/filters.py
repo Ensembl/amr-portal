@@ -22,7 +22,6 @@ def generate_filters(
 
     for dataset in datasets:
         # generate filter values
-        print("building", dataset)
         filters = []
         for f in filter_config:
             if f['dataset'] != dataset['name']:
@@ -40,7 +39,6 @@ def generate_filters(
                 dataset["parquet"],
                 f["id"]
                 )
-            print(sql)
             results = conn.sql(sql)
             cols = results.columns
             filter_values = results.fetchall()
