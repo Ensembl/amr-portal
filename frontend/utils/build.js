@@ -6,7 +6,7 @@
 import fs from 'node:fs/promises';
 import esbuild from 'esbuild';
 import postcss from 'postcss';
-// import postcssImport from 'postcss-import';
+import postcssImport from 'postcss-import';
 import postcssUrl from 'postcss-url';
 
 const isProductionBuild = process.env.ELEVENTY_ENV === 'production';
@@ -25,27 +25,38 @@ export async function buildAssets({
   pathPrefix,
   outputRoot = ''
 }) {
-  const buildOutput = await esbuild.build({
+  // Build scripts
+  const scriptsBuildOutput = await esbuild.build({
     entryPoints: [
-      // scripts
-      'src/assets/scripts/pages/main.ts',
-
-      // styles
-      'src/assets/css/main.css'
+      'src/assets/scripts/pages/main.ts'
     ],
     outdir: `${outputRoot}/assets/scripts`,
     loader: {
-      '.css': 'css',
       '.svg': 'text'
     },
     format: 'esm',
     bundle: true,
     splitting: true,
     entryNames: isProductionBuild ? '[dir]/[name]-[hash]' : '[dir]/[name]',
-    sourcemap: !isProductionBuild,
+    sourcemap: true,
     minify: isProductionBuild,
     metafile: true, // <-- will output a json manifest for the build
-    external: pathPrefix ? [`${pathPrefix}*`] : ['/assets/*'],
+    external: pathPrefix ? [`${pathPrefix}*`] : ['/assets/*']
+  });
+
+  // Build styles: concatenate imports, and, if needed, add prefix to urls referenced from css
+  const stylesBuildOutput = await esbuild.build({
+    entryPoints: [
+      'src/assets/css/main.css'
+    ],
+    outdir: `${outputRoot}/assets/css`,
+    loader: {
+      '.css': 'css',
+    },
+    entryNames: isProductionBuild ? '[dir]/[name]-[hash]' : '[dir]/[name]',
+    minify: isProductionBuild,
+    metafile: true, // <-- will output a json manifest for the build
+    // external: pathPrefix ? [`${pathPrefix}*`] : ['/assets/*'],
     plugins: [
       {
         name: 'postcss',
@@ -53,8 +64,7 @@ export async function buildAssets({
           build.onLoad({ filter: /\.css$/ }, async (args) => {
             const source = await fs.readFile(args.path, 'utf8');
             const result = await postcss([
-              // postcssImport(),
-              // postcssPresetEnv()
+              postcssImport(),
               postcssUrl({
                 url: (asset) => {
                   // Only rewrite absolute /assets/... references
@@ -74,9 +84,13 @@ export async function buildAssets({
     ],
   });
 
+  const buildOutput = {
+    ...scriptsBuildOutput.metafile.outputs,
+    ...stylesBuildOutput.metafile.outputs
+  };
   const assetsManifest = {};
 
-  for (const [outputPath, { entryPoint }] of Object.entries(buildOutput.metafile.outputs)) {
+  for (const [outputPath, { entryPoint }] of Object.entries(buildOutput)) {
     if (entryPoint) {
       assetsManifest[entryPoint] = outputPath;
     }

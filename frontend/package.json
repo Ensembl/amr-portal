@@ -4,14 +4,10 @@
   "type": "module",
   "scripts": {
     "dev": "npx @11ty/eleventy --serve --incremental",
-    "build": "ELEVENTY_ENV=production npx @11ty/eleventy",
-    "xdev": "vite",
-    "xbuild": "vite build",
-    "preview": "vite preview"
+    "build": "ELEVENTY_ENV=production npx @11ty/eleventy"
   },
   "dependencies": {
     "@11ty/eleventy": "3.1.2",
-    "@11ty/eleventy-plugin-vite": "7.0.0",
     "@ensembl/ensembl-elements-common": "0.0.2",
     "@lit-labs/signals": "0.1.3",
     "lit": "3.3.1",
@@ -20,8 +16,8 @@
   },
   "devDependencies": {
     "postcss": "8.5.6",
+    "postcss-import": "16.1.1",
     "postcss-url": "10.1.3",
-    "typescript": "5.9.3",
-    "vite": "7.1.9"
+    "typescript": "5.9.3"
   }
 }

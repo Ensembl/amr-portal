@@ -150,3 +150,7 @@ npm run build
 ```
 
 This will create a `dist` directory containing a static html file and all the assets that it loads.
+
+## Further details
+
+The frontend combines a static site built with [Eleventy](https://www.11ty.dev/) with islands of interactivity built with web components and Lit. For more details about the build setup, see `frontend/eleventy.config.js`, and the documentation in the [`docs/decisions`](/docs//decisions/) directory.

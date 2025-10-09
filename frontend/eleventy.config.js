@@ -1,20 +1,16 @@
 import { HtmlBasePlugin } from '@11ty/eleventy';
-import EleventyVitePlugin from '@11ty/eleventy-plugin-vite';
 
 import { buildAssets } from './utils/build.js';
 import { getAssetOutputPath } from './utils/eleventy-filters.js';
 
-// https://www.aleksandrhovhannisyan.com/notes/cache-busting-assets-in-eleventy/
-// https://github.com/AleksandrHovhannisyan/aleksandrhovhannisyan.com/blob/master/packages/web/.eleventy.js
-
-// const pathPrefix = '/amr/';
-const pathPrefix = undefined;
+const pathPrefix = '/amr/';
+// const pathPrefix = undefined;
 const outputRoot = 'dist';
 
 export default async function(eleventyConfig) {
-  // console.log('HERE', 'eleventyConfig.directories.input', eleventyConfig.directories.input)
-
-  // Global data
+  // Hook into Eleventy's data pipeline at an early stage of a build,
+  // and build the static assets. Add the assets manifest to global data,
+  // such that it can be used in templates to retrieve paths to built files.
   eleventyConfig.addGlobalData('assetsManifest', async () => {
     const assetsManifest = await buildAssets({
       pathPrefix,
@@ -24,8 +20,6 @@ export default async function(eleventyConfig) {
     return assetsManifest;
   });
 
-  // eleventyConfig.addPassthroughCopy('src/assets');
-  eleventyConfig.addPassthroughCopy("src/assets/css");
   eleventyConfig.addPassthroughCopy("src/assets/images");
   // Copy fonts distributed via npm
   eleventyConfig.addPassthroughCopy({
@@ -34,20 +28,10 @@ export default async function(eleventyConfig) {
 
   eleventyConfig.addFilter('getAssetOutputPath', getAssetOutputPath);
 
-  // eleventyConfig.addPassthroughCopy({
-  //   'src/assets': 'amr/assets'
-  // });
 
-
-
-
+  // TODO: ignore any markdown files inside of the assets directory
 
   eleventyConfig.addPlugin(HtmlBasePlugin);
-  // eleventyConfig.addPlugin(EleventyVitePlugin, {
-    // viteOptions: {
-    //   base: '/amr/',
-    // }
-  // });
 };
 
 
@@ -61,46 +45,3 @@ export const config = {
 	htmlTemplateEngine: 'njk',
   pathPrefix
 };
-
-
-
-
-
-
-
-
-
-
-/**
-
-JUNK
-
-  // eleventyConfig.setServerOptions({
-	// 	onRequest: {
-	// 		'/api/*': function(req) {
-  //       console.log('GOT HERE!', 'HEADERS?', req.prototype);
-  //       const serverBaseUrl = 'http://localhost:8000';
-  //       const pathname = req.url.pathname.replace('/api', '');
-
-  //       const serverUrl = new URL(pathname, serverBaseUrl);
-
-  //       const fetchOptions = {
-  //         method: req.method,
-  //         headers: req.headers
-  //       };
-
-  //       if (req.method && !['GET', 'HEAD'].includes(req.method)) {
-  //         console.log('I AM HERE', 'REQ METHOD:', req);
-  //         fetchOptions.body = req;
-  //       }
-
-	// 			return fetch(serverUrl, fetchOptions);
-	// 		}
-	// 	}
-	// });
-
-  // eleventyConfig.on('eleventy.after', async (params) => {
-  //   console.log('params', params);
-  // })
-
- */
