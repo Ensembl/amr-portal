@@ -8,8 +8,9 @@ export class ApiBackend implements BackendInterface {
     const hostname = window.location.hostname;
     const isDev = hostname === 'localhost';
 
+    // TODO: this should probably be read from the environment
     const devApiUrl = 'http://localhost:8000';
-    const prodApiUrl = '/api';    
+    const prodApiUrl = '/amr/api';
 
     this.apiUrl = isDev ? devApiUrl : prodApiUrl;
   }

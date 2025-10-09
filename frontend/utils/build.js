@@ -4,6 +4,7 @@
  */
 
 import fs from 'node:fs/promises';
+import path from 'node:path';
 import esbuild from 'esbuild';
 import postcss from 'postcss';
 import postcssImport from 'postcss-import';
@@ -69,7 +70,7 @@ export async function buildAssets({
                 url: (asset) => {
                   // Only rewrite absolute /assets/... references
                   if (pathPrefix && asset.url.startsWith('/assets/')) {
-                    return pathPrefix + asset.url;
+                    return path.join(pathPrefix, asset.url);
                   }
                   return asset.url;
                 }
