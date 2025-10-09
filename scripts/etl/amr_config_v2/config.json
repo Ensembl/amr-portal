@@ -127,9 +127,10 @@
       			{ "name": "element_type", "enabled":true, "rank":12},
       			{ "name": "drug_class", "enabled":true, "rank":13},
       			{ "name": "antibiotic_name", "enabled":true, "rank":14},
-      			{ "name": "evidence_accession", "enabled":true, "rank":15},
-      			{ "name": "evidence_type", "enabled":true, "rank":16},
-      			{ "name": "evidence_description", "enabled":true, "rank":17}
+      			{ "name": "gen_antibiotic_ontology", "enabled":true, "rank":15},
+      			{ "name": "gen_evidence_accession", "enabled":true, "rank":16},
+      			{ "name": "evidence_type", "enabled":true, "rank":17},
+      			{ "name": "evidence_description", "enabled":true, "rank":18}
       		],
       		"other_columns":["genotype"]
 		},
@@ -208,14 +209,20 @@
                 "label":"Species"
             },
             "antibiotic_ontology":{
-            	"sortable":0,
-            	"type":"link",
-            	"url":"https://www.ebi.ac.uk/ols4/ontologies/aro/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2F{}"
+            	"hidden":true
             },
             "evidence_accession":{
+            	"hidden":true
+            },
+            "gen_antibiotic_ontology":{
+            	"label":"Antibiotic ontology",
             	"sortable":0,
-            	"type":"link",
-            	"url":"https://www.ncbi.nlm.nih.gov/genome/annotation_prok/evidence/{}/"
+            	"type":"labelled-link"
+            },
+            "gen_evidence_accession":{
+            	"label":"Evidence accession",
+            	"sortable":0,
+            	"type":"labelled-link"
             },
             "evidence_link":{
             	"hidden":true

@@ -30,6 +30,14 @@ def serialize_amr_record(row, column_details:dict):
                 else:
                     cell_obj["url"] = None
                 cell_obj["value"] = v
+            elif cell_obj["type"] == "labelled-link":
+                v_bits = v.split('|')
+                cell_obj["type"] = "link" #switch type to url for client
+                if len(v_bits) >= 2:
+                    cell_obj["url"] = v_bits[1]
+                    cell_obj["value"] = v_bits[0]
+                else:
+                    cell_obj["value"] = v;
             elif cell_obj["type"] == "array-link":
                 if set(("delimiter","url")) <=  cell_obj.keys() and v:
                     v_bits = v.split(cell_obj["delimiter"])
