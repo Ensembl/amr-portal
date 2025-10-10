@@ -14,13 +14,6 @@ import '../components/footer/footer';
 import '@ensembl/ensembl-elements-common/embl-ebi-components/page-header/page-header.js';
 import '@ensembl/ensembl-elements-common/embl-ebi-components/page-footer/page-footer.js';
 
-// import '@ensembl/ensembl-elements-common/styles/resets.css';
-// import '@ensembl/ensembl-elements-common/styles/custom-properties.css';
-// import '@ensembl/ensembl-elements-common/styles/global.css';
-// import '@ensembl/ensembl-elements-common/styles/fonts.css';
-// import './styles/global.css';
-// import './styles/custom-properties.css';
-
 export type SelectedFilter = {
   category: string;
   value: string;
