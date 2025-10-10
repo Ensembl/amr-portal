@@ -98,7 +98,7 @@
       			{ "name": "laboratory_typing_method", "enabled":true, "rank":10},
       			{ "name": "platform", "enabled":true, "rank":11},
       			{ "name": "ast_standard", "enabled":true, "rank":12},
-      			{ "name": "antibiotic_ontology", "enabled":true, "rank":13}
+      			{ "name": "gen_antibiotic_ontology", "enabled":true, "rank":13}
       		],
       		"other_columns":["phenotype"]
 		},
@@ -169,7 +169,7 @@
                 "type":"link",
                 "url":"https://www.ebi.ac.uk/ena/browser/view/{}"
             },
-            "pubmed_id":{
+            "AMR_associated_publications":{
                 "sortable":0,
                 "type":"array-link",
                 "delimiter":"|",
@@ -185,10 +185,10 @@
             	"label":"Measurement",
             	"sortable":0
             },
-            "antibiotic_ontology":{
+            "gen_antibiotic_ontology":{
             	"sortable":0,
-            	"type":"link",
-            	"url":"https://www.ebi.ac.uk/ols4/ontologies/aro/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2F{}"
+            	"label":"Antibiotic ontology",
+            	"type":"labelled-link"
             },
             "species": {
             	"hidden": true
@@ -201,6 +201,12 @@
             },
             "measurement_units": {
             	"hidden": true
+            },
+			"antibiotic_ontology":{
+            	"hidden":true
+            },
+            "antibiotic_ontology_link":{
+            	"hidden":true
             }
         },
         "genotype":

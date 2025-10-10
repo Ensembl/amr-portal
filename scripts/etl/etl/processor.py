@@ -18,11 +18,17 @@ CREATE TABLE column_definition AS
     SELECT nextval('sq_column_id') as column_id,
            concat(dataset,'-',id) as fullname,
            id as name,
-           label,
-           type,
-           sortable,
-           url,
-           delimiter
+           COLUMNS([
+               c for c in (*) if
+               c in [
+                    'label',
+                    'type',
+                    'sortable',
+                    'url',
+                    'delimiter'
+               ]
+           ])
+
     FROM column_dump;
 
 ALTER TABLE column_definition ADD PRIMARY KEY (column_id);

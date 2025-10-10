@@ -1,11 +1,15 @@
 [
 	{
 		"name":"phenotype",
-		"path":"/Users/jon/Data/amr/25-10-07/cabbage.csv",
+		"path":"/Users/jon/Data/amr/25-10-10/cabbage.csv",
 		"create_columns": [
 			{
 				"name":"gen_measurement",
 				"command":"TRIM(CONCAT(measurement_sign, ' ', measurement,' ', measurement_units))"
+			},
+			{
+				"name":"gen_antibiotic_ontology",
+				"command":"CONCAT_WS('|', antibiotic_ontology, antibiotic_ontology_link)"
 			}
 		]
 	},
