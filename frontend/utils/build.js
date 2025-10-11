@@ -49,7 +49,8 @@ export async function buildAssets({
   const stylesBuildOutput = await esbuild.build({
     entryPoints: [
       'src/assets/css/home-page.css',
-      'src/assets/css/main-page.css'
+      'src/assets/css/main-page.css',
+      'src/assets/css/documentation-page.css'
     ],
     outdir: `${outputRoot}/assets/css`,
     loader: {

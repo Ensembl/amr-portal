@@ -1,0 +1,18 @@
+{% extends "layouts/base.njk" %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{{ 'src/assets/css/documentation-page.css' | getAssetOutputPath | transformWithHtmlBase }}" />
+{% endblock %}
+
+{% block body %}
+  {% include "components/header/header.njk" %}
+  {% include "components/header/subheader.njk" %}
+
+  <main>
+    <amr-panel>
+      {{ content | safe }}
+    </amr-panel>
+  </main>
+
+  {% include "components/footer/footer.njk" %}
+{% endblock %}

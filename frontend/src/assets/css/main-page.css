@@ -1,10 +1,7 @@
 @import url('./default/defaults.css');
 
+@import url('./layouts/main-layout.css') layer(base);
+
 @import url('./components/embl-ebi-header.css') layer(components);
 @import url('./components/subheader.css') layer(components);
 @import url('./components/embl-ebi-footer.css') layer(components);
-
-
-main {
-  background-color: var(--color-medium-dark-grey);
-}

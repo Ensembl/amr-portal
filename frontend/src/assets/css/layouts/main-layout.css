@@ -1,8 +1,21 @@
 /* 
   Layout for pages other than the home page
+
+  Note:
+    - header height is set to 35px
+    - subheader height is set to 50px
+    - the height of the visible part of the footer is 40px
 */
 
 main {
-  height: calc(100vh - 35px - 20px);
-  /* background: red; */
+  background-color: var(--color-medium-dark-grey);
+  min-height: calc(100vh - 35px - 50px - 40px);
+  display: flex;
+  flex-direction: column;
+  padding-top: 10px;
+  padding-bottom: 20px;
+
+  & > * {
+    flex-grow: 1;
+  }
 }

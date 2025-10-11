@@ -27,8 +27,6 @@ export class AMRApp extends SignalWatcher(LitElement) {
   static styles = css`
     :host {
       box-sizing: border-box;
-      padding-top: 10px;
-      padding-bottom: 20px;
       display: grid;
       grid-template-rows: auto 1fr;
       row-gap: 20px;
