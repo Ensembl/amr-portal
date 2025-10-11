@@ -20,6 +20,10 @@ export default async function(eleventyConfig) {
     return assetsManifest;
   });
 
+  // Trigger rebuild if script or style files have been updated
+  eleventyConfig.addWatchTarget('src/assets/scripts');
+  eleventyConfig.addWatchTarget('src/assets/css');
+
   eleventyConfig.addPassthroughCopy("src/assets/images");
   // Copy fonts distributed via npm
   eleventyConfig.addPassthroughCopy({

@@ -27,10 +27,6 @@ export class AMRApp extends SignalWatcher(LitElement) {
   static styles = css`
     :host {
       box-sizing: border-box;
-    }
-
-    main {
-      box-sizing: border-box;
       padding-top: 10px;
       padding-bottom: 20px;
       display: grid;
@@ -75,21 +71,11 @@ export class AMRApp extends SignalWatcher(LitElement) {
     const selectedFilters = filtersStore.selectedFiltersForViewMode.get();
 
     return html`
-      <header>
-        <embl-ebi-page-header>
-        </embl-ebi-page-header>
-      </header>
-      <main>
-        <top-panel></top-panel>
-        <bottom-panel
-          .dataProvider=${this.dataProvider}
-          .selectedFilters=${selectedFilters}
-        ></bottom-panel>
-      </main>
-      <footer>
-        <embl-ebi-page-footer>
-        </embl-ebi-page-footer>
-      </footer>
+      <top-panel></top-panel>
+      <bottom-panel
+        .dataProvider=${this.dataProvider}
+        .selectedFilters=${selectedFilters}
+      ></bottom-panel>
     `;
   }
 

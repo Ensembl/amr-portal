@@ -48,7 +48,8 @@ export async function buildAssets({
   // Build styles: concatenate imports, and, if needed, add prefix to urls referenced from css
   const stylesBuildOutput = await esbuild.build({
     entryPoints: [
-      'src/assets/css/main.css'
+      'src/assets/css/home-page.css',
+      'src/assets/css/main-page.css'
     ],
     outdir: `${outputRoot}/assets/css`,
     loader: {
