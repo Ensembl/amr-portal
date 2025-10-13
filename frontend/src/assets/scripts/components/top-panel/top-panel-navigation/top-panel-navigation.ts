@@ -7,7 +7,7 @@ import '../circle-counter/circle-counter';
 
 import filtersStore from '../../../state/filtersStore';
 
-import type { FiltersView } from '../../../../types/filters/filtersConfig';
+import type { FiltersView } from '../../../types/filters/filtersConfig';
 
 
 @customElement('top-panel-navigation')

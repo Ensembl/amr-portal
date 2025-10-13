@@ -3,9 +3,9 @@ import { AsyncComputed } from 'signal-utils/async-computed';
 
 import { downloadBlobAsFile } from '../utils/download';
 
-import type { SelectedFilter } from '../index';
-import type { BackendInterface, AMRRecordsFetchParams } from '../../data-provider/backendInterface';
-import type { FiltersView } from '../../types/filters/filtersConfig';
+import type { SelectedFilter } from '../state/filtersStore';
+import type { BackendInterface, AMRRecordsFetchParams } from '../data-provider/backendInterface';
+import type { FiltersView } from '../types/filters/filtersConfig';
 
 type SortingOrder = 'asc' | 'desc';
 

@@ -15,8 +15,8 @@ import {
   renderButtonsColumn
 } from './buttons-column';
 
-import type { BackendInterface } from '../../../../data-provider/dataProvider';
-import type { FiltersView } from '../../../../types/filters/filtersConfig';
+import type { BackendInterface } from '../../../data-provider/dataProvider';
+import type { FiltersView } from '../../../types/filters/filtersConfig';
 
 /**
  * Ideally, this would use the html popover api,

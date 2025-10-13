@@ -1,6 +1,6 @@
-import type { AMRRecord } from '../src/assets/scripts/types/amrRecord';
-import type { SelectedFilter } from '../client';
-import type { FiltersConfig, FiltersView } from '../src/assets/scripts/types/filters/filtersConfig';
+import type { AMRRecord } from '../types/amrRecord';
+import type { SelectedFilter } from '../state/filtersStore';
+import type { FiltersConfig, FiltersView } from '../types/filters/filtersConfig';
 
 export type AMRRecordsFetchParams = {
   filters: SelectedFilter[];

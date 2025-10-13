@@ -11,7 +11,7 @@ import {
   renderButtonsColumn
 } from './buttons-column';
 
-import type { BackendInterface } from '../../../../data-provider/dataProvider';
+import type { BackendInterface } from '../../../data-provider/dataProvider';
 
 @customElement('bottom-panel-action-buttons')
 export class ActionButtons extends SignalWatcher(LitElement) {

@@ -19,10 +19,10 @@ import './action-buttons/action-buttons';
 
 import tableStyles from '@ensembl/ensembl-elements-common/styles/constructable-stylesheets/table.js';
 
-import type { BackendInterface } from '../../../data-provider/dataProvider';
-import type { AMRRecord, AMRRecordField, LinkData, LinkArrayData } from '../../../types/amrRecord';
-import type { AMRRecordsResponse } from '../../../data-provider/backendInterface';
-import type { FiltersView } from '../../../types/filters/filtersConfig';
+import type { BackendInterface } from '../../data-provider/dataProvider';
+import type { AMRRecord, AMRRecordField, LinkData, LinkArrayData } from '../../types/amrRecord';
+import type { AMRRecordsResponse } from '../../data-provider/backendInterface';
+import type { FiltersView } from '../../types/filters/filtersConfig';
 
 import { panelStyles } from '../panel/shared-panel-styles';
 
@@ -43,7 +43,7 @@ export class BottomPanel extends SignalWatcher(LitElement) {
         padding-top: 24px;
         padding-left: 30px;
         padding-right: 30px;
-        min-height: 400px;
+        min-height: var(--amr-bottom-panel-min-height, 400px);
       }
 
       .table-controls-area {
@@ -55,7 +55,7 @@ export class BottomPanel extends SignalWatcher(LitElement) {
       }
 
       .table-container {
-        overflow-x: auto;
+        overflow: auto;
         white-space: nowrap;
       }
 

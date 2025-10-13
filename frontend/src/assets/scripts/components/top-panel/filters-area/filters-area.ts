@@ -9,8 +9,8 @@ import filtersStore from '../../../state/filtersStore';
 
 import './filters-area-top';
 
-import type { FilterChangeEventPayload } from '../../../../types/events/filterChangeEvent';
-import { FilterCategoryGroup, FiltersConfig, FiltersView } from '../../../../types/filters/filtersConfig';
+import type { FilterChangeEventPayload } from '../../../types/events/filterChangeEvent';
+import { FilterCategoryGroup, FiltersConfig, FiltersView } from '../../../types/filters/filtersConfig';
 
 @customElement('filters-area')
 export class FiltersArea extends SignalWatcher(LitElement) {
