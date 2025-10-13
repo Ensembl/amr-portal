@@ -68,18 +68,22 @@ def test_serialize_amr_record_happy_tests():
 
 def test_sad_records_basic():
 
-    sad_row = {
-        "col_d":None
-    }
+    for value_of_nope in [None, "", "nan"]:
     
-    results = serialize_amr_record(
-        sad_row,
-        COLUMN_DETAILS
-    )
-    
-    assert len(results) == 1
-    assert results[0]["type"] == "link"
-    assert results[0]["value"] == None
+        sad_row = {
+            "col_d":value_of_nope
+        }
+        
+        results = serialize_amr_record(
+            sad_row,
+            COLUMN_DETAILS
+        )
+        
+        assert len(results) == 1
+        assert results[0]["type"] == "link"
+        
+        
+        assert results[0]["value"] in [None, '']
     
     
     
