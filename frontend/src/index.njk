@@ -1,0 +1,25 @@
+---
+title: Anti-microbial resistance portal
+layout: "layouts/home.njk"
+---
+
+{% from "components/card-link/card-link.njk" import cardLink %}
+
+{% include "components/header/header.njk" %}
+
+{% include "components/home/hero/hero.njk" %}
+
+
+<div class="card-links-container">
+  <div class="card-links-container-inner">
+    {{ cardLink({ href: '/data/', linkText: 'Find data resources' }) }}
+    {{ cardLink({ href: '/about', linkText: 'About the portal' }) }}
+    {{ cardLink({ href: '/foo', linkText: 'Third link card' }) }}
+  </div>
+</div>
+
+
+<div style="height: 300px;"></div>
+
+
+{% include "components/footer/footer.njk" %}

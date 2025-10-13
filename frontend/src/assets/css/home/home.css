@@ -1,0 +1,14 @@
+.card-links-container {
+  display: flex;
+  justify-content: center;
+  background-color: var(--color-medium-light-grey);
+  padding: 25px var(--standard-gutter);
+}
+
+.card-links-container-inner {
+  display: grid;
+  flex-grow: 1;
+  grid-template-columns: repeat(auto-fit, minmax(var(--vf-card-container__grid--size), 1fr));
+  column-gap: var(--page-grid-gap);
+  max-width: var(--vf-layout--comfortable);
+}

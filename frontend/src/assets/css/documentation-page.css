@@ -1,0 +1,27 @@
+@import url('./default/defaults.css');
+
+@import url('./layouts/main-layout.css') layer(base);
+
+@import url('./components/embl-ebi-header.css') layer(components);
+@import url('./components/subheader.css') layer(components);
+@import url('./components/embl-ebi-footer.css') layer(components);
+
+
+/* Note: some of the amr-panel styles are copied from shared-panel-styles.ts */
+amr-panel {
+  display: block;
+  width: calc(100% - var(--standard-gutter) - var(--double-standard-gutter));
+  margin-left: var(--standard-gutter);
+  border-radius: var(--panel-border-radius);
+  background-color: var(--color-white);
+  padding-right: var(--standard-gutter);
+  padding-left: var(--double-standard-gutter);
+  padding-top: 50px;
+  padding-bottom: 50px;
+
+
+  h1, h2, h3, h4, h5, h6, p {
+    width: 80ch;
+  }
+
+}
