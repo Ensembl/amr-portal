@@ -64,6 +64,24 @@ def test_serialize_amr_record_happy_tests():
     
     #check extras
     assert results[1]["url"] == f"http://unit/test/{ROW[columns[1]]}"
+
+
+def test_sad_records_basic():
+
+    sad_row = {
+        "col_d":None
+    }
+    
+    results = serialize_amr_record(
+        sad_row,
+        COLUMN_DETAILS
+    )
+    
+    assert len(results) == 1
+    assert results[0]["type"] == "link"
+    assert results[0]["value"] == None
+    
+    
     
     
     
