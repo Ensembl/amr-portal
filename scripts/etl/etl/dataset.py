@@ -45,7 +45,7 @@ def build_dataset(parquet: str, table: str, release_path: str, specials: dict) -
             'id': col[0],
             'label': format_column_name(col[0], specials),
             'type': map_type(col[0], col[1], specials),
-            'sortable': map_sortable(col[0], col[1], specials)
+            'sortable': map_sortable(col[0], col[1], specials),
         }
 
         # append additional data
