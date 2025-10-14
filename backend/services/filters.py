@@ -1,11 +1,15 @@
 import csv
 import io
 import json
+import os
+import tempfile
 from collections import defaultdict
+
+import duckdb
 import numpy as np
 from functools import lru_cache
 from fastapi import HTTPException
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, FileResponse
 import logging
 
 from backend.core.database import db_conn
@@ -259,3 +263,63 @@ def fetch_filtered_records(payload: Payload, scope: str = "all", file_format: st
         media_type=media_type,
         headers={"Content-Disposition": f"attachment; filename={filename}"}
     )
+
+
+# --- This part is experimental and will be removed ---
+
+def table_exists(con, table: str) -> bool:
+    # Works for main/temp; expand if you use custom schemas
+    q = """
+        SELECT 1
+        FROM information_schema.tables
+        WHERE table_schema IN ('main', 'temp')
+          AND table_name = ?
+        LIMIT 1
+    """
+    return con.execute(q, [table]).fetchone() is not None
+
+def download_them_all(background_tasks, table_name: str, data_path: str, compress: bool = False):
+    """
+    Opens an existing DuckDB file at `data_path`, reads all rows from `table_name`,
+    and returns a CSV (optionally gzip-compressed).
+    """
+    con = duckdb.connect(data_path, read_only=True)
+    try:
+        if not table_exists(con, table_name):
+            raise HTTPException(status_code=404, detail=f"Table '{table_name}' not found.")
+
+        suffix = ".csv.gz" if compress else ".csv"
+        tmp = tempfile.NamedTemporaryFile(delete=False, suffix=suffix)
+        tmp_path = tmp.name
+        tmp.close()
+
+        # COPY streams out of DuckDB without loading the whole table into Python memory
+        if compress:
+            con.execute(f"""
+                COPY (SELECT * FROM {table_name})
+                TO '{tmp_path}'
+                (FORMAT CSV, HEADER, DELIMITER ',', COMPRESSION GZIP);
+            """)
+        else:
+            con.execute(f"""
+                COPY (SELECT * FROM {table_name})
+                TO '{tmp_path}'
+                (FORMAT CSV, HEADER, DELIMITER ',');
+            """)
+
+        background_tasks.add_task(lambda p=tmp_path: os.remove(p) if os.path.exists(p) else None)
+
+        return FileResponse(
+            path=tmp_path,
+            media_type="application/gzip" if compress else "text/csv",
+            filename=f"mocking_all_data{suffix}",
+        )
+
+    except duckdb.IOException as e:
+        raise HTTPException(status_code=502, detail=f"DuckDB I/O error: {e}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Export failed: {e}")
+    finally:
+        con.close()
+
+# --- end of experimental code ---
