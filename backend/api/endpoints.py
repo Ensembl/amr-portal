@@ -1,8 +1,8 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, BackgroundTasks, Query
 
 from backend.models.filters_config import FiltersConfig
 from backend.models.payload import Payload
-from backend.services.filters import fetch_filters, filter_amr_records, fetch_filtered_records
+from backend.services.filters import fetch_filters, filter_amr_records, fetch_filtered_records, download_them_all
 
 router = APIRouter()
 
@@ -25,3 +25,21 @@ def health():
     # expand to include databae connectivity check etc
     return "Healthy: OK", 200
 
+
+# --- This part is experimental and will be removed ---
+
+ALL_DATA_PATH = "/usr/data/experimental/mocking_all_data.duckdb"
+
+@router.get("/amr-records/downloadEverything")
+def download_everything(
+    background_tasks: BackgroundTasks,
+    compress: bool = Query(False, description="Compress the CSV before downloading (GZIP)."),
+):
+    return download_them_all(
+        background_tasks=background_tasks,
+        table_name="phenotype",
+        data_path=ALL_DATA_PATH,
+        compress=compress,
+    )
+
+# --- end of experimental code ---
