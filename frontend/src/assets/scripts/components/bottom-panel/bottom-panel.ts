@@ -43,7 +43,8 @@ export class BottomPanel extends SignalWatcher(LitElement) {
         padding-top: 24px;
         padding-left: 30px;
         padding-right: 30px;
-        min-height: var(--amr-bottom-panel-min-height, 400px);
+        min-height: 360px;
+        height: calc(100vh - var(--amr-header-height) - var(--amr-subheader-height) - var(--amr-top-panel-height) - 20px - 20px);
       }
 
       .table-controls-area {
