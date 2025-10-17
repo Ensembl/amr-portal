@@ -6,6 +6,9 @@
 @import url('./components/subheader.css') layer(components);
 @import url('./components/embl-ebi-footer.css') layer(components);
 
+@import url('./documentation/table.css') layer(components);
+
+
 
 /* Note: some of the amr-panel styles are copied from shared-panel-styles.ts */
 amr-panel {
@@ -20,8 +23,25 @@ amr-panel {
   padding-bottom: 50px;
 
 
-  h1, h2, h3, h4, h5, h6, p {
+  h1, h2, h3, h4, h5, h6, p, ul {
     width: 80ch;
   }
 
+  ul, ol {
+    padding-left: 34px;
+  }
+
+  /* items of the top-level and second-level unordered list have black solid disks as list markers */
+  ul li {
+    padding-left: 5px;
+    list-style-type: disc;
+  }
+
+  /* top-level list items have a margin-bottom, if not immediately followed by a nested list */
+  ul li:not(:has(+ ul, + ol)),
+  ol li:not(:has(+ ul, + ol)) {
+    margin-bottom: var(--line-height);
+  }
+
 }
+
