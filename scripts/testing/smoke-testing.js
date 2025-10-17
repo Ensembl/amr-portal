@@ -17,8 +17,6 @@ async function checkAMRAPI(hostName) {
   apiPath = 'api';
 
   const filtersConfigEndpoint = `${host}/${apiPath}/filters-config`;
-
-  console.log(`${filtersConfigEndpoint}`);
   group (`/filters_config`, function () {
     let filtersConfigEndpointResponse = http.get(filtersConfigEndpoint);
 
@@ -35,7 +33,6 @@ async function checkAMRAPI(hostName) {
   });
 
   const amrRecordsEndpoint = `${host}/${apiPath}/amr-records`;
-  console.log(`${amrRecordsEndpoint}`)
   group (`/amr_records`, function () {
   let params = {
       headers: {
