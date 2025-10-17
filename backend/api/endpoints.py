@@ -1,4 +1,4 @@
-from fastapi import APIRouter, BackgroundTasks, Query
+from fastapi import APIRouter, BackgroundTasks, Query, HTTPException
 
 from backend.models.filters_config import FiltersConfig
 from backend.models.payload import Payload
@@ -18,6 +18,30 @@ def get_amr_records(payload: Payload):
 @router.post("/amr-records/download")
 def download_filtered_records(payload: Payload, scope: str = "all", file_format: str = "csv"):
     return fetch_filtered_records(payload, scope, file_format)
+
+
+@router.get("/amr-records/download")
+def download_filtered_records_get(
+    payload: str = Query(..., description="URL-encoded JSON matching the Payload schema"),
+    scope: str = Query("all", description="Either 'page' or 'all'"),
+    file_format: str = Query("csv", description="Either 'csv' or 'json'"),
+):
+    """
+    GET version of /amr-records/download.
+    Accepts `payload` as URL-encoded JSON (same shape as the POST body),
+    plus `scope` and `file_format` as query params.
+    """
+    try:
+        # validate directly from JSON string
+        payload_obj = Payload.model_validate_json(payload)
+        print(f"payload_obj: {payload_obj}")
+
+    except Exception as e:
+        # Provide a clear error message if payload is malformed
+        raise HTTPException(status_code=400, detail=f"Invalid 'payload' JSON: {e}")
+
+    return fetch_filtered_records(payload_obj, scope, file_format)
+
 
 @router.get('/health')
 def health():
