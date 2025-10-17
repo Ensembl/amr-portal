@@ -36,7 +36,7 @@ variables:
 # This will be used to build/deploy pipeline for nginx conf
 .static-rules: &static-code-change-rules
   rules:
-    - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "test-qa"'
+    - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "main"'
       changes:
         - frontend/nginx-conf/**/*
       when: always
@@ -44,7 +44,7 @@ variables:
 # template for deploy context
 # Sets k8s agent ( k8s cluster) and namespace to use for deployment
 .deploy-template: &prepare-context
-  image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:latest
+  image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:1.0.4
   before_script:
     - kubectl config use-context ${AGENT}
     - kubectl config set-context --current --namespace=${NS}
@@ -143,7 +143,7 @@ QA:BE:
   stage: qa
   <<: *be-code-change-rules
   image:
-    name: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:latest
+    name: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:1.0.4
     entrypoint: [ '' ]
   variables:
     HOSTNAME: http://amr.review.ensembl.org
