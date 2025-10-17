@@ -14,10 +14,11 @@ main {
 }
 
 amr-app {
-  --amr-top-panel-min-height: 300px;
-  --amr-bottom-panel-min-height: 400px;
-  min-height: calc(var(--amr-bottom-panel-min-height) + var(--amr-top-panel-min-height));
-  height: calc(100vh - 35px - 50px - 40px);
+  --amr-top-panel-height: 360px;
+  --amr-header-height: 35px;
+  --amr-subheader-height: 50px;
+  /* To prevent layout shift while first the script and then the data is loaded */
+  min-height: calc(100vh - var(--amr-header-height) - var(--amr-subheader-height));
 }
 
 amr-app:not(:defined) {

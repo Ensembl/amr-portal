@@ -5,32 +5,41 @@ layout: "layouts/documentation.njk"
 
 # About the portal
 
-## The MGnify resource
-Microbiome research involves the study of all genomes present within a specific environment. The approach can provide unique insights into the complex processes performed by environmental micro-organisms and their relationship to their surroundings, to each other, and, in some cases, to their host.
+The AMR (antimicrobial resistance) Portal is a collaboration between EMBL-EBI research and service teams alongisde Imperial College London to deliver a new way to access and explore AMR phenotype and genotype annotations through a user-friendly interface. Data within the portal is taken from the MRC project CABBAGE (Comprehensive Assessment of Bacterial-Based AMR prediction from Genotypes) and represents the largest public AMR dataset in a reconciled, uniform format. AMR represents a major growing concern to public health predicted to cause over 2M deaths per year by 2050, with the Global South facing a disproportionate burden of AMR. It increases the risk of untreatable bacteiral infections whilst increasing the chance of complications from essential medical procdures from childbirth to transplants.
 
-MGnify offers an automated pipeline for the analysis and archiving of microbiome data to help determine the taxonomic diversity and functional & metabolic potential of environmental samples. Users can submit their own data for analysis or freely browse all of the analysed public datasets held within the repository. In addition, users can request analysis of any appropriate dataset within the European Nucleotide Archive (ENA). User-submitted or ENA-derived datasets can also be assembled on request, prior to analysis.
+## CABBAGE
 
-Staying informed
-Follow us on Twitter using @MGnifyDB
+The Comprehensive Assessment of Bacterial-Based Antimicrobial resistance prediction from GEnotypes (CABBAGE) collects and curates all publicly available data containing both NGS information and AMR information, transforming it into a standard format. During a pilot project researchers collected more than three times as much data as is currently available from the single largest public database. The group's aim is to automate its normalisation processes so that the results of future studies can be directly incorporated into EMBL-EBI resources, and work with stakeholders such as the World Health Organisation to facilitate the adoption of our standards. It is due to the uniformity of these data that the EMBL-EBI teams have been able to create the portal.
 
-Check the service status and incidents: status.mgnify.org
+## AMR Phenotypes
 
-Cite us
-Cover of the journal
-To cite MGnify, please refer to the following publication:
+CABBAGE has catalogued an immensive collection of antibiograms in a standardised format which has been processed by the EMBL-EBI teams to a single consistent large data format. This includes linkage to the [Antibiotic Resistance Ontology (ARO)](https://github.com/arpcard/aro) ontology or [ChEBI (Chemical Entities of Biological Interest) resource](https://www.ebi.ac.uk/chebi/). As part of this work we are brokering these normalised antibiograms back to BioSamples.
 
-MGnify: the microbiome sequence data analysis resource in 2023 Nucleic Acids Research (2023) doi:10.1093/nar/gkac1080
-Richardson LJ, Allen B, Baldi G, Beracochea M, Bileschi M, Burdett T, Burgin J, Caballero-Pérez J, Cochrane G, Colwell L, Curtis T, Escobar-Zepeda A, Gurbich T, Kale V, Korobeynikov A, Raj S, Rogers AB, Sakharova E, Sanchez S, Wilkinson D and Finn RD .
-Latest publications
-MGnify: the microbiome sequence data analysis resource in 2023 Nucleic Acids Research (2023) doi:10.1093/nar/gkac1080
-Richardson LJ, Allen B, Baldi G, Beracochea M, Bileschi M, Burdett T, Burgin J, Caballero-Pérez J, Cochrane G, Colwell L, Curtis T, Escobar-Zepeda A, Gurbich T, Kale V, Korobeynikov A, Raj S, Rogers AB, Sakharova E, Sanchez S, Wilkinson D and Finn RD .
-MGnify Genomes: a resource for biome-specific microbial genome catalogues Journal of Molecular Biology (2023) doi:10.1016/j.jmb.2023.168016
-Gurbich TA, Almeida A, Beracochea M, Burdett T, Burgin T, Cochrane G, Raj S, Richardson LJ, Rogers AB, Sakharova E, Salazar GA and Finn RD.
-A new genomic blueprint of the human gut microbiota Nature (2019) doi:10.1038/s41586-019-0965-1
-Almeida A, Mitchell AL, Boland M, Forster SC, Gloor GB, Tarkowska A, Lawley TD and Finn RD.
-More publications
-MGnify logos
-If you’d like to use the MGnify logo on your slides, posters or figures, download our media pack (zip file).
+## AMR Genotypes
 
-Funding
-MGnify currently receives funding support from: the European Union’s Horizon 2020 Research and Innovation programme (817729, 862923, and 952914) and Research Infrastructures programme (824087); the Biotechnology and Biological Sciences Research Council (BB/S009043/1, BB/T000902/1, BB/V01868X/1, and BB/W002965/1); ELIXIR, the research infrastructure for Life-Science data; EMBL – FNR (CORE International); and European Molecular Biology Laboratory (EMBL) core funds.
+AMR Genotypes are predictions of AMR resistance from computational methods. All annotated genomes have been processed using the mettannotator workflow from EMBL-EBI's MGnify team and generates an exhaustive annotation of prokaryotic genomes using existing tools. Two such tools are [AMRFinderPlus](https://www.ncbi.nlm.nih.gov/pathogens/antimicrobial-resistance/AMRFinder/) from NCBI and [UniProt's UniFire functional annotation system](https://gitlab.ebi.ac.uk/uniprot-public/unifire). Both of which are capable of _in silico_ predictions of resistance based on computational evidence and similarity.
+
+Results from these tools are normalised according to the same rules as our phenotype data.
+
+## EMBL-EBI
+
+The AMR portal is a collaboration between the following EMBL-EBI teams:
+
+- European Nucleotide Archive
+- Genomics Technology Infrastructure
+- Lees Research
+- Microbiome Informatics
+- Protein Function Development
+- Protein Sequence Resources
+- Samples, Phenotypes, and Ontologies
+
+## Future goals
+
+This project represents phase one of our efforts. Future developments may include
+
+- The ability to cross link between our phenotype and genotype data sets
+- Expanding AMR profiles to those from isolate genomes in culture collections
+- Expanding AMR profiles from text mining the literature
+- Submission flows allowing third parties to submit antibiograms and for these data to flow into this portal
+- Further standardisation of the antibiogram formats
+- Display of isolate genomes in the Ensembl resource including integration of AMR functional annotation

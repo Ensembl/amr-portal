@@ -24,9 +24,8 @@ export class TopPanel extends SignalWatcher(LitElement) {
       :host {
         box-sizing: border-box;
         position: relative;
-        height: 100%;
-        max-height: 35vh;
-        min-height: var(--amr-top-panel-min-height, 300px);
+        height: var(--amr-top-panel-height, 360px);
+        padding-bottom: 20px;
       }
 
       :host:has(top-panel-navigation-collapsed) {

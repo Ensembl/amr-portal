@@ -14,12 +14,32 @@ layout: "layouts/home.njk"
   <div class="card-links-container-inner">
     {{ cardLink({ href: '/data/', linkText: 'Find data resources' }) }}
     {{ cardLink({ href: '/about/', linkText: 'About the portal' }) }}
-    {{ cardLink({ href: '/foo/', linkText: 'Third link card' }) }}
+    {{ cardLink({ href: '/usage/', linkText: 'How to use' }) }}
   </div>
 </div>
 
 
-<div style="height: 300px;"></div>
+<div style="min-height: 300px; max-width: var(--vf-layout--comfortable); margin: auto;">
+
+Links to other pages
+
+<ul>
+  <li>
+    <a href="/about/">About</a>
+  </li>
+  <li>
+    <a href="/methods/">Methods</a>
+  </li>
+  <li>
+    <a href="/schemas/">Schemas</a>
+  </li>
+  <li>
+    <a href="/usage/">How to use (barely started)</a>
+  </li>
+</ul>
+
+
+</div>
 
 
 {% include "components/footer/footer.njk" %}
