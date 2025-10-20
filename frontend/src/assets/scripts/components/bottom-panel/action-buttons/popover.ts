@@ -5,11 +5,12 @@ import { SignalWatcher } from '@lit-labs/signals';
 import '@ensembl/ensembl-elements-common/components/button/button.js';
 import '@ensembl/ensembl-elements-common/components/text-button/text-button.js';
 import '@ensembl/ensembl-elements-common/components/button-link/button-link.js';
+import '@ensembl/ensembl-elements-common/components/loading-button/loading-button.js';
 
-import appConfig from '../../../configs/app-config';
 import { actionView } from './state';
 import filtersStore from '../../../state/filtersStore';
 import biosampleStore from '../../../state/biosampleStore';
+import downloadService from '../../../services/download-service';
 import { focusFirstEligibleChild } from '../../../utils/focus-utils';
 
 import {
@@ -113,18 +114,27 @@ export class ActionButtonsPopover extends SignalWatcher(LitElement) {
   @property({ type: Object })
   dataProvider!: BackendInterface;
 
+  // To remove event listeners on unmounting
+  abortController = new AbortController();
+
   protected firstUpdated() {
     focusFirstEligibleChild(this.shadowRoot as ShadowRoot);
   }
 
   connectedCallback() {
     super.connectedCallback();
-    document.addEventListener('keyup', this.#onKeyPress);
+    document.addEventListener('keyup', this.#onKeyPress, {
+      signal: this.abortController.signal
+    });
+
+    downloadService.addEventListener('download-success', this.#onDownloadSuccess, {
+      signal: this.abortController.signal
+    });
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    document.removeEventListener('keyup', this.#onKeyPress);
+    this.abortController.abort();
   }
 
   #onKeyPress = (event: KeyboardEvent) => {
@@ -143,20 +153,40 @@ export class ActionButtonsPopover extends SignalWatcher(LitElement) {
   }
 
   #getDownloadLink() {
-    const viewId = filtersStore.viewMode.get();
+    const viewId = filtersStore.viewMode.get() as string | number;
     const selectedFilters = filtersStore.selectedFiltersForViewMode.get();
-    const payload = {
-      view_id: viewId as string | number,
-      selected_filters: selectedFilters,
-    };
-    const stringifiedPayload = JSON.stringify(payload);
-    const base64Payload = btoa(stringifiedPayload);
-    const url = new URL(`${appConfig.apiBaseUrl}/amr-records/download`, document.baseURI);
-    url.searchParams.set('scope', 'all');
-    url.searchParams.set('file_format', 'csv');
-    url.searchParams.set('payload', base64Payload);
 
-    return url.toString();
+    return downloadService.createDownloadLink({
+      viewId: viewId,
+      selectedFilters
+    });
+  }
+
+  #getPayloadForDownload() {
+   const viewId = filtersStore.viewMode.get() as string | number;
+    const selectedFilters = filtersStore.selectedFiltersForViewMode.get();
+
+    return {
+      viewId,
+      selectedFilters
+    };
+  }
+
+  #onDownloadStart() {
+    const payload = this.#getPayloadForDownload();
+    downloadService.download(payload);
+    this.requestUpdate();
+  }
+
+  #onDownloadSuccess = (event: Event) => {
+    console.log('DOWNLOAD SUCCEEDED', event);
+    const eventDetail = (event as CustomEvent<{ downloadId: string; }>).detail;
+    const { downloadId: completedDownloadId } = eventDetail;
+
+    const downloadId = downloadService.getDownloadId(this.#getPayloadForDownload());
+    if (downloadId === completedDownloadId) {
+      this.requestUpdate();
+    }
   }
 
   render() {
@@ -197,6 +227,37 @@ export class ActionButtonsPopover extends SignalWatcher(LitElement) {
   }
 
   renderDownloadContent() {
+    if (!downloadService.canUseFileSystemApi) {
+      return this.renderDownloadFallback();
+    }
+
+    const isDownloading = downloadService.isDownloading(this.#getPayloadForDownload());
+
+    return html`
+      <div class="download-content">
+        <div class="title">
+          Download data
+        </div>
+        <div class="action-buttons">
+          <ens-loading-button
+            variant="action"
+            @click=${this.#onDownloadStart}
+            status=${isDownloading ? 'loading' : 'default'}
+          >
+            Download
+          </ens-loading-button>
+          <ens-text-button @click=${this.#hidePopover}>
+            Cancel
+          </ens-text-button>
+        </div>
+      </div>
+      ${renderButtonsColumn()}
+    `;
+  }
+
+  // For browsers that do not support FileSystem API
+  // should turn the download button into a button-looking link
+  renderDownloadFallback() {
     return html`
       <div class="download-content">
         <div class="title">
