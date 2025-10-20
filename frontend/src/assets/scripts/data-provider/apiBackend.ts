@@ -1,4 +1,4 @@
-import { BackendInterface, AMRRecordsFetchParams, AMRRecordsResponse } from './backendInterface';
+import type { BackendInterface, AMRRecordsFetchParams, AMRRecordsResponse } from './backendInterface';
 import type { FiltersConfig } from '../types/filters/filtersConfig';
 
 export class ApiBackend implements BackendInterface {

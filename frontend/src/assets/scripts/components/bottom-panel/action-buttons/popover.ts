@@ -4,7 +4,9 @@ import { SignalWatcher } from '@lit-labs/signals';
 
 import '@ensembl/ensembl-elements-common/components/button/button.js';
 import '@ensembl/ensembl-elements-common/components/text-button/text-button.js';
+import '@ensembl/ensembl-elements-common/components/button-link/button-link.js';
 
+import appConfig from '../../../configs/app-config';
 import { actionView } from './state';
 import filtersStore from '../../../state/filtersStore';
 import biosampleStore from '../../../state/biosampleStore';
@@ -15,7 +17,7 @@ import {
   renderButtonsColumn
 } from './buttons-column';
 
-import type { BackendInterface } from '../../../data-provider/dataProvider';
+import type { BackendInterface, AMRRecordsFetchParams } from '../../../data-provider/backendInterface';
 import type { FiltersView } from '../../../types/filters/filtersConfig';
 
 /**
@@ -140,12 +142,21 @@ export class ActionButtonsPopover extends SignalWatcher(LitElement) {
     actionView.set(null);
   }
 
-  #onDownload() {
+  #getDownloadLink() {
     const viewId = filtersStore.viewMode.get();
-    biosampleStore.downloadAMRData({
-      viewId: viewId as FiltersView['id'],
-      dataProvider: this.dataProvider
-    });
+    const selectedFilters = filtersStore.selectedFiltersForViewMode.get();
+    const payload = {
+      view_id: viewId as string | number,
+      selected_filters: selectedFilters,
+    };
+    const stringifiedPayload = JSON.stringify(payload);
+    const base64Payload = btoa(stringifiedPayload);
+    const url = new URL(`${appConfig.apiBaseUrl}/amr-records/download`, document.baseURI);
+    url.searchParams.set('scope', 'all');
+    url.searchParams.set('file_format', 'csv');
+    url.searchParams.set('payload', base64Payload);
+
+    return url.toString();
   }
 
   render() {
@@ -192,12 +203,13 @@ export class ActionButtonsPopover extends SignalWatcher(LitElement) {
           Download data
         </div>
         <div class="action-buttons">
-          <ens-button
+          <ens-button-link
             variant="action"
-            @click=${this.#onDownload}
+            href=${this.#getDownloadLink()}
+            download
           >
             Download
-          </ens-button>
+          </ens-button-link>
           <ens-text-button @click=${this.#hidePopover}>
             Cancel
           </ens-text-button>

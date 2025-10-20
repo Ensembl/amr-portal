@@ -1,3 +1,4 @@
+import base64
 from fastapi import APIRouter, BackgroundTasks, Query, HTTPException
 
 from backend.models.filters_config import FiltersConfig
@@ -33,7 +34,10 @@ def download_filtered_records_get(
     """
     try:
         # validate directly from JSON string
-        payload_obj = Payload.model_validate_json(payload)
+        decoded_payload_bytes = base64.urlsafe_b64decode(payload)
+        decoded_payload_string = decoded_payload_bytes.decode('utf-8')
+        print('decoded_payload_string', decoded_payload_string)
+        payload_obj = Payload.model_validate_json(decoded_payload_string)
         print(f"payload_obj: {payload_obj}")
 
     except Exception as e:
