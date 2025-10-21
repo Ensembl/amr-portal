@@ -19,7 +19,9 @@ export class TopPanelNavigation extends SignalWatcher(LitElement) {
         display: flex;
         column-gap: 1rem;
         align-items: center;
+        padding-top: 18px;
         padding-left: var(--standard-gutter);
+        line-height: 1;
       }
 
       .filters-label {
