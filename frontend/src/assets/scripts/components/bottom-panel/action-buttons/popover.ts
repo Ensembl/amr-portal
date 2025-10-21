@@ -1,4 +1,4 @@
-import { html, css, LitElement, PropertyValues } from 'lit';
+import { html, css, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { SignalWatcher } from '@lit-labs/signals';
 
@@ -9,7 +9,6 @@ import '@ensembl/ensembl-elements-common/components/button-link/button-link.js';
 import appConfig from '../../../configs/app-config';
 import { actionView } from './state';
 import filtersStore from '../../../state/filtersStore';
-import biosampleStore from '../../../state/biosampleStore';
 import { focusFirstEligibleChild } from '../../../utils/focus-utils';
 
 import {
@@ -17,8 +16,7 @@ import {
   renderButtonsColumn
 } from './buttons-column';
 
-import type { BackendInterface, AMRRecordsFetchParams } from '../../../data-provider/backendInterface';
-import type { FiltersView } from '../../../types/filters/filtersConfig';
+import type { BackendInterface } from '../../../data-provider/backendInterface';
 
 /**
  * Ideally, this would use the html popover api,
