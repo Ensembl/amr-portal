@@ -1,5 +1,5 @@
 import { html, css, LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { SignalWatcher } from '@lit-labs/signals';
 
 import '@ensembl/ensembl-elements-common/components/button/button.js';
@@ -104,12 +104,21 @@ export class ActionButtonsPopover extends SignalWatcher(LitElement) {
           align-self: start;
           column-gap: 40px;
         }
+
+        .download-started-button::part(button) {
+          background-color: transparent;
+          border: 1px solid var(--color-grey);
+          color: black;
+        }
       }
     `
   ]
 
   @property({ type: Object })
   dataProvider!: BackendInterface;
+
+  @state()
+  shouldShowDownloadStarted = false;
 
   protected firstUpdated() {
     focusFirstEligibleChild(this.shadowRoot as ShadowRoot);
@@ -138,6 +147,14 @@ export class ActionButtonsPopover extends SignalWatcher(LitElement) {
   #onClear() {
     filtersStore.clearAllFilters();
     actionView.set(null);
+  }
+
+  #onDownloadClick = () => {
+    this.shouldShowDownloadStarted = true;
+
+    setTimeout(() => {
+      this.shouldShowDownloadStarted = false;
+    }, 2000);
   }
 
   #getDownloadLink() {
@@ -201,13 +218,10 @@ export class ActionButtonsPopover extends SignalWatcher(LitElement) {
           Download data
         </div>
         <div class="action-buttons">
-          <ens-button-link
-            variant="action"
-            href=${this.#getDownloadLink()}
-            download
-          >
-            Download
-          </ens-button-link>
+          ${this.shouldShowDownloadStarted
+            ? this.renderDownloadStartedButton()
+            : this.renderDownloadLink()
+          }
           <ens-text-button @click=${this.#hidePopover}>
             Cancel
           </ens-text-button>
@@ -216,5 +230,28 @@ export class ActionButtonsPopover extends SignalWatcher(LitElement) {
       ${renderButtonsColumn()}
     `;
   }
+
+  renderDownloadLink() {
+    return html`
+      <ens-button-link
+        variant="action"
+        href=${this.#getDownloadLink()}
+        download
+        @click=${this.#onDownloadClick}
+      >
+        Download
+      </ens-button-link>
+    `;
+  }
+
+  renderDownloadStartedButton() {
+    return html`
+      <ens-button class="download-started-button" disabled>
+        Starting...
+      </ens-button>
+    `;
+  }
+
+
 
 }
