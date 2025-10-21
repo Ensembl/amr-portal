@@ -1,7 +1,7 @@
 [
 	{
 		"name":"phenotype",
-		"path":"/Users/jon/Data/amr/25-10-10/cabbage.csv",
+		"path":"/Users/jon/Data/amr/25-10-20/cabbage_processed.csv",
 		"create_columns": [
 			{
 				"name":"gen_measurement",
@@ -15,7 +15,7 @@
 	},
 	{
 		"name":"genotype",
-		"path":"/Users/jon/Data/amr/25-10-07/genotype-amr-alpha-processed.csv",
+		"path":"/Users/jon/Data/amr/25-10-20/amr_genotypes_processed.csv",
 		"create_columns": [
 			{
 				"name":"gen_antibiotic_ontology",
@@ -26,5 +26,9 @@
 				"command":"CONCAT_WS('|', evidence_accession, evidence_link)"
 			}
 		]
+	},
+	{
+		"name":"assembly",
+		"path":"/Users/jon/Data/amr/25-10-20/assembly.csv"
 	}
 ]
