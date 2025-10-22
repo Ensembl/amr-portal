@@ -4,19 +4,7 @@ from typing import Any, Iterable
 from collections import defaultdict, OrderedDict
 
 from backend.core.database import db_conn as default_db_conn
-
-
-def _query_to_records(db, sql: str) -> list[dict[str, Any]]:
-    """Run a SQL query and return a list of dict records.
-
-    Args:
-        db: Database connection object exposing `.query(sql).fetchdf()`.
-        sql: SQL query to execute.
-
-    Returns:
-        List[Dict[str, Any]]: Each row represented as a dictionary.
-    """
-    return db.query(sql).fetchdf().to_dict(orient="records")
+from backend.core.utils import query_to_records
 
 
 def _build_filter_categories(rows: Iterable[dict[str, Any]]) -> dict[str, dict[str, Any]]:
@@ -112,7 +100,7 @@ def _build_columns_per_view(db):
         ORDER BY vc.rank
      """
 
-    columns_per_view = _query_to_records(db, columns_per_view_query)
+    columns_per_view = query_to_records(db, columns_per_view_query)
     columns_grouped_per_view = defaultdict(list)
 
     for col in columns_per_view:
@@ -202,7 +190,7 @@ def build_filters_config(db=default_db_conn) -> dict[str, Any]:
         JOIN dataset_column dc ON cd.column_id = dc.column_id
         JOIN dataset d ON dc.dataset_id = d.dataset_id
     """
-    category_rows = _query_to_records(db, filters_category_query)
+    category_rows = query_to_records(db, filters_category_query)
     filter_categories = _build_filter_categories(category_rows)
 
     # Views
@@ -222,9 +210,9 @@ def build_filters_config(db=default_db_conn) -> dict[str, Any]:
     # Release
     release_query = "SELECT release_label as label FROM release"
 
-    view_rows = _query_to_records(db, filters_view_query)
+    view_rows = query_to_records(db, filters_view_query)
     filter_views = _build_filter_views(db, view_rows)
-    release_rows = _query_to_records(db, release_query)
+    release_rows = query_to_records(db, release_query)
     release = release_rows[0] if release_rows else None
 
     return {

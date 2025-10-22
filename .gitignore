@@ -16,3 +16,4 @@ _site
 
 # Environemnt variables
 .env
+.env.test
