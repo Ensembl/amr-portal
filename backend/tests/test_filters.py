@@ -1,9 +1,4 @@
-from fastapi.testclient import TestClient
-from backend.main import app
-
-client = TestClient(app)
-
-def test_amr_records_basic():
+def test_amr_records_basic(client):
     payload = {
         "selected_filters": [],
         "page": 1,
