@@ -1,4 +1,6 @@
 import base64
+from email.policy import default
+
 from fastapi import APIRouter, BackgroundTasks, Query, HTTPException
 
 from backend.models.filters_config import FiltersConfig
@@ -23,9 +25,9 @@ def download_filtered_records(payload: Payload, scope: str = "all", file_format:
 
 @router.get("/amr-records/download")
 def download_filtered_records_get(
-    payload: str = Query(..., description="URL-encoded JSON matching the Payload schema"),
-    scope: str = Query("all", description="Either 'page' or 'all'"),
-    file_format: str = Query("csv", description="Either 'csv' or 'json'"),
+    payload: str = Query(default=..., description="URL-encoded JSON matching the Payload schema"),
+    scope: str = Query(default="all", description="Either 'page' or 'all'"),
+    file_format: str = Query(default="csv", description="Either 'csv' or 'json'"),
 ):
     """
     GET version of /amr-records/download.

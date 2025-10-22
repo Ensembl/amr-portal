@@ -167,8 +167,6 @@ export class ActionButtonsPopover extends SignalWatcher(LitElement) {
     const stringifiedPayload = JSON.stringify(payload);
     const base64Payload = btoa(stringifiedPayload);
     const url = new URL(`${appConfig.apiBaseUrl}/amr-records/download`, document.baseURI);
-    url.searchParams.set('scope', 'all');
-    url.searchParams.set('file_format', 'csv');
     url.searchParams.set('payload', base64Payload);
 
     return url.toString();
