@@ -1,5 +1,6 @@
 ---
 title: Methods
+header_title: About
 layout: "layouts/documentation.njk"
 ---
 
