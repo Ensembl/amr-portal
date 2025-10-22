@@ -20,17 +20,6 @@ from backend.core.filters_config_parser import build_filters_config
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# Whitelist as fallback
-ALLOWED_TABLES = {"phenotype", "genotype"}
-
-@lru_cache(maxsize=1)
-def get_valid_tables():
-    try:
-        tables_result = db_conn.query("SHOW TABLES").fetchdf()
-        return set(tables_result['name'].tolist())
-    except Exception as e:
-        print(f"Warning: Could not fetch tables from database: {e}")
-        return ALLOWED_TABLES
 
 @lru_cache(maxsize=32)
 def get_table_columns(table_name: str):
@@ -108,13 +97,6 @@ def filter_amr_records(payload: Payload):
 
     # Now we use the selected view to infer which dataset to query data from
     selected_dataset = get_dataset_from_view(selected_view_id)
-
-    # And it's in the ALLOWED_TABLES to query
-    if selected_dataset not in ALLOWED_TABLES:
-        raise HTTPException(
-            status_code=400,
-            detail=f"'{selected_view_id}' is not a valid view ID"
-        )
 
     valid_columns = get_table_columns(selected_dataset)
     # not all valid columns are eventually displayed
