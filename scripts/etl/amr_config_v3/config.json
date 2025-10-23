@@ -27,7 +27,7 @@
 		{
 			"dataset":"phenotype",
 			"id":"ast_standard",
-			"label":"Host sex",
+			"label":"AST Standard",
 			"filter_label":"ast_standard"
 		},
 		{
@@ -95,8 +95,9 @@
 		{
 			"name":"AMR Phenotypes",
 			"dataset":"phenotype",
-			"categoryGroups": [ { "name": "", "categories": ["antibiotic_name"] } ],
+			"categoryGroups": [ { "name": "Antibiotic", "categories": ["antibiotic_name"] } ],
       		"otherCategoryGroups": [
+      			{ "name": "Genus", "categories": ["genus"] },
         		{ "name": "Phenotype", "categories": ["resistance_phenotype"] },
         		{ "name": "Genome", "categories": ["species"] },
         		{ "name": "AST Standard", "categories": ["ast_standard"] },
@@ -122,7 +123,7 @@
 		{
 			"name":"AMR Genotypes",
 			"dataset":"genotype",
-			"categoryGroups": [ { "name": "", "categories": ["species"] } ],
+			"categoryGroups": [ { "name": "Species", "categories": ["species"] } ],
       		"otherCategoryGroups": [
       			{ "name": "Genus", "categories": ["genus"] },
       			{ "name": "Genes", "categories": ["gene_symbol"] },
@@ -159,13 +160,13 @@
 		{
 			"name":"AMR Isolates",
 			"dataset":"assembly",
-			"categoryGroups": [ { "name": "", "categories": ["species"] } ],
+			"categoryGroups": [ { "name": "Species", "categories": ["species"] } ],
 			"otherCategoryGroups": [
 				{ "name": "Species", "categories": ["genus","strain"] },
 				{ "name": "Data", "categories": ["phenotype","genotype"] }
 			],
 			"columns":[],
-			"other_columns":["genotype"]
+			"other_columns":["assembly"]
 		}
 	],
 	"special_columns":{
@@ -174,6 +175,11 @@
             	"sortable":0,
                 "type":"link",
                 "url":"https://www.ebi.ac.uk/ena/browser/view/{}"
+            },
+            "BioSample_ID":
+            {
+            	"type":"link",
+            	"url":"https://www.ncbi.nlm.nih.gov/biosample/?term={}"
             },
             "AMR_associated_publications":{
                 "sortable":0,
