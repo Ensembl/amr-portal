@@ -45,16 +45,16 @@ header {
     background-color: var(--vf-color--grey--lightest);
   }
 
-  svg {
+  ul a img {
     height: 15px;
     width: 15px;
     margin-right: 1ch;
-    fill: var(--vf-ui-color--white);
+    filter: var(--filter-black-to-white);
   }
 
-  a:hover svg,
-  a:focus-visible svg {
-    fill: var(--vf-color--grey--darkest);
+  ul a:hover img,
+  ul a:focus-visible img {
+    filter: var(--vf-color--grey--darkest);
   }
 
   .embl-ebi-logo {

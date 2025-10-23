@@ -6,8 +6,12 @@
   background-color: var(--color-white);
   padding: 0 var(--standard-gutter);
 
-  a:has(svg) {
+  a:has(img[src$=".svg"]) {
     line-height: 1;
+  }
+
+  a.active img {
+    filter: none;
   }
 
   .left-wrapper {
@@ -18,7 +22,7 @@
   .home-icon {
     height: 18px;
     width: 18px;
-    fill: var(--color-blue);
+    filter: var(--filter-black-to-ensembl-blue);
   }
 
   .title-wrapper {
@@ -57,7 +61,7 @@
   .circle-icon {
     height: 18px;
     width: 18px;
-    fill: var(--color-blue);
+    filter: var(--filter-black-to-ensembl-blue);
   }
 }
 

@@ -1,9 +1,9 @@
+{% from "components/navigation-link/navigation-link.njk" import navigationLink %}
+
 <div class="subheader">
   <div class="left-wrapper">
     <a href="/">
-      <svg width="32" height="32" viewBox="0 0 32 32" class="home-icon" aria-hidden="true">
-        <use href="{{ '/assets/images/icons/ensembl-icons/icon_home.svg' | htmlBaseUrl }}"></use>
-      </svg>
+      <img src="/assets/images/icons/ensembl-icons/icon_home.svg" class="home-icon" />
       <span class="visually-hidden">
         Home page
       </span>
@@ -15,8 +15,11 @@
       </span>
 
       <span class="page-title">
-        {{ header_title }}
+        {% call navigationLink({ href: "/data", activeAnchorClass: "active", pageUrl: page.url }) -%}
+          Data resources
+        {%- endcall %}
       </span>
+
     </div>
   </div>
 
@@ -32,12 +35,16 @@
       </span>
     </amr-header-release>
 
-    <a href="/about">
-      <svg width="32" height="32" viewBox="0 0 32 32" class="circle-icon">
-        <use href="{{ '/assets/images/icons/ensembl-icons/icon_question_circle.svg' | htmlBaseUrl }}"></use>
-      </svg>
+    <a href="/about/">
+      <img src="/assets/images/icons/ensembl-icons/icon_question_circle.svg" class="circle-icon" />
       <span class="visually-hidden">
         Help page
+      </span>
+    </a>
+    <a href="/usage/">
+      <img src="/assets/images/icons/ensembl-icons/icon_info_circle.svg" class="circle-icon" />
+      <span class="visually-hidden">
+        About page
       </span>
     </a>
   </div>
