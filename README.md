@@ -43,6 +43,18 @@ For production use:
 uvicorn backend.main:app --host 0.0.0.0 --port 8000 --workers 4
 ```
 
+For testing:
+
+Create a `.env.test` file in the project root with the following content:
+```
+DUCKDB_PATH=path/to/test_data.duckdb
+```
+
+Then run:
+```shell
+TESTING=true pytest backend/
+```
+
 #### API Calls Examples
 
 ##### `/filters-config`

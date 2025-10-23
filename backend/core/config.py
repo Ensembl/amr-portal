@@ -1,5 +1,6 @@
 from functools import lru_cache
 from pathlib import Path
+import os
 
 from pydantic import Field, ValidationError, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -13,7 +14,8 @@ class Settings(BaseSettings):
     duckdb_path: Path = Field(validation_alias="DUCKDB_PATH", description="Path to the DuckDB database file")
 
     model_config = SettingsConfigDict(
-        env_file=".env",            # load from .env if present
+        # load from .env if present, or .env.test when running pytest
+        env_file=".env.test" if os.getenv("TESTING") else ".env",
         env_file_encoding="utf-8",
         case_sensitive=False
     )

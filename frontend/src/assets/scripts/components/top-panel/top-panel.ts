@@ -1,5 +1,5 @@
 import { html, css, LitElement } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { SignalWatcher } from '@lit-labs/signals';
 
 import filtersStore from '../../state/filtersStore';
@@ -29,9 +29,8 @@ export class TopPanel extends SignalWatcher(LitElement) {
       }
 
       :host:has(top-panel-navigation-collapsed) {
-        min-height: 54px;
-        height: auto;
         display: flex;
+        align-items: center;
       }
 
       .full-content-container {
@@ -55,7 +54,7 @@ export class TopPanel extends SignalWatcher(LitElement) {
     `
   ];
 
-  @state()
+  @property({ type: Boolean, attribute: 'collapsed', reflect: true })
   isCollapsed = false;
 
   #onFiltersGroupChange = (event: CustomEvent<string>) => {

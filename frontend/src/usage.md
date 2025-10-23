@@ -1,5 +1,6 @@
 ---
-title: Methods
+title: Usage
+header_title: Usage
 layout: "layouts/documentation.njk"
 ---
 

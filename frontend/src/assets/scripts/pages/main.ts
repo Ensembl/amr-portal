@@ -6,10 +6,9 @@ import { getDataProvider, BackendInterface } from '../data-provider/dataProvider
 
 import filtersStore from '../state/filtersStore';
 
-import '../components/header/header';
+import '../components/header/release';
 import '../components/top-panel/top-panel';
 import '../components/bottom-panel/bottom-panel';
-import '../components/footer/footer';
 
 import '@ensembl/ensembl-elements-common/embl-ebi-components/page-header/page-header.js';
 import '@ensembl/ensembl-elements-common/embl-ebi-components/page-footer/page-footer.js';
@@ -31,6 +30,11 @@ export class AMRApp extends SignalWatcher(LitElement) {
       grid-template-rows: auto 1fr;
       row-gap: 20px;
       overflow: hidden;
+    }
+
+    
+    :host:has(top-panel[collapsed]) {
+      --amr-top-panel-height: 60px !important; /* overriding the CSS variable in the outer scope */
     }
   `;
 

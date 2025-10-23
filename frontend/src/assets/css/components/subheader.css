@@ -60,3 +60,11 @@
     fill: var(--color-blue);
   }
 }
+
+amr-header-release {
+  visibility: hidden;
+}
+
+amr-header-release[data-fetched] {
+  visibility: visible;
+}

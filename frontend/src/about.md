@@ -1,5 +1,6 @@
 ---
 title: About the portal
+header_title: About
 layout: "layouts/documentation.njk"
 ---
 

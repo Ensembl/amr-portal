@@ -3,8 +3,10 @@ import base64
 from fastapi import APIRouter, Query, HTTPException
 
 from backend.models.filters_config import FiltersConfig
+from backend.models.release import Release
 from backend.models.payload import Payload
 from backend.services.filters import fetch_filters, filter_amr_records, fetch_filtered_records, download_them_all
+from backend.services.release import fetch_release
 
 router = APIRouter()
 
@@ -53,3 +55,9 @@ def health():
     # Health checks for ensuring application is healthy
     # expand to include databae connectivity check etc
     return "Healthy: OK", 200
+
+
+@router.get("/release", response_model=Release)
+def get_release() -> Release:
+    release: dict = fetch_release()
+    return Release(**release)
