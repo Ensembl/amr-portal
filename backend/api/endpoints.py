@@ -1,27 +1,37 @@
 import base64
 
-from fastapi import APIRouter, Query, HTTPException
+import duckdb
+from fastapi import APIRouter, Query, HTTPException, Depends
 
 from backend.models.filters_config import FiltersConfig
 from backend.models.release import Release
 from backend.models.payload import Payload
 from backend.services.filters import fetch_filters, filter_amr_records, fetch_filtered_records
 from backend.services.release import fetch_release
+from backend.core.database import get_db_connection
 
 router = APIRouter()
 
 @router.get("/filters-config", response_model=FiltersConfig)
-def get_filters_config() -> FiltersConfig:
-    filters: dict = fetch_filters()
+def get_filters_config(db: duckdb.DuckDBPyConnection = Depends(get_db_connection)) -> FiltersConfig:
+    filters: dict = fetch_filters(db)
     return FiltersConfig(**filters)
 
 @router.post("/amr-records")
-def get_amr_records(payload: Payload):
-    return filter_amr_records(payload)
+def get_amr_records(
+    payload: Payload,
+    db: duckdb.DuckDBPyConnection = Depends(get_db_connection)
+):
+    return filter_amr_records(payload, db)
 
 @router.post("/amr-records/download")
-def download_filtered_records(payload: Payload, scope: str = "all", file_format: str = "csv"):
-    return fetch_filtered_records(payload, scope, file_format)
+def download_filtered_records(
+    payload: Payload,
+    scope: str = "all",
+    file_format: str = "csv",
+    db: duckdb.DuckDBPyConnection = Depends(get_db_connection)
+):
+    return fetch_filtered_records(payload, scope, file_format, db)
 
 
 @router.get("/amr-records/download")
@@ -29,6 +39,7 @@ def download_filtered_records_get(
     payload: str = Query(default=..., description="URL-encoded JSON matching the Payload schema"),
     scope: str = Query(default="all", description="Either 'page' or 'all'"),
     file_format: str = Query(default="csv", description="Either 'csv' or 'json'"),
+    db: duckdb.DuckDBPyConnection = Depends(get_db_connection)
 ):
     """
     GET version of /amr-records/download.
@@ -47,7 +58,7 @@ def download_filtered_records_get(
         # Provide a clear error message if payload is malformed
         raise HTTPException(status_code=400, detail=f"Invalid 'payload' JSON: {e}")
 
-    return fetch_filtered_records(payload_obj, scope, file_format)
+    return fetch_filtered_records(payload_obj, scope, file_format, db)
 
 
 @router.get('/health')
@@ -58,6 +69,6 @@ def health():
 
 
 @router.get("/release", response_model=Release)
-def get_release() -> Release:
-    release: dict = fetch_release()
+def get_release(db: duckdb.DuckDBPyConnection = Depends(get_db_connection)) -> Release:
+    release: dict = fetch_release(db)
     return Release(**release)

@@ -1,18 +1,15 @@
 import csv
 import io
 import json
-import os
-import tempfile
 from collections import defaultdict
 
-import duckdb
+import duckdb.duckdb
 import numpy as np
 from functools import lru_cache
 from fastapi import HTTPException
-from fastapi.responses import StreamingResponse, FileResponse
+from fastapi.responses import StreamingResponse
 import logging
 
-from backend.core.database import db_conn
 from backend.models.payload import Payload
 from backend.services.serializer import serialize_amr_record
 from backend.core.filters_config_parser import build_filters_config
@@ -22,9 +19,9 @@ logger = logging.getLogger(__name__)
 
 
 @lru_cache(maxsize=32)
-def get_table_columns(table_name: str):
+def get_table_columns(table_name: str, db: duckdb.DuckDBPyConnection):
     try:
-        columns_result = db_conn.query(f"PRAGMA table_info({table_name})").fetchdf()
+        columns_result = db.query(f"PRAGMA table_info({table_name})").fetchdf()
         return set(columns_result['name'].tolist())
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Failed to get columns for table: {table_name}")
@@ -34,15 +31,15 @@ def check_selected_filters(grouped_filters, valid_columns):
         return True
     return False
 
-def get_dataset_from_view(view_id: int):
+def get_dataset_from_view(view_id: int, db: duckdb.DuckDBPyConnection):
     dataset_from_view_query = f"SELECT DISTINCT (dataset_name) FROM view_categories WHERE view_id = {view_id};"
     try:
-        dataset = db_conn.execute(dataset_from_view_query).fetchone()[0]
+        dataset = db.execute(dataset_from_view_query).fetchone()[0]
         return dataset
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Failed to get dataset from view ID: {view_id}")
 
-def get_display_column_details(view_id: int):
+def get_display_column_details(view_id: int, db: duckdb.DuckDBPyConnection):
     """Retrieves the display columns associated with a specific view ID from the database.
 
     This function queries the database to get the column names that should be displayed
@@ -51,6 +48,7 @@ def get_display_column_details(view_id: int):
 
     Args:
         view_id (int): The ID of the view to get columns for.
+        db (DuckDBPyConnection): DuckDB connection object to execute the query with.
 
     Returns:
         DataFrame: Pandas dataframe containing all column definitions for a given view.
@@ -71,7 +69,7 @@ def get_display_column_details(view_id: int):
         ORDER BY vc.rank;
     """
     try:
-        columns = db_conn.execute(columns_to_display_query).fetchdf()
+        columns = db.execute(columns_to_display_query).fetchdf()
 
         return columns
     except Exception as e:
@@ -81,11 +79,11 @@ def quote_column_name(column_name):
     """Quote column names."""
     return f'"{column_name}"'
 
-def fetch_filters():
-    return build_filters_config()
+def fetch_filters(db):
+    return build_filters_config(db)
 
 
-def filter_amr_records(payload: Payload):
+def filter_amr_records(payload: Payload, db: duckdb.DuckDBPyConnection):
 
     selected_view_id = payload.view_id
     # Check if the view_id is specified
@@ -96,12 +94,12 @@ def filter_amr_records(payload: Payload):
         )
 
     # Now we use the selected view to infer which dataset to query data from
-    selected_dataset = get_dataset_from_view(selected_view_id)
+    selected_dataset = get_dataset_from_view(selected_view_id, db)
 
-    valid_columns = get_table_columns(selected_dataset)
+    valid_columns = get_table_columns(selected_dataset, db)
     # not all valid columns are eventually displayed
     # We need to keep only the ones we are interested
-    columns_to_display = get_display_column_details(selected_view_id)
+    columns_to_display = get_display_column_details(selected_view_id, db)
 
     # This will be used below in the SQL query to select only columns we are interested in
     # Properly quote column names for SQL query
@@ -169,7 +167,7 @@ def filter_amr_records(payload: Payload):
         logger.info(f"selected_filters: {payload.selected_filters}")
         logger.info(f"count_query: {count_query}")
 
-        total_hits = db_conn.execute(count_query).fetchone()[0]
+        total_hits = db.execute(count_query).fetchone()[0]
 
         # Add pagination (LIMIT/OFFSET values can be parameterized in some databases)
         offset = (payload.page - 1) * payload.per_page
@@ -178,7 +176,7 @@ def filter_amr_records(payload: Payload):
         base_query += f" LIMIT {payload.per_page} OFFSET {offset}"
         logger.info(f"base_query: {base_query}")
 
-        res_df = db_conn.execute(base_query).fetchdf()
+        res_df = db.execute(base_query).fetchdf()
         res_df = res_df.replace({np.nan: None, np.inf: None, -np.inf: None})
         res_df = res_df.add_prefix(f"{selected_dataset}-")
         result = [serialize_amr_record(row, display_column_details) for _, row in res_df.iterrows()]
@@ -200,7 +198,7 @@ def flatten_record(record):
     """Convert list-of-dicts into {column_id: value}."""
     return {entry["column_id"]: entry.get("value") for entry in record}
 
-def fetch_filtered_records(payload: Payload, scope: str = "all", file_format: str = "csv"):
+def fetch_filtered_records(payload: Payload, scope, file_format, db: duckdb.DuckDBPyConnection):
     """
     Download filtered AMR records in CSV or JSON format.
     scope: "page" (current page) or "all" (all matches)
@@ -214,9 +212,9 @@ def fetch_filtered_records(payload: Payload, scope: str = "all", file_format: st
         payload_for_all = payload.model_copy(deep=True)
         payload_for_all.page = 1
         payload_for_all.per_page = 10_000_000  # large cap; adjust if you prefer
-        data = filter_amr_records(payload_for_all)["data"]
+        data = filter_amr_records(payload_for_all, db)["data"]
     else:
-        data = filter_amr_records(payload)["data"]
+        data = filter_amr_records(payload, db)["data"]
 
     if not data:
         raise HTTPException(status_code=404, detail="No data found for the given filters")

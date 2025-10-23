@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any, Iterable
 from collections import defaultdict, OrderedDict
 
-from backend.core.database import db_conn as default_db_conn
+import duckdb
 from backend.core.utils import query_to_records
 
 
@@ -165,7 +165,7 @@ def _build_filter_views(db, rows: Iterable[dict[str, Any]]) -> list[dict[str, An
     return sorted_response
 
 
-def build_filters_config(db=default_db_conn) -> dict[str, Any]:
+def build_filters_config(db: duckdb.DuckDBPyConnection) -> dict[str, Any]:
     """Build the complete filters configuration document.
 
     This wraps three steps:
@@ -174,7 +174,7 @@ def build_filters_config(db=default_db_conn) -> dict[str, Any]:
       3) Finally we get the release info from release table and put it in `release`.
 
     Args:
-        db: Database connection object. Defaults to the shared `db_conn`.
+        db: Database connection object.
 
     Returns:
         Dict[str, Any]: A dictionary with keys:
