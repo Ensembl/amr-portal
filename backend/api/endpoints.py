@@ -5,7 +5,7 @@ from fastapi import APIRouter, Query, HTTPException
 from backend.models.filters_config import FiltersConfig
 from backend.models.release import Release
 from backend.models.payload import Payload
-from backend.services.filters import fetch_filters, filter_amr_records, fetch_filtered_records, download_them_all
+from backend.services.filters import fetch_filters, filter_amr_records, fetch_filtered_records
 from backend.services.release import fetch_release
 
 router = APIRouter()
