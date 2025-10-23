@@ -1,7 +1,6 @@
 import base64
-from email.policy import default
 
-from fastapi import APIRouter, BackgroundTasks, Query, HTTPException
+from fastapi import APIRouter, Query, HTTPException
 
 from backend.models.filters_config import FiltersConfig
 from backend.models.payload import Payload
@@ -54,22 +53,3 @@ def health():
     # Health checks for ensuring application is healthy
     # expand to include databae connectivity check etc
     return "Healthy: OK", 200
-
-
-# --- This part is experimental and will be removed ---
-
-ALL_DATA_PATH = "/usr/data/experimental/mocking_all_data.duckdb"
-
-@router.get("/amr-records/downloadEverything")
-def download_everything(
-    background_tasks: BackgroundTasks,
-    compress: bool = Query(False, description="Compress the CSV before downloading (GZIP)."),
-):
-    return download_them_all(
-        background_tasks=background_tasks,
-        table_name="phenotype",
-        data_path=ALL_DATA_PATH,
-        compress=compress,
-    )
-
-# --- end of experimental code ---
