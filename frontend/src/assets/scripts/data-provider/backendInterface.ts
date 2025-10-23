@@ -24,5 +24,4 @@ export type AMRRecordsResponse = {
 export interface BackendInterface {
   getFiltersConfig: () => Promise<FiltersConfig>;
   getAMRRecords: (params: AMRRecordsFetchParams) => Promise<AMRRecordsResponse>;
-  getAMRRecordsAsBlob: (params: AMRRecordsFetchParams) => Promise<Blob>;
 };

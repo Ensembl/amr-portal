@@ -1,13 +1,14 @@
 import { html, css, LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { SignalWatcher } from '@lit-labs/signals';
 
 import '@ensembl/ensembl-elements-common/components/button/button.js';
 import '@ensembl/ensembl-elements-common/components/text-button/text-button.js';
+import '@ensembl/ensembl-elements-common/components/button-link/button-link.js';
 
+import appConfig from '../../../configs/app-config';
 import { actionView } from './state';
 import filtersStore from '../../../state/filtersStore';
-import biosampleStore from '../../../state/biosampleStore';
 import { focusFirstEligibleChild } from '../../../utils/focus-utils';
 
 import {
@@ -15,8 +16,7 @@ import {
   renderButtonsColumn
 } from './buttons-column';
 
-import type { BackendInterface } from '../../../data-provider/dataProvider';
-import type { FiltersView } from '../../../types/filters/filtersConfig';
+import type { BackendInterface } from '../../../data-provider/backendInterface';
 
 /**
  * Ideally, this would use the html popover api,
@@ -104,12 +104,21 @@ export class ActionButtonsPopover extends SignalWatcher(LitElement) {
           align-self: start;
           column-gap: 40px;
         }
+
+        .download-started-button::part(button) {
+          background-color: transparent;
+          border: 1px solid var(--color-grey);
+          color: black;
+        }
       }
     `
   ]
 
   @property({ type: Object })
   dataProvider!: BackendInterface;
+
+  @state()
+  shouldShowDownloadStarted = false;
 
   protected firstUpdated() {
     focusFirstEligibleChild(this.shadowRoot as ShadowRoot);
@@ -140,12 +149,27 @@ export class ActionButtonsPopover extends SignalWatcher(LitElement) {
     actionView.set(null);
   }
 
-  #onDownload() {
+  #onDownloadClick = () => {
+    this.shouldShowDownloadStarted = true;
+
+    setTimeout(() => {
+      this.shouldShowDownloadStarted = false;
+    }, 2000);
+  }
+
+  #getDownloadLink() {
     const viewId = filtersStore.viewMode.get();
-    biosampleStore.downloadAMRData({
-      viewId: viewId as FiltersView['id'],
-      dataProvider: this.dataProvider
-    });
+    const selectedFilters = filtersStore.selectedFiltersForViewMode.get();
+    const payload = {
+      view_id: viewId as string | number,
+      selected_filters: selectedFilters,
+    };
+    const stringifiedPayload = JSON.stringify(payload);
+    const base64Payload = btoa(stringifiedPayload);
+    const url = new URL(`${appConfig.apiBaseUrl}/amr-records/download`, document.baseURI);
+    url.searchParams.set('payload', base64Payload);
+
+    return url.toString();
   }
 
   render() {
@@ -192,12 +216,10 @@ export class ActionButtonsPopover extends SignalWatcher(LitElement) {
           Download data
         </div>
         <div class="action-buttons">
-          <ens-button
-            variant="action"
-            @click=${this.#onDownload}
-          >
-            Download
-          </ens-button>
+          ${this.shouldShowDownloadStarted
+            ? this.renderDownloadStartedButton()
+            : this.renderDownloadLink()
+          }
           <ens-text-button @click=${this.#hidePopover}>
             Cancel
           </ens-text-button>
@@ -206,5 +228,28 @@ export class ActionButtonsPopover extends SignalWatcher(LitElement) {
       ${renderButtonsColumn()}
     `;
   }
+
+  renderDownloadLink() {
+    return html`
+      <ens-button-link
+        variant="action"
+        href=${this.#getDownloadLink()}
+        download
+        @click=${this.#onDownloadClick}
+      >
+        Download
+      </ens-button-link>
+    `;
+  }
+
+  renderDownloadStartedButton() {
+    return html`
+      <ens-button class="download-started-button" disabled>
+        Starting...
+      </ens-button>
+    `;
+  }
+
+
 
 }
