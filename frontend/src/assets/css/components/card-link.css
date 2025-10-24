@@ -31,11 +31,19 @@
     transition: transform 0.125s cubic-bezier(0.45, 0.05, 0.55, 0.95);
   }
 
-  a:hover svg, a:visited svg {
-    fill: var(--vf-color--blue--dark);
+  .arrow-icon {
+    width: 24px;
+    height: 24px;
+    filter: var(--filter-black-to-vf-color-blue);
+    margin-left: 10px;
+    transition: transform 0.125s cubic-bezier(0.45, 0.05, 0.55, 0.95);
   }
 
-  a:hover svg {
+  a:hover .arrow-icon, a:visited .arrow-icon {
+    filter: var(--filter-black-to-vf-color-blue-dark);
+  }
+
+  a:hover .arrow-icon {
     transform: translateX(4px);
   }
 }
