@@ -1,4 +1,4 @@
-import { html, css, nothing, LitElement } from 'lit';
+import { html, css, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { SignalWatcher } from '@lit-labs/signals';
 
@@ -49,24 +49,15 @@ export class TopPanelNavigation extends SignalWatcher(LitElement) {
       justify-content: start;
       height: 22px; /* to prevent vertical shift when the counter is displayed */
     }
-
-    .filters-button-disabled {
-      --text-button-disabled-color: var(--color-medium-dark-grey);
-    }
   `;
 
   #onViewModeChange = (mode: FiltersView['id']) => {
     filtersStore.setViewMode(mode);
   }
 
-  #onExtraFiltersViewToggle = () => {
-    filtersStore.toggleExtraFilters();
-  }
-
   render() {
     const filtersConfig = filtersStore.filtersConfig.get();
     const currentViewMode = filtersStore.viewMode.get();
-    const isViewingExtraFilters = filtersStore.isViewingExtraFilters.get();
     const selectedFilters = filtersStore.selectedFiltersForViewMode.get();
     const hasSelectedFilters = selectedFilters.length > 0;
 
@@ -77,8 +68,7 @@ export class TopPanelNavigation extends SignalWatcher(LitElement) {
 
     const viewModeButtons = this.renderViewModeButtons({
       filterViews: filtersConfig!.filterViews,
-      currentViewMode,
-      isViewingExtraFilters
+      currentViewMode
     });
     
     return html`
@@ -91,31 +81,18 @@ export class TopPanelNavigation extends SignalWatcher(LitElement) {
             ${viewModeButtons}
           </div>
         </div>
-        <div class="section">
-          <div class="section-title">
-            Refine
-          </div>
-          <div class="nav-items">
-            ${this.renderFiltersButton({
-              hasSelectedFilters,
-              isViewingExtraFilters
-            })}
-          </div>
-        </div>
       </nav>
     `;
   }
 
   renderViewModeButtons({
     filterViews,
-    currentViewMode,
-    isViewingExtraFilters
+    currentViewMode
   }: {
     filterViews: FiltersView[];
     currentViewMode: FiltersView['id'] | null;
-    isViewingExtraFilters: boolean;
   }) {
-    const filtersCount = filtersStore.primaryFiltersCount.get();
+    const filtersCount = filtersStore.appliedFiltersCount.get();
 
     const viewModeButtons = filterViews.map(view => {
       const isActiveView = currentViewMode === view.id;
@@ -123,7 +100,7 @@ export class TopPanelNavigation extends SignalWatcher(LitElement) {
         <div class="nav-item">
           <ens-text-button
             @click=${() => this.#onViewModeChange(view.id)}
-            ?disabled=${isActiveView && !isViewingExtraFilters}
+            ?disabled=${isActiveView}
           >
             ${view.name}
           </ens-text-button>
@@ -138,31 +115,6 @@ export class TopPanelNavigation extends SignalWatcher(LitElement) {
     });
 
     return viewModeButtons;
-  }
-
-  renderFiltersButton({
-    hasSelectedFilters,
-    isViewingExtraFilters
-  }: {
-    hasSelectedFilters: boolean;
-    isViewingExtraFilters: boolean;
-  }) {
-    const filtersCount = filtersStore.otherFiltersCount.get();
-
-    return html`
-      <div class="nav-item">
-        <ens-text-button
-          @click=${this.#onExtraFiltersViewToggle}
-          ?disabled=${isViewingExtraFilters || !hasSelectedFilters}
-          class=${!hasSelectedFilters ? 'filters-button-disabled' : nothing}
-        >
-          Filters
-        </ens-text-button>
-        <circle-counter ?dimmed=${filtersCount === 0}>
-          ${filtersCount}
-        </circle-counter>
-      </div>
-    `;
   }
 
 }

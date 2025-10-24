@@ -23,10 +23,6 @@ export class TopPanelNavigation extends SignalWatcher(LitElement) {
         padding-left: var(--standard-gutter);
         line-height: 1;
       }
-
-      .filters-label {
-        color: var(--color-medium-dark-grey);
-      }
     `
   ];
 
@@ -38,8 +34,7 @@ export class TopPanelNavigation extends SignalWatcher(LitElement) {
   render() {
     const filtersConfig = filtersStore.filtersConfig.get();
     const currentViewMode = filtersStore.viewMode.get();
-    const primaryFiltersCount = filtersStore.primaryFiltersCount.get();
-    const otherFiltersCount = filtersStore.otherFiltersCount.get();
+    const appliedFiltersCount = filtersStore.appliedFiltersCount.get();
 
     const currentFiltersView = filtersConfig?.filterViews.find(view => view.id === currentViewMode);
 
@@ -55,14 +50,8 @@ export class TopPanelNavigation extends SignalWatcher(LitElement) {
       <ens-text-button @click=${this.#onViewButtonClick}>
         ${currentFiltersView.name}
       </ens-text-button>
-      <circle-counter ?dimmed=${primaryFiltersCount === 0}>
-        ${primaryFiltersCount}
-      </circle-counter>
-      <span>
-        Filters
-      </span>
-      <circle-counter ?dimmed=${otherFiltersCount === 0}>
-        ${otherFiltersCount}
+      <circle-counter ?dimmed=${appliedFiltersCount === 0}>
+        ${appliedFiltersCount}
       </circle-counter>
     `;
   }

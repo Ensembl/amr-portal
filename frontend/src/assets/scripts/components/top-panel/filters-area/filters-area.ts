@@ -10,7 +10,7 @@ import filtersStore from '../../../state/filtersStore';
 import './filters-area-top';
 
 import type { FilterChangeEventPayload } from '../../../types/events/filterChangeEvent';
-import { FilterCategoryGroup, FiltersConfig, FiltersView } from '../../../types/filters/filtersConfig';
+import { FiltersConfig } from '../../../types/filters/filtersConfig';
 
 @customElement('filters-area')
 export class FiltersArea extends SignalWatcher(LitElement) {
@@ -64,16 +64,7 @@ export class FiltersArea extends SignalWatcher(LitElement) {
   #getFilterGroup = () => {
     const filtersConfig = filtersStore.filtersConfig.get() as FiltersConfig;
     const viewMode = filtersStore.viewMode.get();
-    const activeFiltersGroup = filtersStore.activeFilterGroup.get();
-
-    const filterView = filtersConfig.filterViews.find(view => view.id === viewMode) as FiltersView;
-
-    if (activeFiltersGroup) {
-      return filterView.otherCategoryGroups
-        .find(group => group.name === activeFiltersGroup) as FilterCategoryGroup;
-    } else {
-      return filterView.categoryGroups[0]; // FIXME: it seems that we only ever need one
-    }
+    return filtersStore.activeFilterGroup.get();
   }
  
   render() {
