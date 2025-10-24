@@ -1,6 +1,6 @@
 import { Signal } from 'signal-polyfill';
 
-import type { FiltersConfig, FiltersView, AMRTableColumn } from '../types/filters/filtersConfig';
+import type { FiltersConfig, FiltersView, FilterCategoryGroup, AMRTableColumn } from '../types/filters/filtersConfig';
 
 export type SelectedFilter = {
   category: string;
@@ -15,11 +15,9 @@ export type FiltersUpdatePayload = {
 };
 
 
-
 const viewMode = new Signal.State<FiltersView['id'] | null>(null);
 const setViewMode = (viewId: FiltersView['id']) => {
   viewMode.set(viewId);
-  isViewingExtraFilters.set(false);
   const currentActiveFilterGroups = activeFilterGroups.get();
 
   activeFilterGroups.set({
@@ -83,50 +81,26 @@ const selectedFiltersForViewMode = new Signal.Computed(() => {
 });
 const clearAllFilters = () => {
   selectedFilters.set({}); // clears all filters for all views
-  closeExtraFilters();
 }
 
-const isViewingExtraFilters = new Signal.State<boolean>(false);
-
-const toggleExtraFilters = () => {
-  const isViewing = isViewingExtraFilters.get();
-  if (isViewing) {
-    closeExtraFilters();
-  } else {
-    openExtraFilters();
-  }
-};
-
-const openExtraFilters = () => {
-  const filterGroups = filterGroupsForViewMode.get();
-  const firstFilterGroup = filterGroups[0];
-  setActiveFilterGroup(firstFilterGroup.name);
-  isViewingExtraFilters.set(true);
-};
-
-const closeExtraFilters = () => {
-  setActiveFilterGroup(null);
-  isViewingExtraFilters.set(false);
-};
-
 const filterGroupsForViewMode = new Signal.Computed(() => {
-  const currentViewMode = viewMode.get();
-  const filtersConfigValue = filtersConfig.get() as FiltersConfig;
-  const filtersView = filtersConfigValue
-    .filterViews.find(view => view.id === currentViewMode) as FiltersView;
+  const filtersView = currentViewConfig.get() as FiltersView;
 
-  return filtersView.otherCategoryGroups;
+  return filtersView.categoryGroups;
 });
 
 
 const activeFilterGroups = new Signal.State<Record<string, string | null>>({});
-const activeFilterGroup = new Signal.Computed<string | null>(() => {
-  const currentViewMode = viewMode.get();
-  const currentActiveFilterGroups: Record<string, string | null> = activeFilterGroups.get();
-  if (!currentViewMode) {
-    return null;
+const activeFilterGroup = new Signal.Computed<FilterCategoryGroup>(() => {
+  const currentFiltersView = currentViewConfig.get() as FiltersView;
+  const currentActiveFilterGroupIds: Record<string, string | null> = activeFilterGroups.get();
+  const currentActiveFilterGroupId = currentActiveFilterGroupIds[currentFiltersView.id];
+
+  if (currentActiveFilterGroupId) {
+    return currentFiltersView.categoryGroups.find(group => group.name === currentActiveFilterGroupId) as FilterCategoryGroup;
+  } else {
+    return currentFiltersView.categoryGroups[0];
   }
-  return currentActiveFilterGroups[currentViewMode] ?? null;
 });
 const setActiveFilterGroup = (filterGroupId: string | null) => {
   const currentViewMode = viewMode.get() as string;
@@ -145,11 +119,7 @@ const currentViewConfig = new Signal.Computed(() => {
   return filtersConfigValue.filterViews.find(view => view.id === currentViewMode) ?? null;
 });
 
-
-/**
- * A count of applied filters from the main filter category associated with a view
- */
-const primaryFiltersCount = new Signal.Computed<number>(() => {
+const appliedFiltersCount = new Signal.Computed<number>(() => {
   const currentViewMode = viewMode.get();
   const viewConfig = currentViewConfig.get();
   const filtersForViewMode = selectedFiltersForViewMode.get();
@@ -158,8 +128,8 @@ const primaryFiltersCount = new Signal.Computed<number>(() => {
     return 0;
   }
 
-  const primaryFilterCategoryGroups = viewConfig.categoryGroups;
-  const primaryFilterCategoryIds = primaryFilterCategoryGroups.reduce((ids, group) => {
+  viewConfig.categoryGroups;
+  const primaryFilterCategoryIds = viewConfig.categoryGroups.reduce((ids, group) => {
     return ids.concat(...group.categories)
   }, [] as string[]);
 
@@ -173,32 +143,6 @@ const primaryFiltersCount = new Signal.Computed<number>(() => {
   return count;
 });
 
-/**
- * A count of applied filters from other (non-main) filter categories associated with a view
- */
-const otherFiltersCount = new Signal.Computed<number>(() => {
-  const currentViewMode = viewMode.get();
-  const viewConfig = currentViewConfig.get();
-  const filtersForViewMode = selectedFiltersForViewMode.get();
-
-  if (!currentViewMode || !viewConfig) {
-    return 0;
-  }
-
-  const filterCategoryGroups = viewConfig.otherCategoryGroups;
-  const filterCategoryIds = filterCategoryGroups.reduce((ids, group) => {
-    return ids.concat(...group.categories)
-  }, [] as string[]);
-
-  let count = 0;
-  for (const filter of filtersForViewMode) {
-    if (filterCategoryIds.includes(filter.category)) {
-      count++;
-    }
-  }
-
-  return count;
-});
 
 const store = {
   viewMode,
@@ -209,10 +153,7 @@ const store = {
   selectedFiltersForViewMode,
   updateSelectedFilters,
   clearAllFilters,
-  primaryFiltersCount,
-  otherFiltersCount,
-  isViewingExtraFilters,
-  toggleExtraFilters,
+  appliedFiltersCount,
   filterGroupsForViewMode,
   activeFilterGroups,
   activeFilterGroup,

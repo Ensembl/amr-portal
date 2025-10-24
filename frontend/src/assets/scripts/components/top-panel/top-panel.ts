@@ -2,8 +2,6 @@ import { html, css, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { SignalWatcher } from '@lit-labs/signals';
 
-import filtersStore from '../../state/filtersStore';
-
 import '@ensembl/ensembl-elements-common/components/icon-buttons/expand-button/expand-button.js';
 
 import './top-panel-navigation/top-panel-navigation';
@@ -57,11 +55,6 @@ export class TopPanel extends SignalWatcher(LitElement) {
   @property({ type: Boolean, attribute: 'collapsed', reflect: true })
   isCollapsed = false;
 
-  #onFiltersGroupChange = (event: CustomEvent<string>) => {
-    const filtersGroupName = event.detail;
-    filtersStore.setActiveFilterGroup(filtersGroupName);
-  }
-
   #togglePanelCollapsed = () => {
     this.isCollapsed = !this.isCollapsed;
   }
@@ -78,23 +71,10 @@ export class TopPanel extends SignalWatcher(LitElement) {
   }
 
   #renderExpanded() {
-    const activeFiltersGroup = filtersStore.activeFilterGroup.get();
-    const viewMode = filtersStore.viewMode.get();
-    const isViewingExtraFilters = filtersStore.isViewingExtraFilters.get();
-
     return html`
       <div class="full-content-container">
-        <top-panel-navigation
-          .currentViewMode=${viewMode}
-          .isViewingExtraFilters=${isViewingExtraFilters}
-        >
-        </top-panel-navigation>
-        <filters-area
-          .viewMode=${viewMode}
-          .activeFiltersGroup=${activeFiltersGroup}
-          .isViewingExtraFilters=${isViewingExtraFilters}
-          @filters-group-change=${this.#onFiltersGroupChange}
-        ></filters-area>
+        <top-panel-navigation></top-panel-navigation>
+        <filters-area></filters-area>
       </div>
     `;
   }

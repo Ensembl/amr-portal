@@ -31,8 +31,7 @@ export type AMRTableColumn = {
 export type FiltersView = {
   id: number | string;
   name: string;
-  categoryGroups: FilterCategoryGroup[];
-  otherCategoryGroups: FilterCategoryGroup[]; // order in the array will be used for display order
+  categoryGroups: FilterCategoryGroup[]; // order in the array will be used for display order
   columns: AMRTableColumn[];
 };
 

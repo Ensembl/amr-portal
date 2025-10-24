@@ -27,39 +27,23 @@ export class FiltersAreaTop extends SignalWatcher(LitElement) {
     }
   `;
 
-  onFiltersGroupSelect = (groupName: string) => {
-    const event = new CustomEvent('filters-group-change', {
-      detail: groupName,
-      bubbles: true,
-      composed: true
-    });
-
-    this.dispatchEvent(event);
+  #onFiltersGroupSelect = (filtersGroupName: string) => {
+    filtersStore.setActiveFilterGroup(filtersGroupName);
   }
 
   render() {
-    const isViewingExtraFilters = filtersStore.isViewingExtraFilters.get();
-
-    return html`
-      <div>
-        ${ isViewingExtraFilters ? this.renderFilterGroupsNav() : nothing }
-      </div>
-    `;
-  }
-
-  renderFilterGroupsNav() {
     const filterGroups = filtersStore.filterGroupsForViewMode.get();
     const activeFilterGroup = filtersStore.activeFilterGroup.get();
 
     return html`
       <ul class="filter-groups-nav">
         ${filterGroups.map(group => {
-          const isActiveGroup = group.name === activeFilterGroup;
+          const isActiveGroup = group.name === activeFilterGroup.name;
 
           return html`
             <ens-text-button
               class=${isActiveGroup ? 'active' : nothing}
-              @click=${() => this.onFiltersGroupSelect(group.name)}
+              @click=${() => this.#onFiltersGroupSelect(group.name)}
               ?disabled=${isActiveGroup}
             >
               ${group.name}
@@ -67,7 +51,7 @@ export class FiltersAreaTop extends SignalWatcher(LitElement) {
          `
         })}
       </ul>
-    `;
+    `; 
   }
 
 
