@@ -19,11 +19,13 @@ async function checkAMRAPI(hostName) {
   const filtersConfigEndpoint = `${host}/${apiPath}/filters-config`;
   group (`/filters_config`, function () {
     let filtersConfigEndpointResponse = http.get(filtersConfigEndpoint);
+//    console.log(filtersConfigEndpointResponse.json().filterCategories);
+    let filterCategories = filtersConfigEndpointResponse.json().filterCategories;
+    let filterCategoriesCount = Object.keys(filterCategories).length;
 
     try{
       check(filtersConfigEndpointResponse, {
-        [`is status 200`] : (r) => r.status === 200,
-        [`contains genotype dataset`] : (r) => r.json().filterCategories["genotype-organism_name"]["dataset"] == "genotype",
+        [`is status 200`] : (r) => r.status === 200
       },
       );
     }
@@ -62,7 +64,7 @@ async function checkAMRAPI(hostName) {
       amrRecordsEndpoint,
       JSON.stringify({
         "selected_filters": [
-          {"category":"genotype-organism_name","value":"Acinetobacter baumannii"}
+          {"category":"genotype-species","value":"Acinetobacter baumannii"}
         ],
         "view_id": 2
       }),

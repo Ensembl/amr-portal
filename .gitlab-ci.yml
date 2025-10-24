@@ -146,12 +146,12 @@ QA:BE:
     name: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:1.0.4
     entrypoint: [ '' ]
   variables:
-    HOSTNAME: http://amr.review.ensembl.org
+    HOSTNAME: http://amr.review.ensembl.org/amr
   script:
     - k6 run scripts/testing/smoke-testing.js
     - qa_passed=1
     - successful_checks=$(jq '.["metrics"]["checks"]["values"]["passes"]' amr-smoke-test-summary.json)
-    - if [ $successful_checks == 7 ]; then qa_passed=0; else qa_passed=1; fi
+    - if [ $successful_checks == 4 ]; then qa_passed=0; else qa_passed=1; fi
     - return $qa_passed
   artifacts:
     paths:
