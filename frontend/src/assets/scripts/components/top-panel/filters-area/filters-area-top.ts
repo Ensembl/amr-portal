@@ -10,20 +10,26 @@ import filtersStore from '../../../state/filtersStore';
 export class FiltersAreaTop extends SignalWatcher(LitElement) {
   static styles = css`
     :host {
-      display: block;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      column-gap: 22px;
+      align-items: baseline;
+    }
+
+    .label {
+      font-weight: var(--font-weight-light);
+      font-size: 12px;
     }
 
     .filter-groups-nav {
       display: flex;
+      flex-wrap: wrap;
       column-gap: 1rem;
+      row-gap: 0.5rem;
     }
 
     .active {
       --text-button-disabled-color: var(--color-black);
-    }
-
-    li {
-      list-style: none;
     }
   `;
 
@@ -36,7 +42,10 @@ export class FiltersAreaTop extends SignalWatcher(LitElement) {
     const activeFilterGroup = filtersStore.activeFilterGroup.get();
 
     return html`
-      <ul class="filter-groups-nav">
+      <span class="label">
+        Filter by
+      </span>
+      <div class="filter-groups-nav">
         ${filterGroups.map(group => {
           const isActiveGroup = group.name === activeFilterGroup.name;
 
@@ -50,7 +59,7 @@ export class FiltersAreaTop extends SignalWatcher(LitElement) {
             </ens-text-button>
          `
         })}
-      </ul>
+      </div>
     `; 
   }
 

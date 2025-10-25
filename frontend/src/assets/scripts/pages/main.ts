@@ -31,10 +31,10 @@ export class AMRApp extends SignalWatcher(LitElement) {
       row-gap: 20px;
       overflow: hidden;
     }
-
     
-    :host:has(top-panel[collapsed]) {
-      --amr-top-panel-height: 60px !important; /* overriding the CSS variable in the outer scope */
+    top-panel[collapsed],
+    top-panel[collapsed] + bottom-panel {
+      --amr-top-panel-height: 60px;
     }
   `;
 

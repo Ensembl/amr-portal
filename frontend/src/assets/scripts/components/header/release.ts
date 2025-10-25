@@ -18,7 +18,7 @@ export class AMRHeaderRelease extends HTMLElement {
     const releaseLabelContainer = this.querySelector('.data-release-date');
     if (releaseLabelContainer) {
       // this should always be the case
-      releaseLabelContainer.innerHTML = releaseLabel;
+      releaseLabelContainer.textContent = releaseLabel;
       this.dataset.fetched = 'true';
     }
   }

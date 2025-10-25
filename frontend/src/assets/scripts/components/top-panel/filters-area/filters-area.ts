@@ -18,16 +18,18 @@ export class FiltersArea extends SignalWatcher(LitElement) {
     :host {
       display: grid;
       grid-template-rows: auto 1fr;
-      row-gap: 35px;
+      row-gap: 30px;
       height: 100%;
       overflow: hidden;
-      padding-left: 36px;
+      padding-bottom: 10px;
     }
 
     .main {
       height: 100%;
       overflow-x: auto;
       display: flex;
+      padding-left: 36px;
+      padding-bottom: 10px;
     }
 
     .filters-category {
@@ -37,6 +39,11 @@ export class FiltersArea extends SignalWatcher(LitElement) {
       column-gap: 3rem;
       row-gap: 10px;
       height: 100%;
+    }
+
+    filters-area-top {
+      margin-left: 20px;
+      margin-top: 20px;
     }
   `;
 
