@@ -18,12 +18,6 @@ export type FiltersUpdatePayload = {
 const viewMode = new Signal.State<FiltersView['id'] | null>(null);
 const setViewMode = (viewId: FiltersView['id']) => {
   viewMode.set(viewId);
-  const currentActiveFilterGroups = activeFilterGroups.get();
-
-  activeFilterGroups.set({
-    ...currentActiveFilterGroups,
-    [viewId]: null
-  });
 };
 
 const filtersConfig = new Signal.State<FiltersConfig | null>(null);

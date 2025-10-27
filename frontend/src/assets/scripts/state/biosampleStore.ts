@@ -101,13 +101,6 @@ const createBiosampleResource = ({
     const queryParams = amrQueryState.get();
     const selectedFilters = queryParams.filters;
 
-    if (!selectedFilters.length) {
-      return {
-        meta: null,
-        data: []
-      };
-    }
-
     const requestStarted = performance.now();
 
     const requestParams: AMRRecordsFetchParams = {
@@ -126,11 +119,22 @@ const createBiosampleResource = ({
       }
     }
 
+    if (!selectedFilters.length) {
+      return {
+        meta: null,
+        data: [],
+        requestParams
+      };
+    }
+
     const amrRecords = await dataProvider.getAMRRecords(requestParams);
 
     console.log('Time spent fetching data', Math.round(performance.now() - requestStarted), 'milliseconds');
 
-    return amrRecords;
+    return {
+      ...amrRecords,
+      requestParams
+    };
   });
 
   return asyncResource;

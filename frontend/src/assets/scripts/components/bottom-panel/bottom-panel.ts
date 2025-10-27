@@ -145,10 +145,12 @@ export class BottomPanel extends SignalWatcher(LitElement) {
   }
  
   render() {
+    const view = filtersStore.viewMode.get();
     const biosamplesResource = this.biosamplesResource;
     const selectedFilters = filtersStore.selectedFiltersForViewMode.get();
-    const isComplete = biosamplesResource?.status === 'complete'
-    const hasData = Boolean(biosamplesResource?.value?.data.length);
+    const isComplete = biosamplesResource?.status === 'complete';
+    const hasData = biosamplesResource?.value?.requestParams.viewId === view
+      && Boolean(biosamplesResource?.value?.data.length);
     const isError = Boolean(biosamplesResource?.error);
     const isLoading = !biosamplesResource || biosamplesResource?.status === 'pending' && !hasData;
 
