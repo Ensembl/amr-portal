@@ -1,6 +1,5 @@
 export const focusFirstEligibleChild = (parent: Element | ShadowRoot) => {
   const focusableElement = parent.querySelector('[autofocus]');
-  console.log('focusableElement', focusableElement);
 
   if (
     focusableElement &&

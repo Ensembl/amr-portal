@@ -7,9 +7,10 @@ import '@ensembl/ensembl-elements-common/components/text-button/text-button.js';
 import '@ensembl/ensembl-elements-common/components/button-link/button-link.js';
 
 import appConfig from '../../../configs/app-config';
-import { actionView } from './state';
+import { actionView, setActionView } from './state';
 import filtersStore from '../../../state/filtersStore';
 import { focusFirstEligibleChild } from '../../../utils/focus-utils';
+import { checkOutsideClick } from '../../../utils/check-outside-click';
 
 import {
   styles as buttonsColumnStyles,
@@ -127,11 +128,24 @@ export class ActionButtonsPopover extends SignalWatcher(LitElement) {
   connectedCallback() {
     super.connectedCallback();
     document.addEventListener('keyup', this.#onKeyPress);
+    document.addEventListener('mousedown', this.#checkOutsideClick);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     document.removeEventListener('keyup', this.#onKeyPress);
+    document.removeEventListener('mousedown', this.#checkOutsideClick);
+  }
+
+  #checkOutsideClick = (event: MouseEvent) => {
+    const { isClickOutside } = checkOutsideClick({
+      event,
+      element: this
+    });
+
+    if (isClickOutside) {
+      setActionView(null);
+    }
   }
 
   #onKeyPress = (event: KeyboardEvent) => {
