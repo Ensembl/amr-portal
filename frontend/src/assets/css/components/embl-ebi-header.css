@@ -5,7 +5,6 @@ header {
   font-size: 14.4px;
   white-space: nowrap;
 
-
   nav {
     display: flex;
     align-items: center;
@@ -69,4 +68,24 @@ header {
     height: 90%;
   }
 
+}
+
+@media (width < 870px) {
+
+  header .embl-ebi-logo {
+    margin-right: var(--standard-gutter);
+  }
+
+  header nav a {
+    flex-direction: column;
+    align-items: center;
+    row-gap: 2px;
+    font-size: 10px;
+  }
+
+  header nav a img {
+    height: 16px;
+    width: 16px;
+    margin-right: 0;
+  }
 }
