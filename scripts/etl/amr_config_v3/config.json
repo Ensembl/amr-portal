@@ -4,7 +4,7 @@
 			"dataset":"phenotype",
 			"id":"antibiotic_name",
 			"label":"Antibiotic",
-			"filter_label":"trim(concat(antibiotic_Name,' ',antibiotic_Abbreviation))"
+			"filter_label":"antibiotic_name"
 		},
 		{
 			"dataset":"phenotype",
@@ -21,7 +21,7 @@
 		{
 			"dataset":"phenotype",
 			"id":"resistance_phenotype",
-			"label":"Phenotype",
+			"label":"Resistance Phenotype",
 			"filter_label":"resistance_phenotype"
 		},
 		{
@@ -37,6 +37,18 @@
 			"filter_label":"laboratory_typing_method"
 		},
 		{
+			"dataset":"phenotype",
+			"id":"collection_year",
+			"label":"Collection year",
+			"filter_label":"collection_year"
+		},
+		{
+			"dataset":"phenotype",
+			"id":"ISO_country_code",
+			"label":"Country",
+			"filter_label":"ISO_country_code"
+		},
+		{
 			"dataset":"genotype",
 			"id":"species",
 			"label":"Species",
@@ -47,18 +59,18 @@
 			"id":"genus",
 			"label":"Genus",
 			"filter_label":"genus"
-		},
-		{
-			"dataset":"genotype",
-			"id":"gene_symbol",
-			"label":"Gene symbol",
-			"filter_label":"gene_symbol"
 		},
 		{
 			"dataset":"genotype",
 			"id":"antibiotic_name",
 			"label":"Antibiotic",
-			"filter_label":"trim(concat(antibiotic_Name,' ',antibiotic_Abbreviation))"
+			"filter_label":"antibiotic_name"
+		},
+		{
+			"dataset":"genotype",
+			"id":"class",
+			"label":"AMR Class",
+			"filter_label":"class"
 		},
 		{
 			"dataset":"assembly",
@@ -74,20 +86,14 @@
 		},
 		{
 			"dataset":"assembly",
-			"id":"strain",
-			"label":"Strain",
-			"filter_label":"strain"
-		},
-		{
-			"dataset":"assembly",
 			"id":"phenotype",
-			"label":"Phenotype",
+			"label":"Phenotype data available",
 			"filter_label":"phenotype"
 		},
 		{
 			"dataset":"assembly",
 			"id":"genotype",
-			"label":"Genotype",
+			"label":"Genotype data available",
 			"filter_label":"genotype"
 		}
 	],
@@ -101,7 +107,9 @@
         		{ "name": "Phenotype", "categories": ["resistance_phenotype"] },
         		{ "name": "Genome", "categories": ["species"] },
         		{ "name": "AST Standard", "categories": ["ast_standard"] },
-        		{ "name": "Testing method", "categories": ["laboratory_typing_method"] }
+        		{ "name": "Testing method", "categories": ["laboratory_typing_method"] },
+        		{ "name": "Collection year", "categories":["collection_year"]},
+        		{ "name": "Country", "categories":["ISO_country_code"]}
       		],
       		"columns":[
       			{ "name": "antibiotic_name", "enabled":true, "rank":1},
@@ -126,8 +134,8 @@
 			"categoryGroups": [ { "name": "Species", "categories": ["species"] } ],
       		"otherCategoryGroups": [
       			{ "name": "Genus", "categories": ["genus"] },
-      			{ "name": "Genes", "categories": ["gene_symbol"] },
-        		{ "name": "Antibiotic", "categories": ["antibiotic_name"] }
+        		{ "name": "Antibiotic", "categories": ["antibiotic_name"] },
+        		{ "name": "AMR class", "categories": ["class"]}
       		],
       		"columns":[
       			{ "name": "BioSample_ID", "enabled":true, "rank":1},
@@ -135,25 +143,24 @@
       			{ "name": "genus", "enabled":true, "rank":3},
       			{ "name": "species", "enabled":true, "rank":4},
       			{ "name": "organism", "enabled":true, "rank":5},
-      			{ "name": "strain", "enabled":true, "rank":6},
-      			{ "name": "taxon_id", "enabled":true, "rank":7},
-      			{ "name": "region", "enabled":true, "rank":8},
-      			{ "name": "region_start", "enabled":true, "rank":9},
-      			{ "name": "region_end", "enabled":true, "rank":10},
-      			{ "name": "strand", "enabled":true, "rank":11},
-      			{ "name": "_bin", "enabled":true, "rank":12},
-      			{ "name": "id", "enabled":true, "rank":13},
-      			{ "name": "gene_symbol", "enabled":true, "rank":14},
-      			{ "name": "amr_element_symbol", "enabled":true, "rank":15},
-      			{ "name": "element_type", "enabled":true, "rank":16},
-      			{ "name": "element_subtype", "enabled":true, "rank":17},
-      			{ "name": "class", "enabled":true, "rank":18},
-      			{ "name": "antibiotic_name", "enabled":true, "rank":19},
-      			{ "name": "antibiotic_abbreviation", "enabled":true, "rank":20},
-      			{ "name": "gen_antibiotic_ontology", "enabled":true, "rank":21},
-      			{ "name": "gen_evidence_accession", "enabled":true, "rank":22},
-      			{ "name": "evidence_type", "enabled":true, "rank":23},
-      			{ "name": "evidence_description", "enabled":true, "rank":24}
+      			{ "name": "taxon_id", "enabled":true, "rank":6},
+      			{ "name": "region", "enabled":true, "rank":7},
+      			{ "name": "region_start", "enabled":true, "rank":8},
+      			{ "name": "region_end", "enabled":true, "rank":9},
+      			{ "name": "strand", "enabled":true, "rank":10},
+      			{ "name": "id", "enabled":true, "rank":11},
+      			{ "name": "gene_symbol", "enabled":true, "rank":12},
+      			{ "name": "amr_element_symbol", "enabled":true, "rank":13},
+      			{ "name": "element_type", "enabled":true, "rank":14},
+      			{ "name": "element_subtype", "enabled":true, "rank":15},
+      			{ "name": "class", "enabled":true, "rank":16},
+				{ "name": "subclass", "enabled":true, "rank":17},
+      			{ "name": "antibiotic_name", "enabled":true, "rank":18},
+      			{ "name": "antibiotic_abbreviation", "enabled":true, "rank":19},
+      			{ "name": "gen_antibiotic_ontology", "enabled":true, "rank":20},
+      			{ "name": "gen_evidence_accession", "enabled":true, "rank":21},
+      			{ "name": "evidence_type", "enabled":true, "rank":22},
+      			{ "name": "evidence_description", "enabled":true, "rank":23}
       		],
       		"other_columns":["genotype"]
 		},
@@ -162,7 +169,7 @@
 			"dataset":"assembly",
 			"categoryGroups": [ { "name": "Species", "categories": ["species"] } ],
 			"otherCategoryGroups": [
-				{ "name": "Species", "categories": ["genus","strain"] },
+				{ "name": "Species", "categories": ["genus"] },
 				{ "name": "Data", "categories": ["phenotype","genotype"] }
 			],
 			"columns":[],
@@ -184,7 +191,7 @@
             "AMR_associated_publications":{
                 "sortable":0,
                 "type":"array-link",
-                "delimiter":"|",
+                "delimiter":";",
                 "url":"https://pubmed.ncbi.nlm.nih.gov/{}"
             },
             "database":{
@@ -240,7 +247,8 @@
             	"hidden":true
             },
             "_bin":{
-            	"lebel":"UCSC binning index"
+            	"lsbel":"UCSC binning index",
+				"hidden":true
             }
         }
     }
