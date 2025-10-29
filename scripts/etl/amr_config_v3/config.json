@@ -4,7 +4,7 @@
 			"dataset":"phenotype",
 			"id":"antibiotic_name",
 			"label":"Antibiotic",
-			"filter_label":"antibiotic_name"
+			"filter_label":"lower(antibiotic_name)"
 		},
 		{
 			"dataset":"phenotype",
@@ -21,13 +21,13 @@
 		{
 			"dataset":"phenotype",
 			"id":"resistance_phenotype",
-			"label":"Resistance Phenotype",
+			"label":"Resistance phenotype",
 			"filter_label":"resistance_phenotype"
 		},
 		{
 			"dataset":"phenotype",
 			"id":"ast_standard",
-			"label":"AST Standard",
+			"label":"AST standard",
 			"filter_label":"ast_standard"
 		},
 		{
@@ -99,14 +99,14 @@
 	],
 	"views":[
 		{
-			"name":"AMR Phenotypes",
+			"name":"Phenotypic AMR",
 			"dataset":"phenotype",
 			"categoryGroups": [ { "name": "Antibiotic", "categories": ["antibiotic_name"] } ],
       		"otherCategoryGroups": [
+				{ "name": "Species", "categories": ["species"] },
       			{ "name": "Genus", "categories": ["genus"] },
-        		{ "name": "Phenotype", "categories": ["resistance_phenotype"] },
-        		{ "name": "Genome", "categories": ["species"] },
-        		{ "name": "AST Standard", "categories": ["ast_standard"] },
+        		{ "name": "Resistance phenotype", "categories": ["resistance_phenotype"] },
+        		{ "name": "AST standard", "categories": ["ast_standard"] },
         		{ "name": "Testing method", "categories": ["laboratory_typing_method"] },
         		{ "name": "Collection year", "categories":["collection_year"]},
         		{ "name": "Country", "categories":["ISO_country_code"]}
@@ -129,12 +129,12 @@
       		"other_columns":["phenotype"]
 		},
 		{
-			"name":"AMR Genotypes",
+			"name":"Genotype predicted AMR",
 			"dataset":"genotype",
-			"categoryGroups": [ { "name": "Species", "categories": ["species"] } ],
+			"categoryGroups": [ { "name": "Antibiotic", "categories": ["antibiotic_name"] } ],
       		"otherCategoryGroups": [
-      			{ "name": "Genus", "categories": ["genus"] },
-        		{ "name": "Antibiotic", "categories": ["antibiotic_name"] },
+      			{ "name": "Species", "categories": ["species"] },
+				{ "name": "Genus", "categories": ["genus"] },
         		{ "name": "AMR class", "categories": ["class"]}
       		],
       		"columns":[
@@ -165,12 +165,12 @@
       		"other_columns":["genotype"]
 		},
 		{
-			"name":"AMR Isolates",
+			"name":"Combined phenotypic/genotype AMR availability",
 			"dataset":"assembly",
 			"categoryGroups": [ { "name": "Species", "categories": ["species"] } ],
 			"otherCategoryGroups": [
-				{ "name": "Species", "categories": ["genus"] },
-				{ "name": "Data", "categories": ["phenotype","genotype"] }
+				{ "name": "Genus", "categories": ["genus"] },
+				{ "name": "Data availability", "categories": ["phenotype","genotype"] }
 			],
 			"columns":[],
 			"other_columns":["assembly"]
@@ -224,6 +224,16 @@
         },
         "genotype":
         {
+			"assembly_ID":{
+            	"sortable":0,
+                "type":"link",
+                "url":"https://www.ebi.ac.uk/ena/browser/view/{}"
+            },
+            "BioSample_ID":
+            {
+            	"type":"link",
+            	"url":"https://www.ncbi.nlm.nih.gov/biosample/?term={}"
+            },
             "antibiotic_ontology":{
             	"hidden":true
             },
