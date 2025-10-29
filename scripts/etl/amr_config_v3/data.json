@@ -1,0 +1,34 @@
+[
+	{
+		"name":"phenotype",
+		"path":"/Users/jon/Data/amr/25-10-24/phenotype.csv",
+		"create_columns": [
+			{
+				"name":"gen_measurement",
+				"command":"TRIM(CONCAT(measurement_sign, ' ', measurement,' ', measurement_units))"
+			},
+			{
+				"name":"gen_antibiotic_ontology",
+				"command":"CONCAT_WS('|', antibiotic_ontology, antibiotic_ontology_link)"
+			}
+		]
+	},
+	{
+		"name":"genotype",
+		"path":"/Users/jon/Data/amr/25-10-24/genotype.csv",
+		"create_columns": [
+			{
+				"name":"gen_antibiotic_ontology",
+				"command":"CONCAT_WS('|', antibiotic_ontology, antibiotic_ontology_link)"
+			},
+			{
+				"name":"gen_evidence_accession",
+				"command":"CONCAT_WS('|', evidence_accession, evidence_link)"
+			}
+		]
+	},
+	{
+		"name":"assembly",
+		"path":"/Users/jon/Data/amr/25-10-24/assembly.csv"
+	}
+]
