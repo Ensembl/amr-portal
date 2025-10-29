@@ -44,9 +44,9 @@
 		},
 		{
 			"dataset":"phenotype",
-			"id":"ISO_country_code",
+			"id":"country",
 			"label":"Country",
-			"filter_label":"ISO_country_code"
+			"filter_label":"country"
 		},
 		{
 			"dataset":"genotype",
@@ -109,22 +109,24 @@
         		{ "name": "AST standard", "categories": ["ast_standard"] },
         		{ "name": "Testing method", "categories": ["laboratory_typing_method"] },
         		{ "name": "Collection year", "categories":["collection_year"]},
-        		{ "name": "Country", "categories":["ISO_country_code"]}
+        		{ "name": "Country", "categories":["country"]}
       		],
       		"columns":[
       			{ "name": "antibiotic_name", "enabled":true, "rank":1},
       			{ "name": "antibiotic_abbreviation", "enabled":true, "rank":2},
       			{ "name": "resistance_phenotype", "enabled":true, "rank":3},
       			{ "name": "gen_measurement", "enabled":true, "rank":4},
-      			{ "name": "organism", "enabled":true, "rank":5},
-      			{ "name": "assembly_ID", "enabled":true, "rank":6},
-      			{ "name": "host", "enabled":true, "rank":7},
-      			{ "name": "BioSample_ID", "enabled":true, "rank":8},
-      			{ "name": "INSDC_secondary_accession", "enabled":true, "rank":9},
-      			{ "name": "laboratory_typing_method", "enabled":true, "rank":10},
-      			{ "name": "platform", "enabled":true, "rank":11},
-      			{ "name": "ast_standard", "enabled":true, "rank":12},
-      			{ "name": "gen_antibiotic_ontology", "enabled":true, "rank":13}
+				{ "name": "BioSample_ID", "enabled":true, "rank":5},
+				{ "name": "assembly_ID", "enabled":true, "rank":6},
+				{ "name": "genus", "enabled":true, "rank":7},
+      			{ "name": "species", "enabled":true, "rank":8},
+      			{ "name": "organism", "enabled":true, "rank":9},
+      			{ "name": "host", "enabled":true, "rank":10},
+      			{ "name": "INSDC_secondary_accession", "enabled":true, "rank":11},
+      			{ "name": "laboratory_typing_method", "enabled":true, "rank":12},
+      			{ "name": "platform", "enabled":true, "rank":13},
+      			{ "name": "ast_standard", "enabled":true, "rank":14},
+      			{ "name": "gen_antibiotic_ontology", "enabled":true, "rank":15}
       		],
       		"other_columns":["phenotype"]
 		},
