@@ -1,7 +1,7 @@
 [
 	{
 		"name":"phenotype",
-		"path":"/Users/jon/Data/amr/25-10-24/phenotype.csv",
+		"path":"/Users/jon/Data/amr/25-10-29/phenotype_processed.csv",
 		"create_columns": [
 			{
 				"name":"gen_measurement",

@@ -16,7 +16,7 @@
 			"dataset":"phenotype",
 			"id":"species",
 			"label":"Species",
-			"filter_label":"species"
+			"filter_label":"trim(species)"
 		},
 		{
 			"dataset":"phenotype",
@@ -52,7 +52,7 @@
 			"dataset":"genotype",
 			"id":"species",
 			"label":"Species",
-			"filter_label":"species"
+			"filter_label":"trim(species)"
 		},
 		{
 			"dataset":"genotype",
@@ -82,7 +82,7 @@
 			"dataset":"assembly",
 			"id":"species",
 			"label":"Species",
-			"filter_label":"species"
+			"filter_label":"trim(species)"
 		},
 		{
 			"dataset":"assembly",
@@ -167,7 +167,7 @@
       		"other_columns":["genotype"]
 		},
 		{
-			"name":"Combined phenotypic/genotype AMR availability",
+			"name":"Combined phenotypic / genotype AMR availability",
 			"dataset":"assembly",
 			"categoryGroups": [ { "name": "Species", "categories": ["species"] } ],
 			"otherCategoryGroups": [
