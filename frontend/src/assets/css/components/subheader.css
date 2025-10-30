@@ -42,10 +42,35 @@
     padding-left: 30px;
   }
 
+  .link-with-icon {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+    font-size: 14px;
+  }
+
+  @media (width < 1070px) {
+    .link-with-icon > span {
+      /* same styles as for the visually hidden class, such that text is still visible to assistive tech */
+      clip-path: inset(50%);
+      position: absolute;
+      height: 1px;
+      width: 1px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+  }
+
   .right-wrapper {
     display: flex;
     column-gap: 30px;
     align-items: center;
+  }
+
+  .circle-icon {
+    height: 18px;
+    width: 18px;
+    filter: var(--filter-black-to-ensembl-blue);
   }
 
   .data-release-label {
@@ -57,16 +82,11 @@
     font-size: 12px;
     margin-left: 1ch;
   }
-
-  .circle-icon {
-    height: 18px;
-    width: 18px;
-    filter: var(--filter-black-to-ensembl-blue);
-  }
 }
 
 amr-header-release {
   visibility: hidden;
+  margin-left: var(--double-standard-gutter);
 }
 
 amr-header-release[data-fetched] {
