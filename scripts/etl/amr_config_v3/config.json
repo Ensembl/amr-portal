@@ -167,7 +167,7 @@
       		"other_columns":["genotype"]
 		},
 		{
-			"name":"Combined phenotypic / genotype AMR availability",
+			"name":"Phenotypic / genotype AMR availability",
 			"dataset":"assembly",
 			"categoryGroups": [ { "name": "Species", "categories": ["species"] } ],
 			"otherCategoryGroups": [
@@ -188,13 +188,13 @@
             "BioSample_ID":
             {
             	"type":"link",
-            	"url":"https://www.ncbi.nlm.nih.gov/biosample/?term={}"
+            	"url":"https://www.ebi.ac.uk/biosamples/samples/{}"
             },
             "AMR_associated_publications":{
                 "sortable":0,
                 "type":"array-link",
                 "delimiter":";",
-                "url":"https://pubmed.ncbi.nlm.nih.gov/{}"
+                "url":"https://europepmc.org/search?query={}"
             },
             "database":{
                 "label":"Source"
@@ -234,7 +234,7 @@
             "BioSample_ID":
             {
             	"type":"link",
-            	"url":"https://www.ncbi.nlm.nih.gov/biosample/?term={}"
+            	"url":"https://www.ebi.ac.uk/biosamples/samples/{}"
             },
             "antibiotic_ontology":{
             	"hidden":true
