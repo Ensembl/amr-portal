@@ -2,4 +2,5 @@
 
 {% block styles %}
   <link rel="stylesheet" href="{{ 'src/assets/css/home-page.css' | getAssetOutputPath | transformWithHtmlBase }}" />
+  <link rel="preload" fetchpriority="high" as="image" href="/assets/images/hero/hero.webp" type="image/webp">
 {% endblock %}
