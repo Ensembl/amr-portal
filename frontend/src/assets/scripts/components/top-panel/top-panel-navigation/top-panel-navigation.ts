@@ -6,6 +6,7 @@ import '@ensembl/ensembl-elements-common/components/text-button/text-button.js';
 import '../circle-counter/circle-counter';
 
 import filtersStore from '../../../state/filtersStore';
+import Router from '../../../router/router';
 
 import type { FiltersView } from '../../../types/filters/filtersConfig';
 
@@ -62,8 +63,8 @@ export class TopPanelNavigation extends SignalWatcher(LitElement) {
     }
   `;
 
-  #onViewModeChange = (mode: FiltersView['id']) => {
-    filtersStore.setViewMode(mode);
+  #onViewModeChange = (viewId: FiltersView['id']) => {
+    Router.setView(viewId);
   }
 
   render() {
