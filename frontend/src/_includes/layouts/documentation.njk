@@ -10,7 +10,38 @@
 
   <main>
     <amr-panel>
-      {{ content | safe }}
+      <div class="grid">
+        <aside>
+          <div class="aside-content">
+            <div class="table-of-contents">
+              <div class="aside-section-heading">
+                On this page...
+              </div>
+              <ul class="links">
+              </ul>
+            </div>
+            <div class="related-pages">
+              <div class="aside-section-heading">
+                More pages...
+              </div>
+              <ul class="links">
+                <li>
+                  <a href="/about/">About</a>
+                </li>
+                <li>
+                  <a href="/methods/">Methods</a>
+                </li>
+                <li>
+                  <a href="/schemas/">Schemas</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </aside>
+        <div>
+          {{ content | safe }}
+        </div>
+      </div>
     </amr-panel>
   </main>
 

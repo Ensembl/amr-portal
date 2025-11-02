@@ -2,6 +2,7 @@ import { HtmlBasePlugin } from '@11ty/eleventy';
 
 import { buildAssets } from './utils/build.js';
 import { getAssetOutputPath } from './utils/eleventy-filters.js';
+import { documentationTocTransform } from './utils/documentation-toc-transform.js';
 
 const pathPrefix = '/amr/';
 // const pathPrefix = undefined;
@@ -32,10 +33,20 @@ export default async function(eleventyConfig) {
 
   eleventyConfig.addFilter('getAssetOutputPath', getAssetOutputPath);
 
-
   // TODO: ignore any markdown files inside of the assets directory
 
   eleventyConfig.addPlugin(HtmlBasePlugin);
+
+
+  // eleventyConfig.addCollection("aboutPages", async (collectionsApi) => {
+	// 	// get unsorted items
+  //   console.log('all', collectionsApi.getAll()[0])
+
+	// 	return collectionsApi.getAll();
+	// });
+
+
+	eleventyConfig.addTransform('documentation-toc-transform', documentationTocTransform);
 };
 
 
