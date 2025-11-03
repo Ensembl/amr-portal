@@ -4,6 +4,7 @@ Helper methods used to transform dataset inputs into parquet files
 import os
 
 import duckdb
+from typing import Tuple, List
 
 """
 # Step 1: Connect to new .duckdb file
@@ -24,6 +25,12 @@ select {} from
 read_csv('{}', header=true, all_varchar=true, delim =',', quote='"');
 """
 
+DATASET_PARQUET_VIEW = """
+create view dataset as
+select {} from
+read_parquet('{}');
+"""
+
 FILTER_VIEW = """
 create view filter as
 select * from read_csv('{}',header=false, columns = {{ '{}': 'VARCHAR'}});
@@ -39,7 +46,7 @@ COPY {} TO '{}'
 """
 
 
-def transform_dataset(data: dict, release_path: str) -> (bool, str):
+def transform_dataset(data: dict, release_path: str) -> Tuple[bool, str]:
     # load data set
     target = "dataset"
     conn = duckdb.connect()
@@ -52,7 +59,10 @@ def transform_dataset(data: dict, release_path: str) -> (bool, str):
                 f"{c['command']} as {c['name']}"
                 )
 
-    conn.execute(DATASET_VIEW.format(", ".join(dataset_cols), data['path']))
+    if '.parquet' in data['path']:
+        conn.execute(DATASET_PARQUET_VIEW.format(", ".join(dataset_cols), data['path']))
+    else:
+        conn.execute(DATASET_VIEW.format(", ".join(dataset_cols), data['path']))
     # filter
     if "filter" and "filter_column" in data:
         print(f"Filtering {data['name']}")
@@ -71,9 +81,9 @@ def transform_dataset(data: dict, release_path: str) -> (bool, str):
 
 
 def transform_datasets(
-            datasets: list[dict],
+            datasets: List[dict],
             release_path: str
-            ) -> (bool, str, list[dict]):
+            ) -> Tuple[bool, str, list[dict]]:
     for dataset in datasets:
         result = transform_dataset(
             dataset,
