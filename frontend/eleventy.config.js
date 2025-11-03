@@ -40,6 +40,10 @@ export default async function(eleventyConfig) {
   eleventyConfig.addPlugin(HtmlBasePlugin);
 
 	eleventyConfig.addTransform('documentation-toc-transform', documentationTocTransform);
+
+  eleventyConfig.addFilter('sortByTitle', values => {
+      return values.slice().sort((a, b) => a.data.title.localeCompare(b.data.title))
+  })
 };
 
 
