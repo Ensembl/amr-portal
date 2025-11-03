@@ -1,10 +1,11 @@
 ---
-title: Methods
+title: Methods and protocols
+page_title: Methods
 tags: about
 layout: "layouts/documentation.njk"
 ---
 
-# Methods
+# Methods and protocols
 
 ## Antibiotic lookup
 
@@ -61,4 +62,3 @@ Protein identifiers are based on the GCA for a genome and autoincremented number
 [ChEBI]: <https://www.ebi.ac.uk/chebi/>
 [aroantib]: <https://www.ebi.ac.uk/ols4/ontologies/aro/classes/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FARO_1000003>
 [chebiantib]: <https://www.ebi.ac.uk/ols4/ontologies/chebi/classes/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCHEBI_33281>
-
