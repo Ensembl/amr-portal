@@ -1,5 +1,14 @@
 {% extends "layouts/base.njk" %}
 
+
+{% set inAboutCollection = false %}
+{% for item in collections.about %}
+  {% if item.page.inputPath == page.inputPath %}
+    {% set inAboutCollection = true %}
+  {% endif %}
+{% endfor %}
+
+
 {% block styles %}
   <link rel="stylesheet" href="{{ 'src/assets/css/documentation-page.css' | getAssetOutputPath | transformWithHtmlBase }}" />
 {% endblock %}
@@ -21,20 +30,22 @@
               </ul>
             </div>
             <div class="related-pages">
-              <div class="aside-section-heading">
-                More pages...
-              </div>
-              <ul class="links">
-                <li>
-                  <a href="/about/">About</a>
-                </li>
-                <li>
-                  <a href="/methods/">Methods</a>
-                </li>
-                <li>
-                  <a href="/schemas/">Schemas</a>
-                </li>
-              </ul>
+              {% if inAboutCollection %}
+                <div class="aside-section-heading">
+                  More pages...
+                </div>
+                <ul class="links">
+                  <li>
+                    <a href="/about/">About</a>
+                  </li>
+                  <li>
+                    <a href="/methods/">Methods</a>
+                  </li>
+                  <li>
+                    <a href="/schemas/">Schemas</a>
+                  </li>
+                </ul>
+              {% endif %}
             </div>
           </div>
         </aside>

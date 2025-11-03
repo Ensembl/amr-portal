@@ -8,6 +8,10 @@
 
 @import url('./documentation/table.css') layer(components);
 
+html, body {
+  scroll-behavior: smooth;
+}
+
 main {
   display: flex;
   flex-direction: column;
