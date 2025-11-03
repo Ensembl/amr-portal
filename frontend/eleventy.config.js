@@ -35,15 +35,13 @@ export default async function(eleventyConfig) {
 
   eleventyConfig.addFilter('getAssetOutputPath', getAssetOutputPath);
 
-  // TODO: ignore any markdown files inside of the assets directory
+  eleventyConfig.addFilter('sortByTitle', values => {
+    return values.slice().sort((a, b) => a.data.title.localeCompare(b.data.title))
+  })
 
   eleventyConfig.addPlugin(HtmlBasePlugin);
 
-	eleventyConfig.addTransform('documentation-toc-transform', documentationTocTransform);
-
-  eleventyConfig.addFilter('sortByTitle', values => {
-      return values.slice().sort((a, b) => a.data.title.localeCompare(b.data.title))
-  })
+  eleventyConfig.addTransform('documentation-toc-transform', documentationTocTransform);
 };
 
 

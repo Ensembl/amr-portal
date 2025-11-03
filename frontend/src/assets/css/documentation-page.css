@@ -75,12 +75,16 @@ amr-panel {
     margin-top: 0;
   }
 
-  figure, img {
+  figure, img, pre {
     max-width: 800px;
   }
 
   figure img {
     width: 100%;
+  }
+
+  pre {
+    white-space: pre-wrap;
   }
 
 
