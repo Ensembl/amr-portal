@@ -1,13 +1,7 @@
 {% extends "layouts/base.njk" %}
 
 
-{% set inAboutCollection = false %}
-{% for item in collections.about %}
-  {% if item.page.inputPath == page.inputPath %}
-    {% set inAboutCollection = true %}
-  {% endif %}
-{% endfor %}
-
+{% set inAboutCollection = "about" in tags %}
 
 {% block styles %}
   <link rel="stylesheet" href="{{ 'src/assets/css/documentation-page.css' | getAssetOutputPath | transformWithHtmlBase }}" />
@@ -18,7 +12,6 @@
   {% include "components/header/subheader.njk" %}
 
   <main>
-    {{ page.inputPath.endsWith('md') }}
     <amr-panel>
       <div class="grid">
         <aside>
