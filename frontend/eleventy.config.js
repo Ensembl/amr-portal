@@ -37,15 +37,6 @@ export default async function(eleventyConfig) {
 
   eleventyConfig.addPlugin(HtmlBasePlugin);
 
-
-  // eleventyConfig.addCollection("aboutPages", async (collectionsApi) => {
-	// 	// get unsorted items
-  //   console.log('all', collectionsApi.getAll()[0])
-
-	// 	return collectionsApi.getAll();
-	// });
-
-
 	eleventyConfig.addTransform('documentation-toc-transform', documentationTocTransform);
 };
 

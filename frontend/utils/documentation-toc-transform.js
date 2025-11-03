@@ -8,6 +8,7 @@ import { JSDOM } from 'jsdom';
 
 export async function documentationTocTransform(content) {
   // TODO: decide how to pick pages on which to apply this transform
+
   if (this.page.inputPath.endsWith('.md')) {
     const dom = new JSDOM(content);
     const document = dom.window.document;
@@ -15,8 +16,6 @@ export async function documentationTocTransform(content) {
 
     // get the target element 
     const tocContainer = mainSection?.querySelector('.table-of-contents .links');
-
-    console.log('tocContainer', tocContainer);
 
     if (
       !mainSection ||
@@ -26,7 +25,7 @@ export async function documentationTocTransform(content) {
       return content;
     }
 
-    // FIXME: probably exclude the h1
+    // NOTE: would be nice to exclude the h1
     const headings = mainSection.querySelectorAll('h1, h2');
     const seenHeadingsMap = new Map();
 
@@ -37,10 +36,7 @@ export async function documentationTocTransform(content) {
 
 
     return dom.serialize();
-    // return 'hello world lol';
-    // return content;
   }
-  // console.log(this.page);
 
   return content; // no changes made.
 };

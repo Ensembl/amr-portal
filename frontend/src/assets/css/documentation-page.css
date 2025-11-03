@@ -114,6 +114,10 @@ amr-panel {
     flex-direction: column;
     max-width: 130px;
     padding-bottom: 50px;
+  }
+  
+  /* If the TOC block is followed by related pages block with links, draw a separator */
+  .table-of-contents:has(+ .related-pages) {
     border-bottom: 1px solid var(--color-medium-light-grey);
   }
 
