@@ -1,10 +1,11 @@
 ---
-title: Methods
-header_title: About
+title: Methods and protocols
+page_title: Methods
+tags: about
 layout: "layouts/documentation.njk"
 ---
 
-# Methods
+# Methods and protocols
 
 ## Antibiotic lookup
 

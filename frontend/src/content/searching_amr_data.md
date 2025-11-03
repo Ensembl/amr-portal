@@ -1,11 +1,12 @@
 ---
-title: AMR Search & Retrieval Guide at EMBL-EBI
-header_title: About
+title: Searching and retrieving AMR from EMBL-EBI archives
+header_title: Searching archives
+tags: usage
 layout: "layouts/documentation.njk"
 
 ---
 
-# AMR Search & Retrieval Guide at EMBL-EBI
+# Searching and retrieving AMR from EMBL-EBI archives
 
 ## What are AMR antibiograms?
 
