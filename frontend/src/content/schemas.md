@@ -1,6 +1,6 @@
 ---
 title: Schemas
-header_title: About
+tags: about
 layout: "layouts/documentation.njk"
 ---
 

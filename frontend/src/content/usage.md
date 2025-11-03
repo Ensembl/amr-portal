@@ -1,6 +1,6 @@
 ---
 title: Usage
-header_title: Usage
+tags: howto
 layout: "layouts/documentation.njk"
 ---
 

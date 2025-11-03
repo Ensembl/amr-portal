@@ -52,7 +52,9 @@ export default async function(eleventyConfig) {
 
 export const config = {
   dir: {
-    input: 'src',
+    input: 'src/content',
+    // REMEMBER: includes, layouts, and data directories are registered relative to the input directory
+    includes: '../_includes',
     output: outputRoot
   },
   templateFormats: ['html', 'njk', 'md', '11ty.js'],

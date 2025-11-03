@@ -1,6 +1,6 @@
 ---
 title: About the portal
-header_title: About
+tags: about
 layout: "layouts/documentation.njk"
 ---
 
