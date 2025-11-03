@@ -12,15 +12,29 @@ layout: "layouts/home.njk"
 
 <div class="card-links-container">
   <div class="card-links-container-inner">
-    {{ cardLink({ href: '/data/', linkText: 'Find data resources' }) }}
-    {{ cardLink({ href: '/about/', linkText: 'About the portal' }) }}
+    {{ cardLink({ href: '/data/', linkText: 'Query AMR data' }) }}
+    {{ cardLink({ href: '/about/', linkText: 'About the AMR portal' }) }}
     {{ cardLink({ href: '/usage/', linkText: 'How to use' }) }}
   </div>
 </div>
 
 
 <div style="min-height: 300px; max-width: var(--vf-layout--comfortable); margin: auto;">
-
+<p>
+Antimicrobial resistance (AMR) represents a major growing concern to public health 
+predicted to cause over 2M deaths per year by 2050, with the Global South facing a 
+disproportionate burden of AMR increasing the risk of untreatable bacterial infections.
+The AMR Portal is a collaboration between EMBL-EBI research and service 
+teams alongside Imperial College London to deliver a new way to access and explore AMR phenotype 
+and genotype annotations through a user-friendly interface. AMR antibiogram records can be filtered 
+by an antibiotic compound, resistance phenotype, testing methods and many more attributes. The same
+data can be programmatically interrogated in a number of different programming languages.
+</p>
+<p>
+Data within the portal was produced by the MRC project CABBAGE (Comprehensive Assessment of 
+Bacterial-Based AMR prediction from Genotypes). CABBAGE represents the largest public AMR 
+dataset in a reconciled, uniform format.
+</p>
 </div>
 
 

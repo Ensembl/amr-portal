@@ -17,9 +17,7 @@ Antibiograms are also referred to as Antibiotic Susceptibility Test (AST) data, 
 
 A typical AMR antibiogram stored in EMBL-EBI resources (specifically, ENA or BioSamples) should follow the tabular format below, [as suggested by the COMPARE project in 2020](https://europepmc.org/article/MED/32255760).
 
-***Fig. 1:** Example antibiogram format for ENA and BioSamples submission, developed as part of the COMPARE project*
-
-![Example antibiogram format for ENA and BioSamples submission, developed as part of the COMPARE project](antibiogram.png "Example Antibiogram")
+![Fig. 1: Example antibiogram format for ENA and BioSamples submission, developed as part of the COMPARE project](/assets/images/docs/example_antibiogram.png "Example Antibiogram")
 
 The submitted antibiogram may specify some or all columns in Figure 1. [Example antibiogram](https://github.com/EBI-COMMUNITY/compare-amr/blob/master/validator/antibiogram_template.txt).
 
