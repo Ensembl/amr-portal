@@ -150,20 +150,19 @@
       		],
       		"columns":[
       			{ "name": "antibiotic_name", "enabled":true, "rank":1},
-      			{ "name": "antibiotic_abbreviation", "enabled":true, "rank":2},
-      			{ "name": "resistance_phenotype", "enabled":true, "rank":3},
-      			{ "name": "gen_measurement", "enabled":true, "rank":4},
-				{ "name": "BioSample_ID", "enabled":true, "rank":5},
-				{ "name": "assembly_ID", "enabled":true, "rank":6},
-				{ "name": "genus", "enabled":true, "rank":7},
-      			{ "name": "species", "enabled":true, "rank":8},
-      			{ "name": "organism", "enabled":true, "rank":9},
-      			{ "name": "host", "enabled":true, "rank":10},
-      			{ "name": "INSDC_secondary_accession", "enabled":true, "rank":11},
-      			{ "name": "laboratory_typing_method", "enabled":true, "rank":12},
-      			{ "name": "platform", "enabled":true, "rank":13},
-      			{ "name": "ast_standard", "enabled":true, "rank":14},
-      			{ "name": "gen_antibiotic_ontology", "enabled":true, "rank":15}
+      			{ "name": "resistance_phenotype", "enabled":true, "rank":2},
+      			{ "name": "gen_measurement", "enabled":true, "rank":3},
+				{ "name": "ast_standard", "enabled":true, "rank":4},
+				{ "name": "laboratory_typing_method", "enabled":true, "rank":5},
+				{ "name": "platform", "enabled":true, "rank":6},
+				{ "name": "BioSample_ID", "enabled":true, "rank":7},
+				{ "name": "assembly_ID", "enabled":true, "rank":8},
+				{ "name": "genus", "enabled":true, "rank":9},
+      			{ "name": "species", "enabled":true, "rank":10},
+      			{ "name": "organism", "enabled":true, "rank":11},
+      			{ "name": "host", "enabled":true, "rank":12},
+      			{ "name": "INSDC_secondary_accession", "enabled":true, "rank":13},
+      			{ "name": "gen_antibiotic_ontology", "enabled":true, "rank":14}
       		],
       		"other_columns":["phenotype"]
 		},
@@ -297,7 +296,10 @@
             },
             "antibiotic_ontology_link":{
             	"hidden":true
-            }
+            },
+			"antibiotic_abbreviation":{
+				"hidden":true
+			}
         },
         "genotype":
         {

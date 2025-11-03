@@ -29,7 +29,7 @@
 	},
 	{
 		"name":"pheno_geno_merged",
-		"path":"/Users/ayates/amr-portal/scripts/etl/amr_data/pheno_geno.csv.gz",
+		"path":"/Users/ayates/amr-portal/scripts/etl/amr_data/phenotype_genotype_merged.csv.gz",
 		"create_columns": [
 			{
 				"name":"gen_measurement",
