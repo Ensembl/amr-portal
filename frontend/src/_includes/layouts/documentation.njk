@@ -18,6 +18,7 @@
   {% include "components/header/subheader.njk" %}
 
   <main>
+    {{ page.inputPath.endsWith('md') }}
     <amr-panel>
       <div class="grid">
         <aside>
@@ -35,15 +36,21 @@
                   More pages...
                 </div>
                 <ul class="links">
-                  <li>
-                    <a href="/about/">About</a>
-                  </li>
-                  <li>
-                    <a href="/methods/">Methods</a>
-                  </li>
-                  <li>
-                    <a href="/schemas/">Schemas</a>
-                  </li>
+                  {% if not page.inputPath.endsWith("about.md") %}
+                    <li>
+                      <a href="/about/">About</a>
+                    </li>
+                  {% endif %}
+                  {% if not page.inputPath.endsWith("methods.md") %}
+                    <li>
+                      <a href="/methods/">Methods</a>
+                    </li>
+                  {% endif %}
+                  {% if not page.inputPath.endsWith("schemas.md") %}
+                    <li>
+                      <a href="/schemas/">Schemas</a>
+                    </li>
+                  {% endif %}
                 </ul>
               {% endif %}
             </div>
