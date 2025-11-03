@@ -25,7 +25,9 @@ export default async function(eleventyConfig) {
   eleventyConfig.addWatchTarget('src/assets/scripts');
   eleventyConfig.addWatchTarget('src/assets/css');
 
-  eleventyConfig.addPassthroughCopy('src/assets/images');
+  eleventyConfig.addPassthroughCopy({
+    'src/assets/images': 'assets/images'
+  });
   // Copy fonts distributed via npm
   eleventyConfig.addPassthroughCopy({
     'node_modules/@ensembl/ensembl-elements-common/fonts': 'assets/fonts',
