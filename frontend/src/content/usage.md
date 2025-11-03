@@ -1,10 +1,9 @@
 ---
-title: Usage
-tags: howto
+title: Using the AMR Portal
+tags: usage
 layout: "layouts/documentation.njk"
 ---
-
-# How to use the Anti-microbial resistance portal
+# How to use the AMR portal
 
 The antimicrobial resistance portal contains three main data resources
 
@@ -23,20 +22,20 @@ by selecting 'Find data resources' on the home page.
 <figure>
   <img src="/assets/images/content/howto/home-page.png" />
   <figcaption>
-    Fig 1. A view of the Anti-microbial resistance portal home page showing
+    Fig 1. A view of the antimicrobial resistance portal home page showing
     links to all the sections of the portal.
   </figcaption>
 </figure>
 
 This will take you by default to the Phenotypic AMR data resource and a
-view of the antibiotics for which experimental anti-microbial resistance
+view of the antibiotics for which experimental antimicrobial resistance
 data is available.
 
 <figure>
   <img src="/assets/images/content/howto/image-001.png" />
   <figcaption>
     Fig 2. A view of the Phenotypic AMR data resource showing the
-    antibiotics for which experimental anti-microbial resistance data
+    antibiotics for which experimental antimicrobial resistance data
     and other filters for subsetting the data.
   </figcaption>
 </figure>
@@ -58,7 +57,7 @@ in blue.
 ### Selecting AMR data for antibiotics
 
 The AMR data resource selected will show a view of the antibiotics for
-which anti-microbial resistance data is available by default.
+which antimicrobial resistance data is available by default.
 
 To select antibiotics of interest:
 
@@ -72,7 +71,7 @@ To select antibiotics of interest:
   <img src="/assets/images/content/howto/image-002.png" />
   <figcaption>
     Fig 3. A view showing the selection of azithromycin from the antibiotics
-    for which experimental anti-microbial resistance data is available.
+    for which experimental antimicrobial resistance data is available.
   </figcaption>
 </figure>
 
@@ -83,14 +82,14 @@ below the antibiotic table.
   <img src="/assets/images/content/howto/image-003.png" />
   <figcaption>
     Fig 4. A view showing the table of results for azithromycin from the
-    experimental anti-microbial resistance data resource.
+    experimental antimicrobial resistance data resource.
   </figcaption>
 </figure>
 
 
 ### How to filter the data
 
-The additional ways each anti-microbial resistance data resource can be
+The additional ways each antimicrobial resistance data resource can be
 filtered are listed alongside the 'Filter by' header at the top of the
 antibiotic table.
 
@@ -149,7 +148,7 @@ To filter the data:
   <figcaption>
     Fig 6. A view showing the selection of a species e.g. Escherichia coli
     from the Species filter and highlighting the subsequent reduction
-    in the number of results for experimental anti-microbial resistance
+    in the number of results for experimental antimicrobial resistance
     to azithromycin for the Phenotypic AMR data resource.
   </figcaption>
 </figure>
