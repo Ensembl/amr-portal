@@ -8,6 +8,10 @@
 
 @import url('./documentation/table.css') layer(components);
 
+html, body {
+  scroll-behavior: smooth;
+}
+
 main {
   display: flex;
   flex-direction: column;
@@ -15,7 +19,7 @@ main {
 }
 
 
-/* Note: some of the amr-panel styles are copied from shared-panel-styles.ts */
+/* NOTE: some of the amr-panel styles are copied from shared-panel-styles.ts */
 amr-panel {
   display: block;
   flex-grow: 1;
@@ -49,5 +53,78 @@ amr-panel {
     margin-bottom: var(--line-height);
   }
 
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    grid-template-columns: fit-content(130px) auto;
+    column-gap: var(--standard-gutter);
+  }
+
+  h1 {
+    font-size: 13px; /* ??? */
+    margin: 0 0 24px 0;
+    color: var(--color-dark-grey);
+  }
+
+  h2 {
+    font-size: 13px; /* ??? */
+    margin: 48px 0 24px 0;
+  }
+
+  h1 + h2 {
+    margin-top: 0;
+  }
+
+  figure, img {
+    max-width: 800px;
+  }
+
+  figure img {
+    width: 100%;
+  }
+
+
+  /* STYLES FOR THE ASIDE WITH NAVIGATION */
+  .aside-content {
+    position: sticky;
+    top: 20px;
+  }
+
+  .aside-content ul {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+  }
+
+  .aside-content li {
+    list-style-type: none;
+    padding: 0;
+    line-height: 1.2;
+  }
+
+  .aside-section-heading {
+    margin-bottom: 16px;
+    font-weight: var(--font-weight-light);
+  }
+
+  .table-of-contents {
+    display: flex;
+    flex-direction: column;
+    max-width: 130px;
+    padding-bottom: 50px;
+  }
+  
+  /* If the TOC block is followed by related pages block with links, draw a separator */
+  .table-of-contents:has(+ .related-pages) {
+    border-bottom: 1px solid var(--color-medium-light-grey);
+  }
+
+  .related-pages {
+    margin-top: 0.6rem;
+    display: flex;
+    flex-direction: column;
+  }
 }
 

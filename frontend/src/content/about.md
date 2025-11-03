@@ -1,6 +1,6 @@
 ---
 title: About the portal
-header_title: About
+tags: about
 layout: "layouts/documentation.njk"
 ---
 
@@ -48,8 +48,3 @@ This project represents phase one of our efforts. Future developments may includ
 - Submission flows allowing third parties to submit antibiograms and for these data to flow into this portal
 - Further standardisation of the antibiogram formats
 - Display of isolate genomes in the Ensembl resource including integration of AMR functional annotation
-
-
-## Related links
-- [Methods](/methods/)
-- [Schemas](/schemas/)

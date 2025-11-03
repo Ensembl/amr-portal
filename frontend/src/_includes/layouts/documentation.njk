@@ -1,5 +1,8 @@
 {% extends "layouts/base.njk" %}
 
+
+{% set inAboutCollection = "about" in tags %}
+
 {% block styles %}
   <link rel="stylesheet" href="{{ 'src/assets/css/documentation-page.css' | getAssetOutputPath | transformWithHtmlBase }}" />
 {% endblock %}
@@ -10,7 +13,46 @@
 
   <main>
     <amr-panel>
-      {{ content | safe }}
+      <div class="grid">
+        <aside>
+          <div class="aside-content">
+            <div class="table-of-contents">
+              <div class="aside-section-heading">
+                On this page...
+              </div>
+              <ul class="links">
+              </ul>
+            </div>
+            {% if inAboutCollection %}
+              <div class="related-pages">
+                <div class="aside-section-heading">
+                  More pages...
+                </div>
+                <ul class="links">
+                  {% if not page.inputPath.endsWith("about.md") %}
+                    <li>
+                      <a href="/about/">About</a>
+                    </li>
+                  {% endif %}
+                  {% if not page.inputPath.endsWith("methods.md") %}
+                    <li>
+                      <a href="/methods/">Methods</a>
+                    </li>
+                  {% endif %}
+                  {% if not page.inputPath.endsWith("schemas.md") %}
+                    <li>
+                      <a href="/schemas/">Schemas</a>
+                    </li>
+                  {% endif %}
+                </ul>
+              </div>
+            {% endif %}
+          </div>
+        </aside>
+        <div>
+          {{ content | safe }}
+        </div>
+      </div>
     </amr-panel>
   </main>
 
