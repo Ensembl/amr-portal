@@ -4,7 +4,6 @@ Helper methods used to transform dataset inputs into parquet files
 import os
 
 import duckdb
-from typing import Tuple, List
 
 """
 # Step 1: Connect to new .duckdb file
@@ -46,7 +45,7 @@ COPY {} TO '{}'
 """
 
 
-def transform_dataset(data: dict, release_path: str) -> Tuple[bool, str]:
+def transform_dataset(data: dict, release_path: str) -> (bool, str):
     # load data set
     target = "dataset"
     conn = duckdb.connect()
@@ -81,9 +80,9 @@ def transform_dataset(data: dict, release_path: str) -> Tuple[bool, str]:
 
 
 def transform_datasets(
-            datasets: List[dict],
+            datasets: list[dict],
             release_path: str
-            ) -> Tuple[bool, str, list[dict]]:
+            ) -> (bool, str, list[dict]):
     for dataset in datasets:
         result = transform_dataset(
             dataset,
