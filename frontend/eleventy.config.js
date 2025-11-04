@@ -36,8 +36,8 @@ export default async function(eleventyConfig) {
   eleventyConfig.addFilter('getAssetOutputPath', getAssetOutputPath);
 
   eleventyConfig.addFilter('sortByTitle', values => {
-    return values.slice().sort((a, b) => a.data.title.localeCompare(b.data.title))
-  })
+    return values.toSorted((a, b) => a.data.title.localeCompare(b.data.title));
+  });
 
   eleventyConfig.addPlugin(HtmlBasePlugin);
 
