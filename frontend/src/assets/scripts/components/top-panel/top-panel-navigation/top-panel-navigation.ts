@@ -43,11 +43,20 @@ export class TopPanelNavigation extends SignalWatcher(LitElement) {
 
     .nav-item {
       display: grid;
-      grid-template-columns: repeat(2, auto);
+      grid-template-columns: auto minmax(22px, auto);
       column-gap: 0.6rem;
       align-items: center;
       justify-content: start;
+      padding-right: 0.6rem;
       height: 22px; /* to prevent vertical shift when the counter is displayed */
+    }
+
+    ens-text-button {
+      max-width: 130px;
+    }
+
+    .nav-item ens-text-button::part(button) {
+      text-align: left;
     }
   `;
 
@@ -58,8 +67,6 @@ export class TopPanelNavigation extends SignalWatcher(LitElement) {
   render() {
     const filtersConfig = filtersStore.filtersConfig.get();
     const currentViewMode = filtersStore.viewMode.get();
-    const selectedFilters = filtersStore.selectedFiltersForViewMode.get();
-    const hasSelectedFilters = selectedFilters.length > 0;
 
     if (!currentViewMode) {
       // this should not happen

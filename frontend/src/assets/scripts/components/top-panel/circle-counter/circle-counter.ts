@@ -11,15 +11,16 @@ import { property, customElement } from 'lit/decorators.js';
 export class CircleCounter extends LitElement {
   static styles = css`
     :host {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
+      min-width: 18px;
+      height: 18px;
+      border-radius: 18px;
       display: flex;
       align-items: center;
       justify-content: center;
       background-color: var(--circile-counter-color, var(--color-green));
       color: white;
       font-weight: var(--font-weight-bold);
+      padding: 2px;
     }
 
     :host([dimmed]) {
