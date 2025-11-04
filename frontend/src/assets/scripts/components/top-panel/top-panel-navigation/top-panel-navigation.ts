@@ -15,7 +15,7 @@ export class TopPanelNavigation extends SignalWatcher(LitElement) {
 
   static styles = css`
     :host {
-      min-width: 200px;
+      width: 200px;
       box-sizing: border-box;
       padding-top: 24px;
       padding-left: 30px;
@@ -37,7 +37,7 @@ export class TopPanelNavigation extends SignalWatcher(LitElement) {
       --text-button-disabled-color: var(--color-black);
       display: flex;
       flex-direction: column;
-      row-gap: 1rem;
+      row-gap: 2rem;
       padding-left: 20px;
     }
 
@@ -57,6 +57,7 @@ export class TopPanelNavigation extends SignalWatcher(LitElement) {
 
     .nav-item ens-text-button::part(button) {
       text-align: left;
+      line-height: 1.3;
     }
   `;
 

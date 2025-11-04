@@ -19,9 +19,10 @@ export class FiltersArea extends SignalWatcher(LitElement) {
       display: grid;
       grid-template-rows: auto 1fr;
       row-gap: 30px;
-      height: 100%;
+      align-self: stretch;
       overflow: hidden;
       padding-bottom: 10px;
+      margin-bottom: 5px;
     }
 
     .main {
@@ -36,7 +37,7 @@ export class FiltersArea extends SignalWatcher(LitElement) {
       display: flex;
       flex-direction: column;
       flex-wrap: wrap;
-      column-gap: 3rem;
+      column-gap: 20px;
       row-gap: 10px;
       height: 100%;
     }
@@ -44,6 +45,10 @@ export class FiltersArea extends SignalWatcher(LitElement) {
     filters-area-top {
       margin-left: 20px;
       margin-top: 20px;
+    }
+
+    ens-checkbox {
+      width: 215px;
     }
   `;
 
