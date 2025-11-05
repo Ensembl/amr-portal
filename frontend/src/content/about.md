@@ -1,16 +1,21 @@
 ---
 title: About the portal
-tags: about
+tags: usage
 layout: "layouts/documentation.njk"
 ---
-
 # About the portal
 
 The AMR (antimicrobial resistance) Portal is a collaboration between EMBL-EBI research and service teams alongside Imperial College London to deliver a new way to access and explore AMR phenotype and genotype annotations through a user-friendly interface. Data within the portal is taken from the MRC project CABBAGE (Comprehensive Assessment of Bacterial-Based AMR prediction from Genotypes) and represents the largest public AMR dataset in a reconciled, uniform format. AMR represents a major growing concern to public health predicted to cause over 2M deaths per year by 2050, with the Global South facing a disproportionate burden of AMR. It increases the risk of untreatable bacterial infections whilst increasing the chance of complications from essential medical procedures from childbirth to transplants.
 
 ## CABBAGE
 
-The Comprehensive Assessment of Bacterial-Based Antimicrobial resistance prediction from GEnotypes (CABBAGE) collects and curates all publicly available data containing both NGS information and AMR information, transforming it into a standard format. During a pilot project researchers collected more than three times as much data as is currently available from the single largest public database. The group's aim is to automate its normalisation processes so that the results of future studies can be directly incorporated into EMBL-EBI resources, and work with stakeholders such as the World Health Organisation to facilitate the adoption of our standards. It is due to the uniformity of these data that the EMBL-EBI teams have been able to create the portal.
+The Comprehensive Assessment of Bacterial-Based Antimicrobial resistance prediction from GEnotypes (CABBAGE) project aims to provide a unified AMR phenotype–genotype database for the WHO Bacterial Priority Pathogens (currently following the 2017 WHO list). The database integrates genotype–phenotype information extracted from public resources (PATRIC, NCBI antibiograms, NARMS, NDARO, CDC, COMPARE, PathogenWatch, Microreact, and PubMLST) as well as large datasets obtained from the literature. Isolate metadata such as collection year and country were also retrieved from the BioSample database when missing from the original sources.
+
+Each entry in the database is defined by an isolate BioSample ID and an antibiotic name, and includes either a measurement value (MIC or disk diffusion zone diameter), an SIR phenotype, or both. Additional SIR phenotype inferences were performed using the latest CLSI and EUCAST breakpoint values through the [AMR R package (v3.0.0)](https://amr-for-r.org/).
+
+To ensure comparability across sources, several data standardisation steps were applied. For example, antibiotic abbreviations were converted to full names using a single naming scheme. Further curation steps improved data quality, such as removing erroneous measurements and correcting AST method labels. A de-duplication process was finally implemented to merge duplicate entries and remove unresolved phenotype conflicts originating from different sources.
+
+Please note that not all entries have been manually curated, only those that were clearly inconsistent or conflicted. CABBAGE will continue to be refined as new data are added. The current version of the database contains 1.7M entries, representing 171k isolates.
 
 ## AllTheBacteria
 
@@ -43,7 +48,6 @@ The AMR portal is a collaboration between the following EMBL-EBI teams:
 This project represents phase one of our efforts. Future developments may include
 
 - Advanced querying including search by IDs
-- The ability to cross link between our phenotype and genotype data sets
 - Expanding AMR profiles to those from isolate genomes in culture collections
 - Expanding AMR profiles from text mining the literature
 - Submission flows allowing third parties to submit antibiograms and for these data to flow into this portal
