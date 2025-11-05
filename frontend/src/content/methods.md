@@ -1,7 +1,7 @@
 ---
 title: Methods and protocols
 page_title: Methods
-tags: about
+tags: usage
 layout: "layouts/documentation.njk"
 ---
 
