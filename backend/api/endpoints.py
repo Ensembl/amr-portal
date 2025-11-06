@@ -9,6 +9,8 @@ from backend.models.payload import Payload
 from backend.services.filters import fetch_filters, filter_amr_records, fetch_filtered_records
 from backend.services.release import fetch_release
 from backend.core.database import get_db_connection
+from starlette.responses import StreamingResponse
+from starlette.concurrency import run_in_threadpool
 
 router = APIRouter()
 
@@ -34,31 +36,44 @@ def download_filtered_records(
     return fetch_filtered_records(payload, scope, file_format, db)
 
 
+def _b64url_decode_to_str(s: str) -> str:
+    # URL-safe Base64 often omits padding characters (=)
+    # This adds the missing padding for URL-safe Base64
+    s = s.strip()
+    s += "=" * (-len(s) % 4)
+    try:
+        return base64.urlsafe_b64decode(s).decode("utf-8")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Invalid Base64 in 'payload': {e}")
+
 @router.get("/amr-records/download")
-def download_filtered_records_get(
-    payload: str = Query(default=..., description="URL-encoded JSON matching the Payload schema"),
-    scope: str = Query(default="all", description="Either 'page' or 'all'"),
-    file_format: str = Query(default="csv", description="Either 'csv' or 'json'"),
-    db: duckdb.DuckDBPyConnection = Depends(get_db_connection)
+async def download_filtered_records_get(
+    payload: str = Query(..., description="Base64 URL-safe encoded JSON matching the Payload schema"),
+    scope: str = Query("all", description="Either 'page' or 'all'"),
+    file_format: str = Query("csv", description="Either 'csv' or 'json'"),
+    db: duckdb.DuckDBPyConnection = Depends(get_db_connection),
 ):
     """
     GET version of /amr-records/download.
-    Accepts `payload` as URL-encoded JSON (same shape as the POST body),
-    plus `scope` and `file_format` as query params.
+    - Keeps Base64-encoded JSON `payload`.
+    - Forwards the StreamingResponse (CSV) or dict (JSON) returned by fetch_filtered_records.
     """
+    # Decode and validate the payload into your Pydantic model
+    decoded = _b64url_decode_to_str(payload)
     try:
-        # validate directly from JSON string
-        decoded_payload_bytes = base64.urlsafe_b64decode(payload)
-        decoded_payload_string = decoded_payload_bytes.decode('utf-8')
-        print('decoded_payload_string', decoded_payload_string)
-        payload_obj = Payload.model_validate_json(decoded_payload_string)
-        print(f"payload_obj: {payload_obj}")
-
+        payload_obj = Payload.model_validate_json(decoded)
     except Exception as e:
-        # Provide a clear error message if payload is malformed
         raise HTTPException(status_code=400, detail=f"Invalid 'payload' JSON: {e}")
 
-    return fetch_filtered_records(payload_obj, scope, file_format, db)
+    # Moves the blocking I/O operations to a separate thread pool (DuckDB queries, file operations)
+    result = await run_in_threadpool(fetch_filtered_records, payload_obj, scope, file_format, db)
+
+    # If the service already streams CSV, just return it.
+    if isinstance(result, StreamingResponse):
+        return result
+
+    # Otherwise (e.g., JSON path returns a dict), return as-is.
+    return result
 
 
 @router.get('/health')

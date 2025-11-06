@@ -198,6 +198,35 @@ def flatten_record(record):
     """Convert list-of-dicts into {column_id: value}."""
     return {entry["column_id"]: entry.get("value") for entry in record}
 
+
+def stream_csv(flat_results):
+    """Generate CSV chunks progressively to avoid loading everything in memory."""
+    # Handle empty results
+    if not flat_results:
+        yield "id\n".encode("utf-8")
+        return
+
+    # Setup CSV writer with headers from first row
+    buffer = io.StringIO()
+    headers = list(flat_results[0].keys())
+    writer = csv.DictWriter(buffer, fieldnames=headers)
+    writer.writeheader()
+
+    # Stream rows in chunks
+    for i, row in enumerate(flat_results, start=1):
+        writer.writerow(row)
+        # Sends data when buffer reaches ~64KB or every 500 rows
+        if buffer.tell() > 64 * 1024 or i % 500 == 0:
+            chunk = buffer.getvalue()     # Get current buffer content
+            buffer.seek(0)                # Move to start
+            buffer.truncate(0)            # Clear buffer
+            yield chunk.encode("utf-8")   # Send chunk as bytes
+
+    # Send any remaining data
+    remaining = buffer.getvalue()
+    if remaining:
+        yield remaining.encode("utf-8")
+
 def fetch_filtered_records(payload: Payload, scope, file_format, db: duckdb.DuckDBPyConnection):
     """
     Download filtered AMR records in CSV or JSON format.
@@ -226,20 +255,16 @@ def fetch_filtered_records(payload: Payload, scope, file_format, db: duckdb.Duck
         file_like = io.BytesIO(content.encode("utf-8"))
         filename = "amr_records.json"
         media_type = "application/json"
+        return StreamingResponse(
+            file_like,
+            media_type=media_type,
+            headers={"Content-Disposition": f"attachment; filename={filename}"}
+        )
     else:  # default = csv
-        # Collect headers from the first record
-        logger.debug(f"flat_results: {flat_results[0]}")
-        headers = list(flat_results[0].keys())
-        buffer = io.StringIO()
-        writer = csv.DictWriter(buffer, fieldnames=headers)
-        writer.writeheader()
-        writer.writerows(flat_results)
-        file_like = io.BytesIO(buffer.getvalue().encode("utf-8"))
         filename = "amr_records.csv"
         media_type = "text/csv"
-
-    return StreamingResponse(
-        file_like,
-        media_type=media_type,
-        headers={"Content-Disposition": f"attachment; filename={filename}"}
-    )
+        return StreamingResponse(
+            stream_csv(flat_results),
+            media_type=media_type,
+            headers={"Content-Disposition": f"attachment; filename={filename}"}
+        )
