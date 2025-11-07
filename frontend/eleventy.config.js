@@ -2,7 +2,7 @@ import { HtmlBasePlugin } from '@11ty/eleventy';
 
 import { buildAssets } from './utils/build.js';
 import { getAssetOutputPath } from './utils/eleventy-filters.js';
-import { documentationTocTransform } from './utils/documentation-toc-transform.js';
+import { documentationPageTransform } from './utils/documentation-page-transform.js';
 
 const pathPrefix = '/amr/';
 // const pathPrefix = undefined;
@@ -41,7 +41,7 @@ export default async function(eleventyConfig) {
 
   eleventyConfig.addPlugin(HtmlBasePlugin);
 
-  eleventyConfig.addTransform('documentation-toc-transform', documentationTocTransform);
+  eleventyConfig.addTransform('documentation-page-transform', documentationPageTransform);
 };
 
 

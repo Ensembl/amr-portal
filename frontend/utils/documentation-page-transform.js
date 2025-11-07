@@ -6,7 +6,7 @@ import { JSDOM } from 'jsdom';
  * - Example of html transform using cheerio: https://www.martingunnarsson.com/posts/eleventy-customizing-external-links/
  */
 
-export async function documentationTocTransform(content) {
+export async function documentationPageTransform(content) {
   // TODO: decide how to pick pages on which to apply this transform
 
   if (this.page.inputPath.endsWith('.md')) {
@@ -14,32 +14,43 @@ export async function documentationTocTransform(content) {
     const document = dom.window.document;
     const mainSection = document.querySelector('main');
 
-    // get the target element 
-    const tocContainer = mainSection?.querySelector('.table-of-contents .links');
-
-    if (
-      !mainSection ||
-      !tocContainer
-    ) {
+    if (!mainSection) {
       // abort mission
       return content;
     }
 
-    // NOTE: would be nice to exclude the h1
-    const headings = mainSection.querySelectorAll('h1, h2');
-    const seenHeadingsMap = new Map();
-
-    headings.forEach((heading) => {
-      const tocElement = createTOCElement({ heading, document, seenHeadingsMap });
-      tocContainer.appendChild(tocElement);
+    buildTableOfContents({
+      mainContainer: mainSection,
+      document
     });
-
+    updateExternalLinks(mainSection);
 
     return dom.serialize();
   }
 
   return content; // no changes made.
 };
+
+const buildTableOfContents = ({
+  mainContainer,
+  document
+}) => {
+  // get the target element 
+  const tocContainer = mainContainer.querySelector('.table-of-contents .links');
+
+  if (!tocContainer) {
+    return;
+  }
+
+  // NOTE: would be nice to exclude the h1
+  const headings = mainContainer.querySelectorAll('h1, h2');
+  const seenHeadingsMap = new Map();
+
+  headings.forEach((heading) => {
+    const tocElement = createTOCElement({ heading, document, seenHeadingsMap });
+    tocContainer.appendChild(tocElement);
+  });
+}
 
 const createTOCElement = ({
   document,
@@ -74,4 +85,16 @@ const createHeadingId = ({ text, count }) => {
     id = `${id}-${count}`;
   }
   return id;
+};
+
+
+const updateExternalLinks = (mainContainer) => {
+  const externalLinks = mainContainer.querySelectorAll('a[href^="http"]');
+  externalLinks.forEach(linkElement => updateExternalLink(linkElement));
 }
+
+
+const updateExternalLink = (linkElement) => {
+  linkElement.setAttribute('target', '_blank');
+  linkElement.setAttribute('rel', 'noopener noreferrer');
+};
