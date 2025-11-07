@@ -3,21 +3,22 @@ title: Using the AMR Portal
 tags: usage
 layout: "layouts/documentation.njk"
 ---
-# How to use the AMR portal
 
-The antimicrobial resistance portal contains three main data resources
+# How to use the Antimicrobial resistance (AMR) portal
 
-- **Phenotypic AMR** (AMR was determined experimentally and taken from
+The antimicrobial resistance (AMR) portal contains three main data resources
+
+- **Experimental AMR** (AMR was determined experimentally and taken from
   CABBAGE antibiograms catalogue)
-- **Genotype predicted AMR** (AMR was predicted computationally using
+- **In silico AMR prediction** (AMR was predicted computationally using
   Genotype data)
-- **Phenotypic/genotype AMR** (AMR for which both phenotypic and genotypic
+- **Experimental and In silico AMR** (AMR for which both phenotypic and genotypic
   data is available)
 
 ## How to explore the AMR data in the portal
 
 You can explore the three antimicrobial resistance (AMR) data resources
-by selecting 'Find data resources' on the home page.
+by selecting 'Query AMR data' on the home page.
 
 <figure>
   <img src="/assets/images/content/howto/home-page.png" />
@@ -27,27 +28,25 @@ by selecting 'Find data resources' on the home page.
   </figcaption>
 </figure>
 
-This will take you by default to the Phenotypic AMR data resource and a
+This will take you by default to the Experimental AMR data and a
 view of the antibiotics for which experimental antimicrobial resistance
 data is available.
 
 <figure>
-  <img src="/assets/images/content/howto/image-001.png" />
-  <figcaption>
-    Fig 2. A view of the Phenotypic AMR data resource showing the
-    antibiotics for which experimental antimicrobial resistance data
-    and other filters for subsetting the data.
+  <img src="/assets/images/content/howto/experimental-amr-f2.png" />
+  <figcaption> 
+    Fig 2. A view of the Experimental AMR data resource showing the antibiotics for which experimental AMR data is available.
   </figcaption>
 </figure>
 
 ### How to choose an AMR data resource
 
-To choose an alternative AMR data resource to the default Phenotypic AMR
+To choose an alternative AMR data resource to the default Experimental AMR
 data select either
 
-- Genotype predicted AMR
+- In silico AMR prediction
 or
-- Phenotypic / genotype AMR
+- Experimental and In silico AMR
 
 under the 'Data' heading in the left hand column, both are highlighted
 in blue.
@@ -63,29 +62,25 @@ To select antibiotics of interest:
 
 - Select the check box one or more antibiotics of interest e.g.
   azithromycin was selected in the example shown below.
-
 - You can scroll through available checkboxes by moving the horizontal
   scroll bar under the list of checkboxes to the right.
 
 <figure>
-  <img src="/assets/images/content/howto/image-002.png" />
+  <img src="/assets/images/content/howto/azithromycin-amr-f3.png" />
   <figcaption>
-    Fig 3. A view showing the selection of azithromycin from the antibiotics
-    for which experimental antimicrobial resistance data is available.
+    Fig 3. A view showing the selection of azithromycin from list of antibiotics for which experimental anti-microbial resistance data is available.
   </figcaption>
 </figure>
 
-A table of results will be listed on the bottom half of the screen,
+A table of results will be showed on the bottom half of the screen,
 below the antibiotic table.
 
 <figure>
-  <img src="/assets/images/content/howto/image-003.png" />
+  <img src="/assets/images/content/howto/azithromycin-results-table-amr-f4.png" />
   <figcaption>
-    Fig 4. A view showing the table of results for azithromycin from the
-    experimental antimicrobial resistance data resource.
+    Fig 4. A view showing the table of results for azithromycin from the experimental antimicrobial resistance data resource.
   </figcaption>
 </figure>
-
 
 ### How to filter the data
 
@@ -95,42 +90,46 @@ antibiotic table.
 
 Each of the three AMR data resources has a specific set of filters.
 
-eg In the view shown below for Phenotypic AMR data can be further
+e.g.: In the view shown below for Experimental AMR the data can be further
 filtered by:
 
 - Species
 - Genus
 - Resistance phenotype
-- AST standard
-- Testing methods
+- Isolation source category
+- Testing method
 - Collection year
+- Geographical subregion
 - Country
 
 <figure>
-  <img src="/assets/images/content/howto/image-004.png" />
+  <img src="/assets/images/content/howto/species-amr-f5.png" />
   <figcaption>
-    Fig 5. A view highlighting the Species filter in the horizontal list of
-    all filters available for the Phenotypic AMR data resource.
+    Fig 5. A view highlighting the Species filter in the horizontal list of all filters available for the Experimental AMR data.
   </figcaption>
 </figure>
 
-Genotype predicted AMR antibiotic data can be filtered by:
+In silico AMR prediction data can be filtered by:
 
 - Species
 - Genus
 - AMR class
 
-Phenotypic / genotype AMR antibiotic data can be filtered by:
+Experimental and In silico AMR data can be filtered by:
 
 - Species
 - Genus
-- Phenotype data - (select true to show phenotypic data)
-- Genotype data (select true to show those with genotype data - select
+- Resistance Phenotype - (select true to show phenotypic data)
+- Isolation source category  (select true to show those with genotype data - select
   false to show those without genotype data )
+- Testing method
+- Collection year
+- Geographical subregion
+- Country
 
 To filter the data:
 
-- Find a filter of interest alongside the "Filter by" header,
+- Find a filter of interest alongside the \"Filter by\" header,
   highlighted in blue, ie Species.
 - Select the filter ie Species Click on the check box alongside a
   species of interest to begin subsetting the data.
@@ -144,12 +143,9 @@ To filter the data:
   change to fit the new resource.
 
 <figure>
-  <img src="/assets/images/content/howto/image-005.png" />
+  <img src="/assets/images/content/howto/species-selected-amr-f6.png" />
   <figcaption>
-    Fig 6. A view showing the selection of a species e.g. Escherichia coli
-    from the Species filter and highlighting the subsequent reduction
-    in the number of results for experimental antimicrobial resistance
-    to azithromycin for the Phenotypic AMR data resource.
+    Fig 6. A view showing the selection of a species e.g. Escherichia coli from the Species filter and highlighting the subsequent reduction in the number of results for experimental antimicrobial resistance to azithromycin for Experimental AMR data.
   </figcaption>
 </figure>
 
@@ -161,29 +157,49 @@ point in the AMR data resource used.
 The information displayed in the results table for each AMR data
 resource is different.
 
-For example the Phenotypic AMR resource results table displays:
+For example the Experimental AMR resource results table displays:
 
 - Antibiotic name
 - Antibiotic abbreviation
 - Resistance phenotype
-- Measurement
-- BioSample ID
+- Ast standard
+- Laboratory typing method
+- Platform
+- Biosample ID
 - Assembly ID
 - Genus
 - Species
 - Organism
 - Host
 - INSDC secondary accession
-- Laboratory typing method
-- Platform
-- Ast standard
 - Antibiotic ontology
 - Collection year
+- ISO country code
+- Host age
+- Isolate
+- Isolation source
+- Lat long
+- AMR associated publications
+- Updated phenotype CLSI	
+- Updated phenotype EUCAST	
+- Used ECOFF	
+- Source	
+- Country	
+- Geographical region	
+- Geographical subregion
 
-Different information is displayed in the results table for
+Different information is displayed in the results table for 
 
-- Genotype predicted AMR
-- Phenotypic/genotype AMR
+- In silico AMR prediction
+- Experimental and In silico AMR
+
+<figure>
+  <img src="/assets/images/content/howto/results-table-azith-species-amr-f7.png" />
+  <figcaption>
+    Fig 7. A view of the results table for isolates of *Escherichia coli* resistant to azithromycin from the Experimental AMR data resource.
+  </figcaption> 
+  </figcaption>
+</figure>
 
 The results table has many columns which are off screen and can be viewed by
 moving the scroll bar on the bottom of the results table to the right.
@@ -191,29 +207,40 @@ moving the scroll bar on the bottom of the results table to the right.
 The number of rows in the results table will depend on how you have
 filtered the data.
 
-![](/assets/images/content/howto/image-006.png)
-
 ### How to navigate the results table
 
-- to **reveal all the columns** in the results table - move the scroll
+- To **reveal all the columns** in the results table - move the scroll
   bar on the bottom of the results table to the right.
-
-![](/assets/images/content/howto/image-007.png)
-
 - To **reveal all the rows** in the table move the scroll bar on far right
   of the results table down.
+
+<figure>
+  <img src="/assets/images/content/howto/scrolling-results-table-amr-f8.png" />
+  <figcaption>
+    Fig 8. A view showing the horizontal and vertical scroll bars in the results table. 
+</figure>
 
 ### How to navigate the results table
 
 - To **change the number of results** displayed per page by using the
   drop-down menu.
 
-![](/assets/images/content/howto/image-008.png)
+<figure>
+  <img src="/assets/images/content/howto/items-on-a-page-results-table-amr-f9.png" />
+  <figcaption>
+    Fig 9. A view highlighting where to change the number of rows displayed in the results table.
+  </figcaption>
+</figure>
 
 - To **clear your results** click on the blue recycle bin icon on the
   right hand side of the results table.
 
-![](/assets/images/content/howto/image-009.png)
+<figure>
+  <img src="/assets/images/content/howto/.png"/><img src="media/results-table-delete-amr-f10.png" />
+  <figcaption>
+    Fig 10. A view highlighting the blue bin icon which you select to delete the results table. 
+  </figcaption>
+</figure>
 
 ### How to download the results table
 
@@ -221,9 +248,18 @@ To **download the results** table
 
 - select the download arrow on the right hand side of the results table.
 
-![](/assets/images/content/howto/image-010.png)
+<figure>
+  <img src="/assets/images/content/howto/results-table-download-amr-f11.png" />
+  <figcaption>
+    Fig 11. A view highlighting the download icon which you need to select to download the results table. 
+  </figcaption>
+</figure>
 
-- then select the green download button, which will export the table to
-  your computer in comma separate value file format.
+- select the download button and a CSV version of the results table will be downloaded onto your computer.
 
-![](/assets/images/content/howto/image-011.png)
+<figure>
+   <img src="/assets/images/content/howto/results-download-button-amr-f12.png" />
+  <figcaption>
+    Fig 12. A view highlighting the download button which you need to select to download the results table. 
+  </figcaption>
+</figure>
