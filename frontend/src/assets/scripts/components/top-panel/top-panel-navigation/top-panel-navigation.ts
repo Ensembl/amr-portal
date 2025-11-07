@@ -58,6 +58,7 @@ export class TopPanelNavigation extends SignalWatcher(LitElement) {
     .nav-item ens-text-button::part(button) {
       text-align: left;
       line-height: 1.3;
+      font-weight: var(--font-weight-bold);
     }
   `;
 

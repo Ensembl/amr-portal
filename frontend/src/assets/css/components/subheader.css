@@ -32,6 +32,7 @@
 
   .portal-title {
     font-size: 16px;
+    color: var(--color-black); /* to override the color inherited from a wrapper link */
     font-weight: var(--font-weight-bold);
     padding: 0 30px 0 20px;
     border-right: 1px solid var(--color-black);

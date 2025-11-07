@@ -251,7 +251,7 @@ export class BottomPanel extends SignalWatcher(LitElement) {
     return html`
       <div class="initial-content">
         <ens-table-view-button disabled class="strong"></ens-table-view-button>
-        <span class="strong">Select data above</span>
+        <span class="strong">Select data from the options above to start</span>
 
         <ens-delete-button disabled></ens-delete-button>
         <span>Select to clear</span>
