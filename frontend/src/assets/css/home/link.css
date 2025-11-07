@@ -1,0 +1,26 @@
+.homepage-link {
+
+  a {
+    display: flex;
+    align-items: center;
+    font-size: 17px;
+    color: var(--color-blue);
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  .arrow-icon {
+    width: 21px;
+    height: 21px;
+    filter: var(--filter-black-to-ensembl-blue);
+    margin-left: 10px;
+    transition: transform 0.125s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+  }
+
+  a:hover .arrow-icon {
+    transform: translateX(4px);
+  }
+
+}

@@ -4,38 +4,73 @@ layout: "layouts/home.njk"
 ---
 
 {% from "components/card-link/card-link.njk" import cardLink %}
+{% from "components/home/link/link.njk" import homepageLink %}
 
 {% include "components/header/header.njk" %}
 
 {% include "components/home/hero/hero.njk" %}
 
+{% set cardLinkText1 %}
+Query and filter antibiogram AMR records based on antibiotic,
+resistance phenotype, species and other key attributes.
+Contains over 1.5 million entries across 170,000 samples and 100,000 assemblies.
+{% endset %}
+
+{% set cardLinkText2 %}
+Query and filter In silico predictions of AMR resistance from AMRFinderPlus.
+Provides access to predictions and annotation for 40,000 genomes and samples.
+{% endset %}
+
+{% set cardLinkText3 %}
+A merged dataset of experimental evidence and In silico predictions
+of AMR resistance based on the prediction of AMR resistance
+to the same compound in identical samples and assemblies.
+{% endset %}
+
 
 <div class="card-links-container">
   <div class="card-links-container-inner">
-    {{ cardLink({ href: '/data/', linkText: 'Query AMR data' }) }}
-    {{ cardLink({ href: '/about/', linkText: 'About the AMR portal' }) }}
-    {{ cardLink({ href: '/usage/', linkText: 'How to use' }) }}
+    {{ cardLink({ href: '/data/', cardText: cardLinkText1, linkText: 'Experimental AMR' }) }}
+    {{ cardLink({ href: '/about/', cardText: cardLinkText2, linkText: 'In silico AMR prediction' }) }}
+    {{ cardLink({ href: '/usage/', cardText: cardLinkText3, linkText: 'Experimental and In silico AMR' }) }}
   </div>
 </div>
 
 
-<div style="min-height: 300px; max-width: var(--vf-layout--comfortable); margin: auto;">
-<p>
-Antimicrobial resistance (AMR) represents a major growing concern to public health 
-predicted to cause over 2M deaths per year by 2050, with the Global South facing a 
-disproportionate burden of AMR increasing the risk of untreatable bacterial infections.
-The AMR Portal is a collaboration between EMBL-EBI research and service 
-teams alongside Imperial College London to deliver a new way to access and explore AMR phenotype 
-and genotype annotations through a user-friendly interface. AMR antibiogram records can be filtered 
-by an antibiotic compound, resistance phenotype, testing methods and many more attributes. The same
-data can be programmatically interrogated in a number of different programming languages.
-</p>
-<p>
-Data within the portal was produced by the MRC project CABBAGE (Comprehensive Assessment of 
-Bacterial-Based AMR prediction from Genotypes). CABBAGE represents the largest public AMR 
-dataset in a reconciled, uniform format.
-</p>
+<div class="main-grid-wrapper">
+  <div class="main-grid">
+    <div>
+      <p>
+        Antimicrobial resistance (AMR) represents a major growing concern to public health
+        predicted to cause over 2M deaths per year by 2050, with the Global South facing
+        a disproportionate burden of AMR increasing the risk of untreatable bacterial infections.
+      </p>
+
+      <p>
+        The AMR Portal is a collaboration between EMBL-EBI research and service teams
+        alongside Imperial College London to deliver a new way to access and explore
+        AMR phenotype and genotype annotations through a user-friendly interface.
+        AMR antibiogram records can be filtered by an antibiotic compound, resistance phenotype,
+        testing methods and many more attributes.
+        The same data can be programmatically interrogated in a number of different programming languages.
+      </p>
+
+      <p>
+        Data within the portal was produced by the MRC project CABBAGE
+        (Comprehensive Assessment of Bacterial-Based AMR prediction from Genotypes).
+        CABBAGE represents the largest public AMR dataset in a reconciled, uniform format.
+      </p>
+    </div>
+
+    <div class="documentation-links">
+      {{ homepageLink({ href: '/usage/', linkText: 'How to use the portal' }) }}
+      {{ homepageLink({ href: '/about/', linkText: 'About the portal' }) }}
+      {{ homepageLink({ href: '/developers/', linkText: 'Developer documentation' }) }}
+    </div>
+  </div>
 </div>
+
+
 
 
 {% include "components/footer/footer.njk" %}

@@ -1,12 +1,10 @@
+{% from "components/home/link/link.njk" import homepageLink %}
+
 {% macro cardLink(params) %}
 <div class="card-link">
-  <a href="{{ params.href }}">
-    <span>
-      {{ params.linkText }}
-    </span>
-    <img src="/assets/images/icons/arrow-circle-right.svg" class="arrow-icon" />
-  </a>
+  <div class="description">
+    {{ params.cardText }}
+  </div>
+  {{ homepageLink(params) }}
 </div>
 {% endmacro %}
-
-
