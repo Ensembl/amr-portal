@@ -71,6 +71,10 @@ amr-panel {
     column-gap: var(--standard-gutter);
   }
 
+  .article {
+    overflow-x: auto;
+  }
+
   h1 {
     font-size: 13px; /* ??? */
     margin: 0 0 24px 0;
