@@ -257,7 +257,7 @@ To **download the results** table
 - select the download button and a CSV version of the results table will be downloaded onto your computer.
 
 <figure>
-   <img src="/assets/images/content/howto/results-download-button-amr-f12" />
+   <img src="/assets/images/content/howto/results-download-button-amr-f12.png" />
   <figcaption>
     Fig 12. A view highlighting the download button which you need to select to download the results table. 
   </figcaption>
