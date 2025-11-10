@@ -5,6 +5,7 @@ import { SignalWatcher } from '@lit-labs/signals';
 import '@ensembl/ensembl-elements-common/components/button/button.js';
 import '@ensembl/ensembl-elements-common/components/text-button/text-button.js';
 import '@ensembl/ensembl-elements-common/components/button-link/button-link.js';
+import '@ensembl/ensembl-elements-common/components/external-link/external-link.js';
 
 import appConfig from '../../../configs/app-config';
 import { actionView, setActionView } from './state';
@@ -54,7 +55,7 @@ export class ActionButtonsPopover extends SignalWatcher(LitElement) {
         grid-template-columns: 1fr auto;
         grid-template-rows: auto 1fr;
         column-gap: 60px;
-        row-gap: 20px;
+        row-gap: 24px;
         grid-template-areas:
           'title title'
           'message buttons';
@@ -69,7 +70,6 @@ export class ActionButtonsPopover extends SignalWatcher(LitElement) {
         .message {
           grid-area: message;
           color: var(--color-red);
-          padding-left: 20px;
         }
 
         .action-buttons {
@@ -86,10 +86,12 @@ export class ActionButtonsPopover extends SignalWatcher(LitElement) {
         grid-template-columns: 1fr auto;
         grid-template-rows: auto 1fr;
         column-gap: 60px;
-        row-gap: 20px;
+        row-gap: 24px;
+        align-self: start;
+        align-items: center;
         grid-template-areas:
           'title title'
-          'checkboxes buttons';
+          'ftp-link buttons';
         padding-right: 70px;
 
         .title {
@@ -110,6 +112,10 @@ export class ActionButtonsPopover extends SignalWatcher(LitElement) {
           background-color: transparent;
           border: 1px solid var(--color-grey);
           color: black;
+        }
+
+        .ftp-link {
+          grid-area: ftp-link;
         }
       }
     `
@@ -228,6 +234,11 @@ export class ActionButtonsPopover extends SignalWatcher(LitElement) {
       <div class="download-content">
         <div class="title">
           Download data
+        </div>
+        <div class="ftp-link">
+          <ens-external-link href="https://ftp.ebi.ac.uk/pub/databases/amr_portal">
+            Get data from the ftp site
+          </ens-external-link>
         </div>
         <div class="action-buttons">
           ${this.shouldShowDownloadStarted
