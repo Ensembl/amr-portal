@@ -8,23 +8,22 @@ layout: "layouts/documentation.njk"
 
 The antimicrobial resistance (AMR) portal contains three main data resources
 
-- **Experimental AMR** (AMR was determined experimentally and taken from
-  CABBAGE antibiograms catalogue)
-- **In silico AMR prediction** (AMR was predicted computationally using
-  Genotype data)
-- **Experimental and In silico AMR** (AMR for which both phenotypic and genotypic
-  data is available)
+- **Experimental AMR**  - AMR was determined experimentally and taken from
+  CABBAGE antibiograms catalogue.
+- **In silico AMR prediction** - AMR was predicted computationally using
+  Genotype data.
+- **Experimental and In silico AMR** - AMR for which both phenotypic and genotypic
+  data is available.
 
 ## How to explore the AMR data in the portal
 
 You can explore the three antimicrobial resistance (AMR) data resources
-by selecting 'Query AMR data' on the home page.
+by selecting one of the links on the home page ie 'Experimental AMR'.
 
 <figure>
-  <img src="/assets/images/content/howto/home-page.png" />
+  <img src="/assets/images/content/howto/home-page-amr-f1.jpeg" />
   <figcaption>
-    Fig 1. A view of the antimicrobial resistance portal home page showing
-    links to all the sections of the portal.
+    Fig 1. A view of the antimicrobial resistance portal home page showing links to all three data resources Experimental AMR, In silico AMR prediction and Experimental and In silico AMR.
   </figcaption>
 </figure>
 
@@ -121,9 +120,9 @@ Experimental and In silico AMR data can be filtered by:
 - Genus
 - Resistance Phenotype - (select true to show phenotypic data)
 - Isolation source category  (select true to show those with genotype data - select
-  false to show those without genotype data )
+  false to show those without genotype data )  
 - Testing method
-- Collection year
+- Collection year  
 - Geographical subregion
 - Country
 
@@ -236,7 +235,7 @@ filtered the data.
   right hand side of the results table.
 
 <figure>
-  <img src="/assets/images/content/howto/.png"/><img src="media/results-table-delete-amr-f10.png" />
+  <img src="/assets/images/content/howto/results-table-delete-amr-f10.png" />
   <figcaption>
     Fig 10. A view highlighting the blue bin icon which you select to delete the results table. 
   </figcaption>
@@ -258,7 +257,7 @@ To **download the results** table
 - select the download button and a CSV version of the results table will be downloaded onto your computer.
 
 <figure>
-   <img src="/assets/images/content/howto/results-download-button-amr-f12.png" />
+   <img src="/assets/images/content/howto/results-download-button-amr-f12" />
   <figcaption>
     Fig 12. A view highlighting the download button which you need to select to download the results table. 
   </figcaption>
