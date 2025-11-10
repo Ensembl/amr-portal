@@ -31,7 +31,7 @@ class CategoryGroup(BaseModel):
 
 
 class FilterView(BaseModel):
-    id: int
+    label: str
     name: str
     categoryGroups: list[CategoryGroup]
     otherCategoryGroups: list[CategoryGroup]

@@ -23,8 +23,8 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 _settings = get_settings()
 
-# Cache display columns per view_id so repeated downloads do not incur extra metadata queries.
-_display_columns_cache: Dict[int, Any] = {}
+# Cache display columns per view_label so repeated downloads do not incur extra metadata queries.
+_display_columns_cache: Dict[str, Any] = {}
 
 
 @dataclass
@@ -71,11 +71,11 @@ def check_selected_filters(grouped_filters, valid_columns):
         return True
     return False
 
-def get_dataset_from_view(view_id: int, db: duckdb.DuckDBPyConnection):
-    """Resolve the dataset backing a view_id.
+def get_dataset_from_view(view_label: str, db: duckdb.DuckDBPyConnection):
+    """Resolve the dataset backing a view_label.
 
     Args:
-        view_id (int): View identifier coming from the UI configuration.
+        view_label (str): View identifier coming from the UI configuration.
         db (duckdb.DuckDBPyConnection): Database connection.
 
     Returns:
@@ -84,18 +84,21 @@ def get_dataset_from_view(view_id: int, db: duckdb.DuckDBPyConnection):
     Raises:
         HTTPException: If the lookup fails.
     """
-    dataset_from_view_query = f"SELECT DISTINCT (dataset_name) FROM view_categories WHERE view_id = {view_id};"
+    dataset_from_view_query = f"""
+    SELECT DISTINCT (dataset_name) FROM
+ view_categories as vc JOIN view as v on (vc.view_id = v.view_id)
+ WHERE v.label = '{view_label}';"""
     try:
         dataset = db.execute(dataset_from_view_query).fetchone()[0]
         return dataset
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Failed to get dataset from view ID: {view_id}")
+        raise HTTPException(status_code=400, detail=f"Failed to get dataset from view label: {view_label}")
 
-def get_display_column_details(view_id: int, db: duckdb.DuckDBPyConnection):
+def get_display_column_details(view_label: int, db: duckdb.DuckDBPyConnection):
     """Return per-column metadata for a view, caching results for reuse.
 
     Args:
-        view_id (int): Requested view identifier.
+        view_label (str): Requested view identifier.
         db (duckdb.DuckDBPyConnection): Database connection.
 
     Returns:
@@ -105,23 +108,24 @@ def get_display_column_details(view_id: int, db: duckdb.DuckDBPyConnection):
         HTTPException: If the metadata query fails.
     """
 
-    if view_id in _display_columns_cache:
-        return _display_columns_cache[view_id].copy()
+    if view_label in _display_columns_cache:
+        logger.info("Using cache")
+        return _display_columns_cache[view_label].copy()
 
     columns_to_display_query = f"""
         SELECT cd.fullname, cd.name, cd.type, cd.sortable, cd.url, cd.delimiter
         FROM view as v
             JOIN view_column vc on v.view_id = vc.view_id
             JOIN column_definition cd on vc.column_id = cd.column_id
-        WHERE v.view_id = {view_id}
+        WHERE v.label = '{view_label}'
         ORDER BY vc.rank;
     """
     try:
         columns = db.execute(columns_to_display_query).fetchdf()
-        _display_columns_cache[view_id] = columns
+        _display_columns_cache[view_label] = columns
         return columns.copy()
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Failed to get columns to display from view ID: {view_id}")
+        raise HTTPException(status_code=400, detail=f"Failed to get columns to display from view label: {view_label}")
 
 def quote_column_name(column_name):
     """Quote a column name for DuckDB SQL usage.
@@ -190,24 +194,25 @@ def _build_filter_query_context(payload: Payload, db: duckdb.DuckDBPyConnection)
         FilterQueryContext: Object encapsulating dataset info and reusable SQL snippets.
 
     Raises:
-        HTTPException: If the view_id is missing, filters are invalid, or order_by references an unknown column.
+        HTTPException: If the view_label is missing, filters are invalid, or order_by references an unknown column.
     """
-    selected_view_id = payload.view_id
+    selected_view_label = payload.view_label
     # Check if the view_id is specified
-    if not selected_view_id:
+    if not selected_view_label:
         raise HTTPException(
             status_code=400,
-            detail="Please specify a view ID to filter by."
+            detail="Please specify a view label to filter by."
         )
 
     # Now we use the selected view to infer which dataset to query data from
-    selected_dataset = get_dataset_from_view(selected_view_id, db)
+    selected_dataset = get_dataset_from_view(selected_view_label, db)
 
     valid_columns = get_table_columns(selected_dataset, db)
+
     # not all valid columns are eventually displayed
     # We need to keep only the ones we are interested
-    columns_to_display = get_display_column_details(selected_view_id, db)
-
+    columns_to_display = get_display_column_details(selected_view_label, db)
+    
     # This will be used below in the SQL query to select only columns we are interested in
     # Properly quote column names for SQL query
     quoted_columns = [quote_column_name(col) for col in columns_to_display["name"]]
@@ -225,7 +230,7 @@ def _build_filter_query_context(payload: Payload, db: duckdb.DuckDBPyConnection)
 
     are_filters_valid = check_selected_filters(grouped_filters, valid_columns)
     logger.info(f"are_filters_valid: {are_filters_valid}")
-    logger.info(f"selected_view_id: {selected_view_id}")
+    logger.info(f"selected_view_label: {selected_view_label}")
     logger.info(f"selected_dataset: {selected_dataset}")
     logger.info(f"grouped_filters: {grouped_filters}")
     logger.info(f"quoted_columns: {quoted_columns}")

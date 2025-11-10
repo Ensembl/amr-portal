@@ -11,7 +11,7 @@ class OrderBy(BaseModel):
 
 class Payload(BaseModel):
     selected_filters: List[SelectedFilter]
-    view_id: int
+    view_label: str
     page: Optional[int] = 1
     per_page: Optional[int] = 100
     order_by: Optional[OrderBy] = None

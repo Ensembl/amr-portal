@@ -80,6 +80,7 @@ def _build_columns_per_view(db):
         A dictionary where keys are view names and values are lists of column
         configuration dictionaries. Each column dictionary contains:
             - view_name: The view name teh column belongs to
+            - view_label: The unique label used to identify the view
             - id: The column identifier
             - label: The display label for the column
             - sortable: Boolean indicating if the column is sortable
@@ -128,6 +129,7 @@ def _build_filter_views(db, rows: Iterable[dict[str, Any]]) -> list[dict[str, An
         if vid not in views:
             views[vid] = {
                 "id": r["view_id"],
+                "label": r["view_label"],
                 "name": r["view_name"],
                 "categoryGroups": [],
                 "otherCategoryGroups": [],
@@ -197,6 +199,7 @@ def build_filters_config(db: duckdb.DuckDBPyConnection) -> dict[str, Any]:
     filters_view_query = """
         SELECT view_id,
             view_name,
+            view_label,
             category_group_id,
             category_group_name,
             category_group_is_primary,
