@@ -76,7 +76,7 @@ amr-panel {
   }
 
   h1 {
-    font-size: 17px; /* ??? */
+    font-size: 17px;
     margin: 0 0 24px 0;
     color: var(--color-dark-grey);
   }

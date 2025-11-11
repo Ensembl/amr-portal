@@ -18,12 +18,13 @@ The antimicrobial resistance (AMR) portal contains three main data resources
 ## How to explore the AMR data in the portal
 
 You can explore the three antimicrobial resistance (AMR) data resources
-by selecting one of the links on the home page ie 'Experimental AMR'.
+by selecting one of the links on the home page, e.g.: 'Experimental AMR'.
 
 <figure>
   <img src="/assets/images/content/howto/home-page-amr-f1.jpeg" />
   <figcaption>
-    Fig 1. A view of the antimicrobial resistance portal home page showing links to all three data resources Experimental AMR, In silico AMR prediction and Experimental and In silico AMR.
+    Fig 1. A view of the antimicrobial resistance portal home page showing links to all three data resources:
+    Experimental AMR, In silico AMR prediction, and Experimental and In silico AMR.
   </figcaption>
 </figure>
 
@@ -71,7 +72,7 @@ To select antibiotics of interest:
   </figcaption>
 </figure>
 
-A table of results will be showed on the bottom half of the screen,
+A table of results will be shown on the bottom half of the screen,
 below the antibiotic table.
 
 <figure>
@@ -197,7 +198,6 @@ Different information is displayed in the results table for
   <figcaption>
     Fig 7. A view of the results table for isolates of *Escherichia coli* resistant to azithromycin from the Experimental AMR data resource.
   </figcaption> 
-  </figcaption>
 </figure>
 
 The results table has many columns which are off screen and can be viewed by
@@ -216,7 +216,8 @@ filtered the data.
 <figure>
   <img src="/assets/images/content/howto/scrolling-results-table-amr-f8.png" />
   <figcaption>
-    Fig 8. A view showing the horizontal and vertical scroll bars in the results table. 
+    Fig 8. A view showing the horizontal and vertical scroll bars in the results table.
+  </figcaption>
 </figure>
 
 ### How to navigate the results table
