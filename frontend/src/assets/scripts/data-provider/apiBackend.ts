@@ -39,14 +39,14 @@ export class ApiBackend implements BackendInterface {
       categoryGroups: [...view.categoryGroups, ...view.otherCategoryGroups]
     }));
 
-
     return config;
   };
 
   getAMRRecords = async (params: AMRRecordsFetchParams): Promise<AMRRecordsResponse> => {
+    console.log(params);
     const payload: Record<string, unknown> = {
       selected_filters: params.filters,
-      view_id: params.viewId,
+      view_url_name: params.urlName,
       page: params.page,
       per_page: params.perPage
     };

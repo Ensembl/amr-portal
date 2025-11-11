@@ -16,7 +16,7 @@ const DEFAULT_NUM_ITEMS_PER_PAGE = 100;
 
 type QueryState = {
   filters: SelectedFilter[];
-  viewId: FiltersView['id'];
+  urlName: FiltersView['urlName'];
   page: number;
   perPage: number;
   orderBy: OrderPayload | null;
@@ -24,7 +24,7 @@ type QueryState = {
 
 const initialQueryState: QueryState = {
   filters: [] as SelectedFilter[],
-  viewId: '',
+  urlName: '',
   page: 1,
   perPage: DEFAULT_NUM_ITEMS_PER_PAGE,
   orderBy: null
@@ -34,14 +34,15 @@ const amrQueryState = new Signal.State(initialQueryState);
 
 const setFilters = ({
   filters,
-  viewId
+  urlName
 }: {
   filters: SelectedFilter[];
-  viewId: FiltersView['id'];
+  urlName: FiltersView['urlName'];
 }) => {
+  console.log("setFilters", urlName);
   amrQueryState.set({
     ...initialQueryState,
-    viewId,
+    urlName,
     filters
   });
 };
@@ -105,7 +106,7 @@ const createBiosampleResource = ({
 
     const requestParams: AMRRecordsFetchParams = {
       filters: selectedFilters,
-      viewId: queryParams.viewId,
+      urlName: queryParams.urlName,
       page: queryParams.page,
       perPage: queryParams.perPage
     };

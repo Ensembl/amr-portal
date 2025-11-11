@@ -62,7 +62,7 @@ export class TopPanelNavigation extends SignalWatcher(LitElement) {
     }
   `;
 
-  #onViewModeChange = (mode: FiltersView['id']) => {
+  #onViewModeChange = (mode: FiltersView['urlName']) => {
     filtersStore.setViewMode(mode);
   }
 
@@ -99,16 +99,16 @@ export class TopPanelNavigation extends SignalWatcher(LitElement) {
     currentViewMode
   }: {
     filterViews: FiltersView[];
-    currentViewMode: FiltersView['id'] | null;
+    currentViewMode: FiltersView['urlName'] | null;
   }) {
     const filtersCount = filtersStore.appliedFiltersCount.get();
 
     const viewModeButtons = filterViews.map(view => {
-      const isActiveView = currentViewMode === view.id;
+      const isActiveView = currentViewMode === view.urlName;
       return html`
         <div class="nav-item">
           <ens-text-button
-            @click=${() => this.#onViewModeChange(view.id)}
+            @click=${() => this.#onViewModeChange(view.urlName)}
             ?disabled=${isActiveView}
           >
             ${view.name}

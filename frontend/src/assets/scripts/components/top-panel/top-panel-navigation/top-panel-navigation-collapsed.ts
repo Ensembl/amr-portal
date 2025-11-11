@@ -36,7 +36,7 @@ export class TopPanelNavigation extends SignalWatcher(LitElement) {
     const currentViewMode = filtersStore.viewMode.get();
     const appliedFiltersCount = filtersStore.appliedFiltersCount.get();
 
-    const currentFiltersView = filtersConfig?.filterViews.find(view => view.id === currentViewMode);
+    const currentFiltersView = filtersConfig?.filterViews.find(view => view.urlName === currentViewMode);
 
     if (!currentViewMode || !currentFiltersView) {
       // this should not happen

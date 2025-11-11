@@ -1,6 +1,6 @@
 export type Filter = {
   label: string;
-  value: string; // ??? how do we represent null values?
+  value: string; // ??? how do we represent null values? <- only is_some values are added to filters
 };
 
 export type FilterCategory = {
@@ -29,7 +29,7 @@ export type AMRTableColumn = {
 };
 
 export type FiltersView = {
-  id: number | string;
+  urlName: string;
   name: string;
   categoryGroups: FilterCategoryGroup[]; // order in the array will be used for display order
   columns: AMRTableColumn[];

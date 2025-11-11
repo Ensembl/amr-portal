@@ -119,7 +119,7 @@ export class BottomPanel extends SignalWatcher(LitElement) {
       const view = filtersStore.viewMode.get();
       biosampleStore.setFilters({
         filters,
-        viewId: view as FiltersView['id']
+        urlName: view as FiltersView['urlName']
       });
     });
 
@@ -149,7 +149,7 @@ export class BottomPanel extends SignalWatcher(LitElement) {
     const biosamplesResource = this.biosamplesResource;
     const selectedFilters = filtersStore.selectedFiltersForViewMode.get();
     const isComplete = biosamplesResource?.status === 'complete';
-    const hasData = biosamplesResource?.value?.requestParams.viewId === view
+    const hasData = biosamplesResource?.value?.requestParams.urlName === view
       && Boolean(biosamplesResource?.value?.data.length);
     const isError = Boolean(biosamplesResource?.error);
     const isLoading = !biosamplesResource || biosamplesResource?.status === 'pending' && !hasData;

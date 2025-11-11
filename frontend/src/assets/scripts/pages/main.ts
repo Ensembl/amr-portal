@@ -49,7 +49,7 @@ export class AMRApp extends SignalWatcher(LitElement) {
   initialise = async () => {
     await this.getDataProvider();
     const filtersConfig = await this.dataProvider!.getFiltersConfig();
-    const defaultViewMode = filtersConfig.filterViews[0].id;
+    const defaultViewMode = filtersConfig.filterViews[0].urlName;
     
     filtersStore.setFiltersConfig(filtersConfig);
     filtersStore.setViewMode(defaultViewMode);

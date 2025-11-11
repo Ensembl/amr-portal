@@ -15,16 +15,20 @@ export type FiltersUpdatePayload = {
 };
 
 
-const viewMode = new Signal.State<FiltersView['id'] | null>(null);
-const setViewMode = (viewId: FiltersView['id']) => {
-  viewMode.set(viewId);
+const viewMode = new Signal.State<FiltersView['urlName'] | null>(null);
+const setViewMode = (urlName: FiltersView['urlName']) => {
+  viewMode.set(urlName);
 };
 
 const filtersConfig = new Signal.State<FiltersConfig | null>(null);
-const setFiltersConfig = (config: FiltersConfig) => filtersConfig.set(config);
+const setFiltersConfig = (config: FiltersConfig) => 
+{
+  filtersConfig.set(config);
+}
 
 const amrTableColumnsMap = new Signal.Computed(() => {
   const viewConfig = currentViewConfig.get();
+  
 
   if (!viewConfig) {
     return null;
@@ -79,23 +83,23 @@ const clearAllFilters = () => {
 
 const filterGroupsForViewMode = new Signal.Computed(() => {
   const filtersView = currentViewConfig.get() as FiltersView;
-
   return filtersView.categoryGroups;
 });
 
-
 const activeFilterGroups = new Signal.State<Record<string, string | null>>({});
+
 const activeFilterGroup = new Signal.Computed<FilterCategoryGroup>(() => {
   const currentFiltersView = currentViewConfig.get() as FiltersView;
   const currentActiveFilterGroupIds: Record<string, string | null> = activeFilterGroups.get();
-  const currentActiveFilterGroupId = currentActiveFilterGroupIds[currentFiltersView.id];
-
+  const currentActiveFilterGroupId = currentActiveFilterGroupIds[currentFiltersView.urlName];
+  
   if (currentActiveFilterGroupId) {
-    return currentFiltersView.categoryGroups.find(group => group.name === currentActiveFilterGroupId) as FilterCategoryGroup;
+      return currentFiltersView.categoryGroups.find(group => group.name === currentActiveFilterGroupId) as FilterCategoryGroup;
   } else {
-    return currentFiltersView.categoryGroups[0];
+      return currentFiltersView.categoryGroups[0];
   }
 });
+
 const setActiveFilterGroup = (filterGroupId: string | null) => {
   const currentViewMode = viewMode.get() as string;
   const currentActiveFilterGroups = activeFilterGroups.get();
@@ -110,7 +114,7 @@ const currentViewConfig = new Signal.Computed(() => {
   const currentViewMode = viewMode.get();
   const filtersConfigValue = filtersConfig.get() as FiltersConfig;
 
-  return filtersConfigValue.filterViews.find(view => view.id === currentViewMode) ?? null;
+  return filtersConfigValue.filterViews.find(view => view.urlName === currentViewMode) ?? null;
 });
 
 const appliedFiltersCount = new Signal.Computed<number>(() => {

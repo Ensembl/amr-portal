@@ -52,7 +52,7 @@ async function checkAMRAPI(hostName) {
         "selected_filters": [
           { "category": "phenotype-antibiotic_name", "value": "amikacin"}
         ],
-        "view_id": 1,
+        "view_url_name": "experiments",
       }),
       params,
     );
@@ -66,7 +66,7 @@ async function checkAMRAPI(hostName) {
         "selected_filters": [
           {"category":"genotype-species","value":"Acinetobacter baumannii"}
         ],
-        "view_id": 2
+        "view_url_name": "predictions"
       }),
       params,
     );
@@ -81,7 +81,7 @@ async function checkAMRAPI(hostName) {
         "selected_filters": [
             { "category": "phenotype-antibiotic_name", "value": "amikacin"}
         ],
-        "view_id": 1,
+        "view_url_name": "experiments",
       }),
       params,
     );

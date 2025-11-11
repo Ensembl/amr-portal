@@ -178,10 +178,10 @@ export class ActionButtonsPopover extends SignalWatcher(LitElement) {
   }
 
   #getDownloadLink() {
-    const viewId = filtersStore.viewMode.get();
+    const urlName = filtersStore.viewMode.get();
     const selectedFilters = filtersStore.selectedFiltersForViewMode.get();
     const payload = {
-      view_id: viewId as string | number,
+      view_url_name: urlName,
       selected_filters: selectedFilters,
     };
     const stringifiedPayload = JSON.stringify(payload);
