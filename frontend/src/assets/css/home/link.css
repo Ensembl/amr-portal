@@ -1,8 +1,10 @@
 .homepage-link {
+  display: inline-flex;
 
   a {
     display: flex;
     align-items: center;
+    column-gap: 10px;
     font-size: 17px;
     color: var(--color-blue);
   }
@@ -15,7 +17,6 @@
     width: 21px;
     height: 21px;
     filter: var(--filter-black-to-ensembl-blue);
-    margin-left: 10px;
     transition: transform 0.125s cubic-bezier(0.45, 0.05, 0.55, 0.95);
   }
 
