@@ -54,7 +54,7 @@
           },
           "url_name": {
             "type": "string",
-            "description": "Display name of view"
+            "description": "url name for view. Used to identify a view"
           },
           "dataset": {
             "type": "string",
