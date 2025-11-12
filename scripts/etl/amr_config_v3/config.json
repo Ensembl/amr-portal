@@ -73,12 +73,6 @@
 			"filter_label":"antibiotic_name"
 		},
 		{
-			"dataset":"genotype",
-			"id":"class",
-			"label":"AMR Class",
-			"filter_label":"class"
-		},
-		{
 			"dataset":"pheno_geno_merged",
 			"id":"antibiotic_name",
 			"label":"Antibiotic",
@@ -174,8 +168,7 @@
 			"categoryGroups": [ { "name": "Antibiotic", "categories": ["antibiotic_name"] } ],
       		"otherCategoryGroups": [
       			{ "name": "Species", "categories": ["species"] },
-				{ "name": "Genus", "categories": ["genus"] },
-        		{ "name": "AMR class", "categories": ["class"]}
+				{ "name": "Genus", "categories": ["genus"] }
       		],
       		"columns":[
       			{ "name": "BioSample_ID", "enabled":true, "rank":1},
@@ -196,11 +189,10 @@
       			{ "name": "class", "enabled":true, "rank":16},
 				{ "name": "subclass", "enabled":true, "rank":17},
       			{ "name": "antibiotic_name", "enabled":true, "rank":18},
-      			{ "name": "antibiotic_abbreviation", "enabled":true, "rank":19},
-      			{ "name": "gen_antibiotic_ontology", "enabled":true, "rank":20},
-      			{ "name": "gen_evidence_accession", "enabled":true, "rank":21},
-      			{ "name": "evidence_type", "enabled":true, "rank":22},
-      			{ "name": "evidence_description", "enabled":true, "rank":23}
+      			{ "name": "gen_antibiotic_ontology", "enabled":true, "rank":21},
+      			{ "name": "gen_evidence_accession", "enabled":true, "rank":22},
+      			{ "name": "evidence_type", "enabled":true, "rank":23},
+      			{ "name": "evidence_description", "enabled":true, "rank":24}
       		],
       		"other_columns":["genotype"]
 		},
@@ -221,35 +213,34 @@
       		],
       		"columns":[
       			{ "name": "antibiotic_name", "enabled":true, "rank":1},
-      			{ "name": "antibiotic_abbreviation", "enabled":true, "rank":2},
-      			{ "name": "resistance_phenotype", "enabled":true, "rank":3},
-      			{ "name": "gen_measurement", "enabled":true, "rank":4},
-				{ "name": "BioSample_ID", "enabled":true, "rank":5},
-				{ "name": "assembly_ID", "enabled":true, "rank":6},
-				{ "name": "genus", "enabled":true, "rank":7},
-      			{ "name": "species", "enabled":true, "rank":8},
-      			{ "name": "organism", "enabled":true, "rank":9},
-				{ "name": "taxon_id", "enabled":true, "rank":10},
-      			{ "name": "host", "enabled":true, "rank":11},
-      			{ "name": "INSDC_secondary_accession", "enabled":true, "rank":12},
-      			{ "name": "laboratory_typing_method", "enabled":true, "rank":13},
-      			{ "name": "platform", "enabled":true, "rank":14},
-      			{ "name": "ast_standard", "enabled":true, "rank":15},
-      			{ "name": "gen_antibiotic_ontology", "enabled":true, "rank":16},
-      			{ "name": "region", "enabled":true, "rank":17},
-      			{ "name": "region_start", "enabled":true, "rank":18},
-      			{ "name": "region_end", "enabled":true, "rank":19},
-      			{ "name": "strand", "enabled":true, "rank":20},
-      			{ "name": "id", "enabled":true, "rank":21},
-      			{ "name": "gene_symbol", "enabled":true, "rank":22},
-      			{ "name": "amr_element_symbol", "enabled":true, "rank":23},
-      			{ "name": "element_type", "enabled":true, "rank":24},
-      			{ "name": "element_subtype", "enabled":true, "rank":25},
-      			{ "name": "class", "enabled":true, "rank":26},
-				{ "name": "subclass", "enabled":true, "rank":27},
-      			{ "name": "gen_evidence_accession", "enabled":true, "rank":28},
-      			{ "name": "evidence_type", "enabled":true, "rank":29},
-      			{ "name": "evidence_description", "enabled":true, "rank":30}
+      			{ "name": "resistance_phenotype", "enabled":true, "rank":2},
+      			{ "name": "gen_measurement", "enabled":true, "rank":3},
+				{ "name": "BioSample_ID", "enabled":true, "rank":4},
+				{ "name": "assembly_ID", "enabled":true, "rank":5},
+				{ "name": "genus", "enabled":true, "rank":6},
+      			{ "name": "species", "enabled":true, "rank":7},
+      			{ "name": "organism", "enabled":true, "rank":8},
+				{ "name": "taxon_id", "enabled":true, "rank":9},
+      			{ "name": "host", "enabled":true, "rank":10},
+      			{ "name": "INSDC_secondary_accession", "enabled":true, "rank":11},
+      			{ "name": "laboratory_typing_method", "enabled":true, "rank":12},
+      			{ "name": "platform", "enabled":true, "rank":13},
+      			{ "name": "ast_standard", "enabled":true, "rank":14},
+      			{ "name": "gen_antibiotic_ontology", "enabled":true, "rank":15},
+      			{ "name": "region", "enabled":true, "rank":16},
+      			{ "name": "region_start", "enabled":true, "rank":17},
+      			{ "name": "region_end", "enabled":true, "rank":18},
+      			{ "name": "strand", "enabled":true, "rank":19},
+      			{ "name": "id", "enabled":true, "rank":20},
+      			{ "name": "gene_symbol", "enabled":true, "rank":21},
+      			{ "name": "amr_element_symbol", "enabled":true, "rank":22},
+      			{ "name": "element_type", "enabled":true, "rank":23},
+      			{ "name": "element_subtype", "enabled":true, "rank":24},
+      			{ "name": "class", "enabled":true, "rank":25},
+				{ "name": "subclass", "enabled":true, "rank":26},
+      			{ "name": "gen_evidence_accession", "enabled":true, "rank":27},
+      			{ "name": "evidence_type", "enabled":true, "rank":28},
+      			{ "name": "evidence_description", "enabled":true, "rank":29}
       		],
       		"other_columns":["pheno_geno_merged"]
 
@@ -299,10 +290,7 @@
             },
             "antibiotic_ontology_link":{
             	"hidden":true
-            },
-			"antibiotic_abbreviation":{
-				"hidden":true
-			}
+            }
         },
         "genotype":
         {

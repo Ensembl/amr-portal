@@ -16,7 +16,7 @@ Using tools such as [DuckDB](https://duckdb.org/) (an in-process SQL OLAP databa
 
 ```sql
 SELECT count(distinct BioSample_ID) as biosample_count 
-FROM read_parquet('https://ftp.ebi.ac.uk/pub/databases/ensembl/amr_portal/beta_5/phenotype.parquet')
+FROM read_parquet('https://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/2025-11/phenotype.parquet')
 ```
 
 Examples of how to work with these files in Python can be found in our [Python notebook repository](https://github.com/Ensembl/amr_portal_notebooks).
@@ -80,7 +80,6 @@ Each directory contains a GFF annotation and TSV report. The formats are `{Assem
 | platform                    | `string` | Yes        | The platform used for analysis (empty/NULL in the sample data)                                                           |
 | resistance_phenotype        | `string` | Yes        | The final result of the interpretation (e.g. susceptible, non-susceptible, resistant)                                    |
 | species                     | `string` | No         | The species of the organism (e.g. Streptococcus pneumoniae)                                                              |
-| antibiotic_abbreviation     | `string` | Yes        | A common abbreviation for the antibiotic (e.g. SXT)                                                                      |
 | antibiotic_ontology         | `string` | Yes        | An ontology ID for the antibiotic (e.g. ARO_3004024)                                                                     |
 | antibiotic_ontology_link    | `string` | Yes        | Link to the ontology resource for the ID                                                                                 |
 | country                     | `string` | Yes        | Full country name where the sample was collected from. Converted from `ISO_country_code`.                                |
@@ -110,7 +109,6 @@ Each directory contains a GFF annotation and TSV report. The formats are `{Assem
 | subclass                 | `string` | No         | Subclass of AMR compound as given by AMRFinderPlus. Can also be set to the same as class                                                                 |
 | split_subclass           | `string` | No         | Subclass can represent multiple individual compounds separated by a '/'. This field contains the individual element of subclass.                         |
 | antibiotic_name          | `string` | Yes        | Normalised name of the antibiotic tested (e.g., beta-lactams, trimethoprim-sulfamethoxazole)                                                             |
-| antibiotic_abbreviation  | `string` | Yes        | Abbreviation for the antibiotic (e.g. SXT)                                                                                                               |
 | antibiotic_ontology      | `string` | Yes        | Ontology ID for the antibiotic (e.g., ARO_3004024)                                                                                                       |
 | antibiotic_ontology_link | `string` | Yes        | Link to ontology entry for the antibiotic                                                                                                                |
 | evidence_accession       | `string` | Yes        | Accession number for evidence supporting the predicted AMR resistance                                                                                    |
@@ -146,7 +144,6 @@ Each directory contains a GFF annotation and TSV report. The formats are `{Assem
 | measurement_units           | `string` | Yes        | The units for the measurement (e.g. mg/l)                                                                                        |
 | platform                    | `string` | Yes        | The platform used for analysis (empty/NULL in the sample data)                                                                   |
 | resistance_phenotype        | `string` | Yes        | The final result of the interpretation (e.g. susceptible, non-susceptible, resistant)                                            |
-| antibiotic_abbreviation     | `string` | Yes        | A common abbreviation for the antibiotic (e.g. SXT)                                                                              |
 | antibiotic_ontology_link    | `string` | Yes        | Link to the ontology resource for the ID                                                                                         |
 | country                     | `string` | Yes        | Full country name where the sample was collected from. Converted from `ISO_country_code`.                                        |
 | geographical_region         | `string` | Yes        | Geographical region as defined by UN M49. e.g Asia, Europe, Oceania, Africa or Americas.                                         |
