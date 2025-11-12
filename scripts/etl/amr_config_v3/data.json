@@ -1,7 +1,7 @@
 [
 	{
 		"name":"phenotype",
-		"path":"/Users/ayates/amr-portal/scripts/etl/amr_data/phenotype.csv.gz",
+		"path":"/amr/2025-11-03/phenotype.csv.gz",
 		"create_columns": [
 			{
 				"name":"gen_measurement",
@@ -15,7 +15,7 @@
 	},
 	{
 		"name":"genotype",
-		"path":"/Users/ayates/amr-portal/scripts/etl/amr_data/genotype.csv.gz",
+		"path":"/amr/2025-11-05/genotype.csv.gz",
 		"create_columns": [
 			{
 				"name":"gen_antibiotic_ontology",
@@ -29,7 +29,7 @@
 	},
 	{
 		"name":"pheno_geno_merged",
-		"path":"/Users/ayates/amr-portal/scripts/etl/amr_data/phenotype_genotype_merged.csv.gz",
+		"path":"/2025-11-03/phenotype_genotype_merged.csv.gz",
 		"create_columns": [
 			{
 				"name":"gen_measurement",

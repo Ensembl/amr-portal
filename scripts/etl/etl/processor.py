@@ -117,6 +117,7 @@ select column_name from (describe {});
 SQL_CREATE_VIEW_TABLES = """
 CREATE TABLE view (
     view_id INTEGER PRIMARY KEY,
+    url_name VARCHAR,
     name VARCHAR
 );
 
@@ -141,7 +142,7 @@ CREATE TABLE category_group_category (
 """
 
 SQL_ADD_VIEW = """
-INSERT INTO view (view_id, name) VALUES (?,?)
+INSERT INTO view (view_id, name, url_name) VALUES (?,?,?)
 """
 
 SQL_ADD_CATEGORY_GROUPS = """
@@ -171,6 +172,7 @@ SQL_CREATE_VIEW_CATEGORIES = """
 CREATE VIEW view_categories as (
     SELECT
     v.view_id,
+    v.url_name AS view_url_name,
     v.name AS view_name,
     cg.category_group_id,
     cg.name AS category_group_name,
@@ -197,6 +199,7 @@ SQL_CREATE_VIEW_CATEGORIES_JSON = """
 CREATE VIEW view_categories_json as (
     SELECT
     {view_id: view_id,
+    view_url_name: view_url_name,
     category_group_id: category_group_id,
     view_name: view_name,
     category_group_name: category_group_name,
@@ -311,7 +314,7 @@ def amr_release_to_duckdb(
     for v in views:
         conn.execute(
             SQL_ADD_VIEW,
-            [view_index, v["name"]]
+            [view_index, v["name"], v["url_name"]]
         )
 
         # filter groups
