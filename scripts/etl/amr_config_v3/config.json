@@ -135,6 +135,7 @@
 	],
 	"views":[
 		{
+			"url_name":"experiments",
 			"name":"Experimental AMR",
 			"dataset":"phenotype",
 			"categoryGroups": [ { "name": "Antibiotic", "categories": ["antibiotic_name"] } ],
@@ -167,6 +168,7 @@
       		"other_columns":["phenotype"]
 		},
 		{
+			"url_name":"predictions",
 			"name":"In silico AMR prediction",
 			"dataset":"genotype",
 			"categoryGroups": [ { "name": "Antibiotic", "categories": ["antibiotic_name"] } ],
@@ -203,6 +205,7 @@
       		"other_columns":["genotype"]
 		},
 		{
+			"url_name":"combined",
 			"name" : "Experimental and In silico AMR",
 			"dataset":"pheno_geno_merged",
 			"categoryGroups": [ { "name": "Antibiotic", "categories": ["antibiotic_name"] } ],

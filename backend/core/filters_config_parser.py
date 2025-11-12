@@ -129,6 +129,7 @@ def _build_filter_views(db, rows: Iterable[dict[str, Any]]) -> list[dict[str, An
             views[vid] = {
                 "id": r["view_id"],
                 "name": r["view_name"],
+                "url_name": r["url_name"],
                 "categoryGroups": [],
                 "otherCategoryGroups": [],
             }
@@ -197,6 +198,7 @@ def build_filters_config(db: duckdb.DuckDBPyConnection) -> dict[str, Any]:
     filters_view_query = """
         SELECT view_id,
             view_name,
+            view_url_name as url_name,
             category_group_id,
             category_group_name,
             category_group_is_primary,

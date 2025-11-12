@@ -43,11 +43,16 @@
         "type": "object",
         "required":[
           "name",
+          "url_name",
           "dataset",
           "categoryGroups"
         ],
         "properties": {
           "name": {
+            "type": "string",
+            "description": "Display name of view"
+          },
+          "url_name": {
             "type": "string",
             "description": "Display name of view"
           },
