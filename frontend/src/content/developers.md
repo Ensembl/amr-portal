@@ -27,7 +27,7 @@ We provide three parquet datasets
 
 - Phenotypes: phenotypic experimental data collected from antibiograms
 - Genotypes: predicted AMR resistance mechanism
-- Assembly: high level summary of data availability. Based on a join between the prior two data sets on `BioSample_ID` and `assembly_ID`.
+- Merged phenotype and genotype: Merge of the previous two datasets based on a join on `BioSample_ID`, `assembly_ID` and `antibiotic_ontology` (i.e. where the same sample, assembly and antibiotic have a record).
 
 ## Accessing annotated genomes
 
