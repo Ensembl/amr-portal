@@ -1,6 +1,6 @@
 {% macro homepageLink(params) %}
 <div class="homepage-link">
-  <a href="{{ params.href }}">
+  <a href="{{ params.href }}" {{ 'data-prerender=true' if params.prerender }}>
     <span>
       {{ params.linkText }}
     </span>

@@ -12,6 +12,10 @@ html, body {
   scroll-behavior: smooth;
 }
 
+body {
+  min-width: 980px;
+}
+
 main {
   display: flex;
   flex-direction: column;
