@@ -64,7 +64,7 @@ export class TopPanelNavigation extends SignalWatcher(LitElement) {
   `;
 
   #onViewModeChange = (viewId: FiltersView['id']) => {
-    Router.setView(viewId);
+    Router.changeView(viewId);
   }
 
   render() {

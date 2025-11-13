@@ -26,36 +26,53 @@ class Router {
   }
 
   static setViewFromUrl() {
+    // read view parameter from the url
     const url = new URL(window.location.href);
     const searchParams = url.searchParams;
     const viewParam = searchParams.get('view');
 
+    // validate the view parameter
     const config = this.config;
-
-    const validValidViewIds = config.filterViews.map(view => view.id);
 
     let viewId;
     
     if (viewParam) {
-      viewId = validValidViewIds.find(id => String(id) === viewParam);
+      const view = config.filterViews.find(view => view.url_name === viewParam);
+      viewId = view?.id;
     }
 
-    // in case there is no view parameter in the url, or if it is invalid
-    if (!viewId) {
-      viewId = validValidViewIds[0];
+    // set the view
+    if (viewId) {
+      this.setView(viewId);
+    } else {
+      // in case there is no view parameter in the url,
+      // or if no corresponding view has been found,
+      // enable the first view
+      const firstView = config.filterViews[0];
+      const viewId = firstView.id;
+      this.changeView(viewId);
+    }
+  }
+
+  static changeView(viewId: FiltersView['id']) {
+    const filtersConfig = this.config;
+    const view = filtersConfig.filterViews.find(view => view.id === viewId);
+
+    if (!view) {
+      // this shouldn't happen
+      return;
     }
 
-    // set view
+    // Change the view parameter in the url
+    // (use a history replace so as not to add this to history)
+    const url = new URL(window.location.href);
+    url.searchParams.set('view', view.url_name);
+    window.history.replaceState(null, '', url);
+
     this.setView(viewId);
   }
 
   static setView(viewId: FiltersView['id']) {
-    // 1) Run a history replace with a new id
-    const url = new URL(window.location.href);
-    url.searchParams.set('view', String(viewId));
-    window.history.replaceState(null, '', url);
-
-    // 2) Set new view
     filtersStore.setViewMode(viewId);
   }
 
