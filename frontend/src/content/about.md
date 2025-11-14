@@ -27,7 +27,7 @@ CABBAGE has catalogued an immense collection of antibiograms in a standardised f
 
 ## AMR Genotypes
 
-AMR Genotypes is a resource recording the detection and annotation of resistance-associated genes and mutations. All annotated genomes have been processed using the mettannotator workflow from EMBL-EBI's MGnify team and generates an exhaustive annotation of prokaryotic genomes using existing tools. We have currently run [AMRFinderPlus](https://www.ncbi.nlm.nih.gov/pathogens/antimicrobial-resistance/AMRFinder/) from NCBI against these genomes. [UniProt's UniFire functional annotation system](https://gitlab.ebi.ac.uk/uniprot-public/unifire) will provide additional annotations. Results from these tools are normalised according to the same rules as our phenotype data.
+AMR Genotypes is a resource recording the detection and annotation of resistance-associated genes and mutations. All annotated genomes have been processed using the mettannotator workflow from EMBL-EBI's MGnify team and generates an exhaustive annotation of prokaryotic genomes using existing tools. We have currently run [AMRFinderPlus](https://www.ncbi.nlm.nih.gov/pathogens/antimicrobial-resistance/AMRFinder/) from NCBI against these genomes. [UniProt's UniFIRE functional annotation system](https://gitlab.ebi.ac.uk/uniprot-public/unifire) will provide additional annotations. Results from these tools are normalised according to the same rules as our phenotype data.
 
 ## EMBL-EBI
 
