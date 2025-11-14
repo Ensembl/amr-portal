@@ -16,7 +16,7 @@ Using tools such as [DuckDB](https://duckdb.org/) (an in-process SQL OLAP databa
 
 ```sql
 SELECT count(distinct BioSample_ID) as biosample_count 
-FROM read_parquet('https://ftp.ebi.ac.uk/pub/databases/ensembl/amr_portal/beta_5/phenotype.parquet')
+FROM read_parquet('https://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/2025-11/phenotype.parquet')
 ```
 
 Examples of how to work with these files in Python can be found in our [Python notebook repository](https://github.com/Ensembl/amr_portal_notebooks).
@@ -26,8 +26,8 @@ Examples of how to work with these files in Python can be found in our [Python n
 We provide three parquet datasets
 
 - Phenotypes: phenotypic experimental data collected from antibiograms
-- Genotypes: predicted AMR resistance mechanism
-- Assembly: high level summary of data availability. Based on a join between the prior two data sets on `BioSample_ID` and `assembly_ID`.
+- Genotypes: AMR genes and mutations from _in silico_ methods
+- Merged phenotype and genotype: Merge of the previous two datasets based on a join on `BioSample_ID`, `assembly_ID` and `antibiotic_ontology` (i.e. where the same sample, assembly and antibiotic have a record).
 
 ## Accessing annotated genomes
 
@@ -48,7 +48,7 @@ Each directory contains a GFF annotation and TSV report. The formats are `{Assem
 
 ## AMR portal parquet schemas
 
-### `phenotype.parquet`: Phenotypic AMR
+### `phenotype.parquet`: AMR phenotypes
 
 | Field                       | Type     | Nullable   | Description                                                                                                              |
 |:----------------------------|:---------|:-----------|:-------------------------------------------------------------------------------------------------------------------------|
@@ -63,29 +63,31 @@ Each directory contains a GFF annotation and TSV report. The formats are `{Assem
 | isolate                     | `string` | Yes        | A unique identifier for the specific isolate (e.g. SMRU2695)                                                             |
 | isolation_source            | `string` | Yes        | The specific anatomical source or environment the isolate came from (e.g. nasopharynx)                                   |
 | isolation_source_category   | `string` | Yes        | The general category of the isolation source (e.g. respiratory tract)                                                    |
-| lat_lon                     | `string` | Yes        | Geographic coordinates (latitude and longitude)                                                                          |
+| isolation_latitude          | `string` | Yes        | Geographic latitude for the sample                                                                                       |
+| isolation_longitude         | `string` | Yes        | Geographic longitude for the sample                                                                                      |
 | genus                       | `string` | No         | The genus of the organism (e.g. Streptococcus)                                                                           |
 | organism                    | `string` | No         | The full name of the organism (e.g. Streptococcus pneumoniae)                                                            |
-| AMR_associated_publications | `int32`  | Yes        | The PubMed ID of the publication associated with the data                                                                |
+| AMR_associated_publications | `string` | Yes        | The PubMed ID of the publication associated with the data. Can be a set of values joined with a ;                        |
 | Updated_phenotype_CLSI      | `string` | Yes        | The updated antimicrobial susceptibility testing (AST) phenotype based on CLSI standards (empty/NULL in the sample data) |
 | Updated_phenotype_EUCAST    | `string` | Yes        | The updated AST phenotype based on EUCAST standards (empty/NULL in the sample data)                                      |
 | used_ECOFF                  | `string` | Yes        | Indicates if the Epidemiological Cut-Off (ECOFF) was used (empty/NULL in the sample data)                                |
 | database                    | `string` | Yes        | Database of annotation                                                                                                   |
 | antibiotic_name             | `string` | Yes        | The name of the antibiotic tested (e.g. beta-lactams, trimethoprim-sulfamethoxazole)                                     |
-| astStandard                 | `string` | Yes        | The standard or guideline used for Antimicrobial Susceptibility Testing (e.g. CLSI, EUCAST)                              |
-| laboratoryTypingMethod      | `string` | Yes        | The method used to test the antibiotic sensitivity (e.g. disk diffusion, E-test)                                         |
-| measurement                 | `double` | Yes        | The raw measurement value, typically MIC or zone size (e.g. 2, 1, 0.5). FLOAT is used for non-integer numeric values     |
+| ast_standard                | `string` | Yes        | The standard or guideline used for Antimicrobial Susceptibility Testing (e.g. CLSI, EUCAST)                              |
+| laboratory_typing_method    | `string` | Yes        | The method used to test the antibiotic sensitivity (e.g. disk diffusion, E-test)                                         |
+| measurement                 | `string` | Yes        | The raw measurement value, typically MIC or zone size (e.g. 2, 1, 0.5, 12/0.125).                                        |
 | measurement_sign            | `string` | Yes        | The sign indicating the nature of the measurement (e.g. '==' for exact value, or '>', '<')                               |
 | measurement_units           | `string` | Yes        | The units for the measurement (e.g. mg/l)                                                                                |
 | platform                    | `string` | Yes        | The platform used for analysis (empty/NULL in the sample data)                                                           |
 | resistance_phenotype        | `string` | Yes        | The final result of the interpretation (e.g. susceptible, non-susceptible, resistant)                                    |
 | species                     | `string` | No         | The species of the organism (e.g. Streptococcus pneumoniae)                                                              |
-| antibiotic_abbreviation     | `string` | Yes        | A common abbreviation for the antibiotic (e.g. SXT)                                                                      |
 | antibiotic_ontology         | `string` | Yes        | An ontology ID for the antibiotic (e.g. ARO_3004024)                                                                     |
 | antibiotic_ontology_link    | `string` | Yes        | Link to the ontology resource for the ID                                                                                 |
 | country                     | `string` | Yes        | Full country name where the sample was collected from. Converted from `ISO_country_code`.                                |
+| geographical_region         | `string` | Yes        | Geographical region as defined by UN M49. e.g Asia, Europe, Oceania, Africa or Americas.                                 |
+| geographical_subregion      | `string` | Yes        | Geographical subregion as defined by UN M49. e.g.Eastern Asia, Northern Europe.                                          |
 
-### `genotype.parquet`: _In silico_ AMR prediction
+### `genotype.parquet`: AMR genotypes
 
 | Field                    | Type     | Nullable   | Description                                                                                                                                              |
 |:-------------------------|:---------|:-----------|:---------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -110,7 +112,6 @@ Each directory contains a GFF annotation and TSV report. The formats are `{Assem
 | subclass                 | `string` | No         | Subclass of AMR compound as given by AMRFinderPlus. Can also be set to the same as class                                                                 |
 | split_subclass           | `string` | No         | Subclass can represent multiple individual compounds separated by a '/'. This field contains the individual element of subclass.                         |
 | antibiotic_name          | `string` | Yes        | Normalised name of the antibiotic tested (e.g., beta-lactams, trimethoprim-sulfamethoxazole)                                                             |
-| antibiotic_abbreviation  | `string` | Yes        | Abbreviation for the antibiotic (e.g. SXT)                                                                                                               |
 | antibiotic_ontology      | `string` | Yes        | Ontology ID for the antibiotic (e.g., ARO_3004024)                                                                                                       |
 | antibiotic_ontology_link | `string` | Yes        | Link to ontology entry for the antibiotic                                                                                                                |
 | evidence_accession       | `string` | Yes        | Accession number for evidence supporting the predicted AMR resistance                                                                                    |
@@ -118,7 +119,7 @@ Each directory contains a GFF annotation and TSV report. The formats are `{Assem
 | evidence_link            | `string` | Yes        | Link to the evidence supporting the predicted AMR resistance                                                                                             |
 | evidence_description     | `string` | Yes        | Evidence description supporting the predicted AMR resistance                                                                                             |
 
-### `phenotype_genotype_merged.parquet`: Experimental and _In silico_ AMR
+### `phenotype_genotype_merged.parquet`: Combined phenotypes and genotypes
 
 | Field                       | Type     | Nullable   | Description                                                                                                                      |
 |:----------------------------|:---------|:-----------|:---------------------------------------------------------------------------------------------------------------------------------|
@@ -139,14 +140,13 @@ Each directory contains a GFF annotation and TSV report. The formats are `{Assem
 | used_ECOFF                  | `string` | Yes        | Indicates if the Epidemiological Cut-Off (ECOFF) was used (empty/NULL in the sample data)                                        |
 | database                    | `string` | Yes        | Database of annotation                                                                                                           |
 | antibiotic_name             | `string` | Yes        | The name of the antibiotic tested (e.g. beta-lactams, trimethoprim-sulfamethoxazole)                                             |
-| astStandard                 | `string` | Yes        | The standard or guideline used for Antimicrobial Susceptibility Testing (e.g. CLSI, EUCAST)                                      |
-| laboratoryTypingMethod      | `string` | Yes        | The method used to test the antibiotic sensitivity (e.g. disk diffusion, E-test)                                                 |
+| ast_standard                | `string` | Yes        | The standard or guideline used for Antimicrobial Susceptibility Testing (e.g. CLSI, EUCAST)                                      |
+| laboratory_typing_method    | `string` | Yes        | The method used to test the antibiotic sensitivity (e.g. disk diffusion, E-test)                                                 |
 | measurement                 | `string` | Yes        | The raw measurement value, typically MIC or zone size (e.g. 2, 1, 0.5). FLOAT is used for non-integer numeric values             |
 | measurement_sign            | `string` | Yes        | The sign indicating the nature of the measurement (e.g. '==' for exact value, or '>', '<')                                       |
 | measurement_units           | `string` | Yes        | The units for the measurement (e.g. mg/l)                                                                                        |
 | platform                    | `string` | Yes        | The platform used for analysis (empty/NULL in the sample data)                                                                   |
 | resistance_phenotype        | `string` | Yes        | The final result of the interpretation (e.g. susceptible, non-susceptible, resistant)                                            |
-| antibiotic_abbreviation     | `string` | Yes        | A common abbreviation for the antibiotic (e.g. SXT)                                                                              |
 | antibiotic_ontology_link    | `string` | Yes        | Link to the ontology resource for the ID                                                                                         |
 | country                     | `string` | Yes        | Full country name where the sample was collected from. Converted from `ISO_country_code`.                                        |
 | geographical_region         | `string` | Yes        | Geographical region as defined by UN M49. e.g Asia, Europe, Oceania, Africa or Americas.                                         |

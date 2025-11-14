@@ -9,48 +9,43 @@ layout: "layouts/documentation.njk"
 
 The antimicrobial resistance (AMR) portal contains three main data resources
 
-- **Experimental AMR**  - AMR was determined experimentally and taken from
-  CABBAGE antibiograms catalogue.
-- **In silico AMR prediction** - AMR was predicted computationally using
-  Genotype data.
-- **Experimental and In silico AMR** - AMR for which both phenotypic and genotypic
-  data is available.
+- **AMR phenotypes**  - AMR was determined experimentally including minimum inhibitory concentrations
+- **AMR genotypes** - AMR genes and mutations were annotated computationally
+- **Combined phenotypes and genotypes** - A cross join between phenotype and genotype data based on shared BioSample, assembly and antibiotic identity
 
 ## How to explore the AMR data in the portal
 
 You can explore the three antimicrobial resistance (AMR) data resources
-by selecting one of the links on the home page, e.g.: 'Experimental AMR'.
+by selecting one of the links on the home page, e.g.: 'AMR phenotypes'.
 
 <figure>
   <img src="/assets/images/content/howto/home-page-amr-f1.jpeg" />
   <figcaption>
     Fig 1. A view of the antimicrobial resistance portal home page showing links to all three data resources:
-    Experimental AMR, In silico AMR prediction, and Experimental and In silico AMR.
+    AMR phenotypes, AMR genotypes, and Combined phenotypes and genotypes.
   </figcaption>
 </figure>
 
-This will take you by default to the Experimental AMR data and a
+This will take you by default to the AMR phenotypes data and a
 view of the antibiotics for which experimental antimicrobial resistance
 data is available.
 
 <figure>
   <img src="/assets/images/content/howto/experimental-amr-f2.png" />
   <figcaption> 
-    Fig 2. A view of the Experimental AMR data resource showing the antibiotics for which experimental AMR data is available.
+    Fig 2. A view of the AMR phenotypes data resource showing the antibiotics for which experimental AMR data is available.
   </figcaption>
 </figure>
 
 ### How to choose an AMR data resource
 
-To choose an alternative AMR data resource to the default Experimental AMR
+To choose an alternative AMR data resource to the default AMR phenotypes
 data select either
 
-- In silico AMR prediction
-or
-- Experimental and In silico AMR
+- _In silico_ AMR prediction
+- Experimental and _In silico_ AMR
 
-under the 'Data' heading in the left hand column, both are highlighted
-in blue.
+Under the 'Data' heading in the left hand column, both are highlighted in blue.
 
 ## How to use the AMR data resource
 
@@ -91,7 +86,7 @@ antibiotic table.
 
 Each of the three AMR data resources has a specific set of filters.
 
-e.g.: In the view shown below for Experimental AMR the data can be further
+e.g.: In the view shown below for AMR phenotypes the data can be further
 filtered by:
 
 - Species
@@ -106,17 +101,16 @@ filtered by:
 <figure>
   <img src="/assets/images/content/howto/species-amr-f5.png" />
   <figcaption>
-    Fig 5. A view highlighting the Species filter in the horizontal list of all filters available for the Experimental AMR data.
+    Fig 5. A view highlighting the Species filter in the horizontal list of all filters available for the AMR phenotypes data.
   </figcaption>
 </figure>
 
-In silico AMR prediction data can be filtered by:
+AMR genotypes data can be filtered by:
 
 - Species
 - Genus
-- AMR class
 
-Experimental and In silico AMR data can be filtered by:
+Combined data can be filtered by:
 
 - Species
 - Genus
@@ -131,9 +125,9 @@ Experimental and In silico AMR data can be filtered by:
 To filter the data:
 
 - Find a filter of interest alongside the \"Filter by\" header,
-  highlighted in blue, ie Species.
-- Select the filter ie Species Click on the check box alongside a
-  species of interest to begin subsetting the data.
+  highlighted in blue, i.e. Species.
+- Select the filter i.e. Species, click on the check box alongside a
+  species of interest to begin sub-setting the data.
 - You can scroll through available checkboxes by moving the horizontal
   scroll bar under the list of checkboxes to the right.
 - You may continue to add any filter available for an AMR data resource
@@ -146,7 +140,7 @@ To filter the data:
 <figure>
   <img src="/assets/images/content/howto/species-selected-amr-f6.png" />
   <figcaption>
-    Fig 6. A view showing the selection of a species e.g. Escherichia coli from the Species filter and highlighting the subsequent reduction in the number of results for experimental antimicrobial resistance to azithromycin for Experimental AMR data.
+    Fig 6. A view showing the selection of a species e.g. Escherichia coli from the Species filter and highlighting the subsequent reduction in the number of results for experimental antimicrobial resistance to azithromycin for AMR phenotypes data.
   </figcaption>
 </figure>
 
@@ -158,15 +152,15 @@ point in the AMR data resource used.
 The information displayed in the results table for each AMR data
 resource is different.
 
-For example the Experimental AMR resource results table displays:
+For example the AMR phenotypes resource results table displays:
 
 - Antibiotic name
-- Antibiotic abbreviation
 - Resistance phenotype
+- Measurement
 - Ast standard
 - Laboratory typing method
 - Platform
-- Biosample ID
+- BioSample ID
 - Assembly ID
 - Genus
 - Species
@@ -175,30 +169,30 @@ For example the Experimental AMR resource results table displays:
 - INSDC secondary accession
 - Antibiotic ontology
 - Collection year
-- ISO country code
 - Host age
 - Isolate
 - Isolation source
-- Lat long
+- Isolation latitude
+- Isolation longitude
 - AMR associated publications
-- Updated phenotype CLSI	
-- Updated phenotype EUCAST	
-- Used ECOFF	
-- Source	
-- Country	
-- Geographical region	
+- Updated phenotype CLSI
+- Updated phenotype EUCAST
+- Used ECOFF
+- Source
+- Country
+- Geographical region
 - Geographical subregion
 
-Different information is displayed in the results table for 
+Different information is displayed in the results table for
 
-- In silico AMR prediction
-- Experimental and In silico AMR
+- AMR genotypes
+- Combined phenotypes and genotypes
 
 <figure>
   <img src="/assets/images/content/howto/results-table-azith-species-amr-f7.png" />
   <figcaption>
-    Fig 7. A view of the results table for isolates of *Escherichia coli* resistant to azithromycin from the Experimental AMR data resource.
-  </figcaption> 
+    Fig 7. A view of the results table for isolates of *Escherichia coli* resistant to azithromycin from the AMR phenotypes data resource.
+  </figcaption>
 </figure>
 
 The results table has many columns which are off screen and can be viewed by
@@ -220,8 +214,6 @@ filtered the data.
     Fig 8. A view showing the horizontal and vertical scroll bars in the results table.
   </figcaption>
 </figure>
-
-### How to navigate the results table
 
 - To **change the number of results** displayed per page by using the
   drop-down menu.
@@ -245,9 +237,9 @@ filtered the data.
 
 ### How to download the results table
 
-To **download the results** table
+To download the results table
 
-- select the download arrow on the right hand side of the results table.
+- Select the download arrow on the right hand side of the results table.
 
 <figure>
   <img src="/assets/images/content/howto/results-table-download-amr-f11.png" />
@@ -256,7 +248,7 @@ To **download the results** table
   </figcaption>
 </figure>
 
-- select the download button and a CSV version of the results table will be downloaded onto your computer.
+- Select the download button and a CSV version of the results table will be downloaded onto your computer.
 
 <figure>
    <img src="/assets/images/content/howto/results-download-button-amr-f12.png" />

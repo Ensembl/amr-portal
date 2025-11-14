@@ -28,7 +28,7 @@ Genomes from the Comprehensive Assessment of Bacterial-Based AMR prediction from
 
 ### Annotation using mettannotator
 
-[mettannotator][mettannotator] is a bioinformatics pipeline that generates an exhaustive annotation of prokaryotic genomes using existing tools. The output is a GFF file that integrates the results of all pipeline components. Results of each individual tool are also provided. Version `3.12.8` of [AMRFinder][AMRFinderPlus] was used alongside database version `3.12 2024-01-31.1`. Version `2023.4` of [UniFire][UniFire] was used. [v1.4.0 of mettannotator][mettannotatortag] was used by this protal.
+[mettannotator][mettannotator] is a bioinformatics pipeline that generates an exhaustive annotation of prokaryotic genomes using existing tools. The output is a GFF file that integrates the results of all pipeline components. Results of each individual tool are also provided. Version `4.0.23` of [AMRFinderPlus][AMRFinderPlus] was used alongside database version `4.0 2025-07-16.1`. In future versions [UniFIRE][UniFire] will be used to generate additional _in silico_ predictions. [v1.5.0 of mettannotator][mettannotatortag] was used by this portal.
 
 ### Parsing of results
 
@@ -55,7 +55,7 @@ We ensure records are linked to the following archives
 Protein identifiers are based on the GCA for a genome and autoincremented number starting at `00001`. Identifiers are consistent and unique within a genome.
 
 [mettannotator]: <https://github.com/EBI-Metagenomics/mettannotator>
-[mettannotatortag]: <https://github.com/EBI-Metagenomics/mettannotator/releases/tag/v1.4.0>
+[mettannotatortag]: <https://github.com/EBI-Metagenomics/mettannotator/releases/tag/v1.5.0>
 [AMRFinderPlus]: <https://www.ncbi.nlm.nih.gov/pathogens/antimicrobial-resistance/AMRFinder/>
 [UniFire]: <https://gitlab.ebi.ac.uk/uniprot-public/unifire>
 [ARO]: <https://www.ebi.ac.uk/ols4/ontologies/aro>

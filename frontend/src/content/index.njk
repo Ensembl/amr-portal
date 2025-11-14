@@ -12,28 +12,25 @@ layout: "layouts/home.njk"
 {% include "components/home/hero/hero.njk" %}
 
 {% set cardLinkText1 %}
-Query and filter antibiogram AMR records based on antibiotic,
+Query and filter AMR phenotype data based on antibiotic,
 resistance phenotype, species and other key attributes.
 Contains over 1.5 million entries across 170,000 samples and 100,000 assemblies.
 {% endset %}
 
 {% set cardLinkText2 %}
-Query and filter In silico predictions of AMR resistance from AMRFinderPlus.
-Provides access to predictions and annotation for 40,000 genomes and samples.
+Query and filter AMR genotypes providing access to AMR gene detection and annotation for over 100,000 genomes and samples.
 {% endset %}
 
 {% set cardLinkText3 %}
-A merged dataset of experimental evidence and In silico predictions
-of AMR resistance based on the prediction of AMR resistance
-to the same compound in identical samples and assemblies.
+A merged dataset of experimental evidence and in silico genotypes linked between identical samples, assemblies and antimicrobial compound
 {% endset %}
 
 
 <div class="card-links-container">
   <div class="card-links-container-inner">
-    {{ cardLink({ href: '/data/?view=experiments', cardText: cardLinkText1, linkText: 'Experimental AMR', prerender: true }) }}
-    {{ cardLink({ href: '/data/?view=predictions', cardText: cardLinkText2, linkText: 'In silico AMR prediction' }) }}
-    {{ cardLink({ href: '/data/?view=combined', cardText: cardLinkText3, linkText: 'Experimental and In silico AMR' }) }}
+    {{ cardLink({ href: '/data/?view=experiments', cardText: cardLinkText1, linkText: 'AMR phenotypes', prerender: true }) }}
+    {{ cardLink({ href: '/data/?view=predictions', cardText: cardLinkText2, linkText: 'AMR genotypes' }) }}
+    {{ cardLink({ href: '/data/?view=combined', cardText: cardLinkText3, linkText: 'Combined phenotypes and genotypes' }) }}
   </div>
 </div>
 
