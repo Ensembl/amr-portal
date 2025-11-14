@@ -102,7 +102,7 @@ Build:FE:Docker:
 Build:FE:Assets:
   stage: build
   <<: *fe-code-change-rules
-  image: node:22.19
+  image: node:24
   script:
     - cd frontend
     - npm ci
