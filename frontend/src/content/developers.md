@@ -63,18 +63,19 @@ Each directory contains a GFF annotation and TSV report. The formats are `{Assem
 | isolate                     | `string` | Yes        | A unique identifier for the specific isolate (e.g. SMRU2695)                                                             |
 | isolation_source            | `string` | Yes        | The specific anatomical source or environment the isolate came from (e.g. nasopharynx)                                   |
 | isolation_source_category   | `string` | Yes        | The general category of the isolation source (e.g. respiratory tract)                                                    |
-| lat_lon                     | `string` | Yes        | Geographic coordinates (latitude and longitude)                                                                          |
+| isolation_latitude          | `string` | Yes        | Geographic latitude for the sample                                                                                       |
+| isolation_longitude         | `string` | Yes        | Geographic longitude for the sample                                                                                      |
 | genus                       | `string` | No         | The genus of the organism (e.g. Streptococcus)                                                                           |
 | organism                    | `string` | No         | The full name of the organism (e.g. Streptococcus pneumoniae)                                                            |
-| AMR_associated_publications | `int32`  | Yes        | The PubMed ID of the publication associated with the data                                                                |
+| AMR_associated_publications | `string` | Yes        | The PubMed ID of the publication associated with the data. Can be a set of values joined with a ;                        |
 | Updated_phenotype_CLSI      | `string` | Yes        | The updated antimicrobial susceptibility testing (AST) phenotype based on CLSI standards (empty/NULL in the sample data) |
 | Updated_phenotype_EUCAST    | `string` | Yes        | The updated AST phenotype based on EUCAST standards (empty/NULL in the sample data)                                      |
 | used_ECOFF                  | `string` | Yes        | Indicates if the Epidemiological Cut-Off (ECOFF) was used (empty/NULL in the sample data)                                |
 | database                    | `string` | Yes        | Database of annotation                                                                                                   |
 | antibiotic_name             | `string` | Yes        | The name of the antibiotic tested (e.g. beta-lactams, trimethoprim-sulfamethoxazole)                                     |
-| astStandard                 | `string` | Yes        | The standard or guideline used for Antimicrobial Susceptibility Testing (e.g. CLSI, EUCAST)                              |
-| laboratoryTypingMethod      | `string` | Yes        | The method used to test the antibiotic sensitivity (e.g. disk diffusion, E-test)                                         |
-| measurement                 | `double` | Yes        | The raw measurement value, typically MIC or zone size (e.g. 2, 1, 0.5). FLOAT is used for non-integer numeric values     |
+| ast_standard                | `string` | Yes        | The standard or guideline used for Antimicrobial Susceptibility Testing (e.g. CLSI, EUCAST)                              |
+| laboratory_typing_method    | `string` | Yes        | The method used to test the antibiotic sensitivity (e.g. disk diffusion, E-test)                                         |
+| measurement                 | `string` | Yes        | The raw measurement value, typically MIC or zone size (e.g. 2, 1, 0.5, 12/0.125).                                        |
 | measurement_sign            | `string` | Yes        | The sign indicating the nature of the measurement (e.g. '==' for exact value, or '>', '<')                               |
 | measurement_units           | `string` | Yes        | The units for the measurement (e.g. mg/l)                                                                                |
 | platform                    | `string` | Yes        | The platform used for analysis (empty/NULL in the sample data)                                                           |
@@ -83,6 +84,8 @@ Each directory contains a GFF annotation and TSV report. The formats are `{Assem
 | antibiotic_ontology         | `string` | Yes        | An ontology ID for the antibiotic (e.g. ARO_3004024)                                                                     |
 | antibiotic_ontology_link    | `string` | Yes        | Link to the ontology resource for the ID                                                                                 |
 | country                     | `string` | Yes        | Full country name where the sample was collected from. Converted from `ISO_country_code`.                                |
+| geographical_region         | `string` | Yes        | Geographical region as defined by UN M49. e.g Asia, Europe, Oceania, Africa or Americas.                                 |
+| geographical_subregion      | `string` | Yes        | Geographical subregion as defined by UN M49. e.g.Eastern Asia, Northern Europe.                                          |
 
 ### `genotype.parquet`: _In silico_ AMR prediction
 
@@ -137,8 +140,8 @@ Each directory contains a GFF annotation and TSV report. The formats are `{Assem
 | used_ECOFF                  | `string` | Yes        | Indicates if the Epidemiological Cut-Off (ECOFF) was used (empty/NULL in the sample data)                                        |
 | database                    | `string` | Yes        | Database of annotation                                                                                                           |
 | antibiotic_name             | `string` | Yes        | The name of the antibiotic tested (e.g. beta-lactams, trimethoprim-sulfamethoxazole)                                             |
-| astStandard                 | `string` | Yes        | The standard or guideline used for Antimicrobial Susceptibility Testing (e.g. CLSI, EUCAST)                                      |
-| laboratoryTypingMethod      | `string` | Yes        | The method used to test the antibiotic sensitivity (e.g. disk diffusion, E-test)                                                 |
+| ast_standard                | `string` | Yes        | The standard or guideline used for Antimicrobial Susceptibility Testing (e.g. CLSI, EUCAST)                                      |
+| laboratory_typing_method    | `string` | Yes        | The method used to test the antibiotic sensitivity (e.g. disk diffusion, E-test)                                                 |
 | measurement                 | `string` | Yes        | The raw measurement value, typically MIC or zone size (e.g. 2, 1, 0.5). FLOAT is used for non-integer numeric values             |
 | measurement_sign            | `string` | Yes        | The sign indicating the nature of the measurement (e.g. '==' for exact value, or '>', '<')                                       |
 | measurement_units           | `string` | Yes        | The units for the measurement (e.g. mg/l)                                                                                        |
