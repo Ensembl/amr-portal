@@ -130,7 +130,7 @@
 	"views":[
 		{
 			"url_name":"experiments",
-			"name":"Experimental AMR",
+			"name":"AMR phenotypes",
 			"dataset":"phenotype",
 			"categoryGroups": [ { "name": "Antibiotic", "categories": ["antibiotic_name"] } ],
       		"otherCategoryGroups": [
@@ -163,7 +163,7 @@
 		},
 		{
 			"url_name":"predictions",
-			"name":"In silico AMR prediction",
+			"name":"AMR genotypes",
 			"dataset":"genotype",
 			"categoryGroups": [ { "name": "Antibiotic", "categories": ["antibiotic_name"] } ],
       		"otherCategoryGroups": [
@@ -198,7 +198,7 @@
 		},
 		{
 			"url_name":"combined",
-			"name" : "Experimental and In silico AMR",
+			"name" : "Combined phenotypes and genotypes",
 			"dataset":"pheno_geno_merged",
 			"categoryGroups": [ { "name": "Antibiotic", "categories": ["antibiotic_name"] } ],
 	  		"otherCategoryGroups": [
@@ -290,7 +290,10 @@
             },
             "antibiotic_ontology_link":{
             	"hidden":true
-            }
+            },
+			"ISO_country_code" : {
+				"hidden" : true
+			}
         },
         "genotype":
         {
@@ -389,7 +392,10 @@
             "_bin":{
             	"label":"UCSC binning index",
 				"hidden":true
-            }
+            },
+			"ISO_country_code" : {
+				"hidden" : true
+			}
         }
     }
 }

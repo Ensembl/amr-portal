@@ -26,7 +26,7 @@ Examples of how to work with these files in Python can be found in our [Python n
 We provide three parquet datasets
 
 - Phenotypes: phenotypic experimental data collected from antibiograms
-- Genotypes: predicted AMR resistance mechanism
+- Genotypes: AMR genes and mutations from _in silico_ methods
 - Merged phenotype and genotype: Merge of the previous two datasets based on a join on `BioSample_ID`, `assembly_ID` and `antibiotic_ontology` (i.e. where the same sample, assembly and antibiotic have a record).
 
 ## Accessing annotated genomes
@@ -48,7 +48,7 @@ Each directory contains a GFF annotation and TSV report. The formats are `{Assem
 
 ## AMR portal parquet schemas
 
-### `phenotype.parquet`: Phenotypic AMR
+### `phenotype.parquet`: AMR phenotypes
 
 | Field                       | Type     | Nullable   | Description                                                                                                              |
 |:----------------------------|:---------|:-----------|:-------------------------------------------------------------------------------------------------------------------------|
@@ -87,7 +87,7 @@ Each directory contains a GFF annotation and TSV report. The formats are `{Assem
 | geographical_region         | `string` | Yes        | Geographical region as defined by UN M49. e.g Asia, Europe, Oceania, Africa or Americas.                                 |
 | geographical_subregion      | `string` | Yes        | Geographical subregion as defined by UN M49. e.g.Eastern Asia, Northern Europe.                                          |
 
-### `genotype.parquet`: _In silico_ AMR prediction
+### `genotype.parquet`: AMR genotypes
 
 | Field                    | Type     | Nullable   | Description                                                                                                                                              |
 |:-------------------------|:---------|:-----------|:---------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -119,7 +119,7 @@ Each directory contains a GFF annotation and TSV report. The formats are `{Assem
 | evidence_link            | `string` | Yes        | Link to the evidence supporting the predicted AMR resistance                                                                                             |
 | evidence_description     | `string` | Yes        | Evidence description supporting the predicted AMR resistance                                                                                             |
 
-### `phenotype_genotype_merged.parquet`: Experimental and _In silico_ AMR
+### `phenotype_genotype_merged.parquet`: Combined phenotypes and genotypes
 
 | Field                       | Type     | Nullable   | Description                                                                                                                      |
 |:----------------------------|:---------|:-----------|:---------------------------------------------------------------------------------------------------------------------------------|
