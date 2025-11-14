@@ -262,7 +262,7 @@
                 "sortable":0,
                 "type":"array-link",
                 "delimiter":";",
-                "url":"https://europepmc.org/search?query={}"
+                "url":"https://europepmc.org/article/MED/{}"
             },
             "database":{
                 "label":"Source"
