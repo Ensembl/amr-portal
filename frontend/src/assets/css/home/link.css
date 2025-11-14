@@ -1,5 +1,6 @@
 .homepage-link {
   display: inline-flex;
+  white-space: nowrap;
 
   a {
     display: flex;

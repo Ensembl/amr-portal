@@ -20,7 +20,7 @@
 
   .title-box {
     background-color: var(--color-white);
-    width: max-content;
+    width: fit-content;
     padding: 35px 45px;
   }
 

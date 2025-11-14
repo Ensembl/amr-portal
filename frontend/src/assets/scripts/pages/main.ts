@@ -5,6 +5,7 @@ import { SignalWatcher } from '@lit-labs/signals';
 import { getDataProvider, BackendInterface } from '../data-provider/dataProvider';
 
 import filtersStore from '../state/filtersStore';
+import Router from '../router/router';
 
 import '../components/header/release';
 import '../components/top-panel/top-panel';
@@ -49,10 +50,11 @@ export class AMRApp extends SignalWatcher(LitElement) {
   initialise = async () => {
     await this.getDataProvider();
     const filtersConfig = await this.dataProvider!.getFiltersConfig();
-    const defaultViewMode = filtersConfig.filterViews[0].id;
     
     filtersStore.setFiltersConfig(filtersConfig);
-    filtersStore.setViewMode(defaultViewMode);
+
+    Router.init(filtersConfig);
+    Router.setViewFromUrl();
   }
 
   getDataProvider = async () => {
