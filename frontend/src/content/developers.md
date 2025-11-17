@@ -53,7 +53,7 @@ Each directory contains a GFF annotation and TSV report. The formats are `{Assem
 | Field                       | Type     | Nullable   | Description                                                                                                              |
 |:----------------------------|:---------|:-----------|:-------------------------------------------------------------------------------------------------------------------------|
 | BioSample_ID                | `string` | No         | The unique identifier for the biological sample (e.g. SAMEA1028830)                                                      |
-| INSDC_secondary_accession   | `string` | Yes        | The secondary accession number in the International Nucleotide Sequence Database Collaboration (INSDC)                   |
+| SRA_accession               | `string` | Yes        | The SRA accession number                                                                                                 |
 | assembly_ID                 | `string` | Yes        | The unique accession number of the genome assembly (e.g. GCA_001096525.1)                                                |
 | collection_year             | `int32`  | Yes        | The year the sample was collected                                                                                        |
 | ISO_country_code            | `string` | Yes        | The 3-letter ISO country code where the sample was collected (e.g. THA for Thailand)                                     |
@@ -126,7 +126,7 @@ Each directory contains a GFF annotation and TSV report. The formats are `{Assem
 | BioSample_ID                | `string` | No         | The unique identifier for the biological sample (e.g. SAMEA1028830)                                                              |
 | assembly_ID                 | `string` | No         | The unique accession number of genome assembly (e.g., GCA_001096525.1)                                                           |
 | antibiotic_ontology         | `string` | Yes        | An ontology ID for the antibiotic (e.g. ARO_3004024)                                                                             |
-| INSDC_secondary_accession   | `string` | Yes        | The secondary accession number in the International Nucleotide Sequence Database Collaboration (INSDC)                           |
+| SRA_accession               | `string` | Yes        | The SRA accession number                                                                                                         |
 | collection_year             | `int32`  | Yes        | The year the sample was collected                                                                                                |
 | ISO_country_code            | `string` | Yes        | The 3-letter ISO country code where the sample was collected (e.g. THA for Thailand)                                             |
 | host                        | `string` | Yes        | The organism the sample was isolated from (e.g. Homo sapiens)                                                                    |
