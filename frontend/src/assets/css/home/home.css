@@ -22,7 +22,7 @@ body {
 .card-link {
   flex-grow: 1;
   flex-shrink: 1;
-  min-width: 315px;
+  min-width: min-content;
   width: 30%;
 }
 
