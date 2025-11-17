@@ -24,12 +24,11 @@ variables:
 # Code and config changed rules for backend
 # Rule to detect changes in backend directory and k8s
 # This will be used for the deploy pipeline for backend code
-.be-deploy-rules: &be-code-or-config-change-rules
+.be-config-rules: &be-config-change-rules
   rules:
     - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "main"'
       changes:
-        - backend/**/*
-        - k8s/backend/*
+        - k8s/backend/configmap.yaml
       when: always
 
 # Code changed rules for frontend
@@ -68,6 +67,14 @@ variables:
     - cd k8s/backend/
     - kustomize edit set image DOCKER_IMAGE=${DOCKER_IMAGE}
     - kubectl apply -k .
+
+# template for deploy the configmap used by the backend backend
+# update docker image in appropriate environment
+.deploy-config-be-template:
+  <<: *prepare-context
+  script:
+    - cd k8s/backend/
+    - kubectl apply -f configmap.yaml
 
 # template for deploy context for frontend
 # publish static assets to appropriate environment
@@ -131,7 +138,18 @@ Build:FE:Assets:
 Deploy:BE:RC:
   extends: .deploy-be-template
   stage: deploy_rc
-  <<: *be-code-or-config-change-rules
+  <<: *be-code-change-rules
+  environment:
+    name: development
+  variables:
+    AGENT: ${REVIEW_AGENT}
+    NS: amr
+
+# Deploy backend configmap to QA environment
+Deploy:BE-Config:RC:
+  extends: .deploy-config-be-template
+  stage: deploy_rc
+  <<: *be-config-change-rules
   environment:
     name: development
   variables:
@@ -175,10 +193,9 @@ QA:BE:
 # Deploy backend to live environment
 # This is manual step it explicitly needs to be triggered by pressing a button in gitlab interface
 # The job is scheduled only for main branch and when deploy freeze is not in place
-# I have kept the be-code-or-config-change-rules in but it looks like it is overwritten by the rules below
 Deploy:BE:Live:
   extends: .deploy-be-template
-  <<: *be-code-or-config-change-rules
+  <<: *be-code-change-rules
   stage: deploy
   environment:
     name: production
@@ -189,7 +206,24 @@ Deploy:BE:Live:
     - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "main"'
       changes:
         - backend/**/*
-        - k8s/backend/*
+      when: manual
+
+# Deploy backend config map to live environment
+# This is manual step it explicitly needs to be triggered by pressing a button in gitlab interface
+# The job is scheduled only for main branch and when deploy freeze is not in place
+Deploy:BE-config:Live:
+  extends: .deploy-config-be-template
+  <<: *be-config-change-rules
+  stage: deploy
+  environment:
+    name: production
+  variables:
+    AGENT: ${PROD_AGENT}
+    NS: amr
+  rules:
+    - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "main"'
+      changes:
+        - k8s/backend/configmap.yaml
       when: manual
 
 # Publish static assets to live environment
