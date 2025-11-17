@@ -49,7 +49,7 @@ export class TopPanelNavigation extends SignalWatcher(LitElement) {
       align-items: center;
       justify-content: start;
       padding-right: 0.6rem;
-      height: 22px; /* to prevent vertical shift when the counter is displayed */
+      min-height: 22px; /* to prevent vertical shift when the counter is displayed */
     }
 
     ens-text-button {
