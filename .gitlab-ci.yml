@@ -13,12 +13,23 @@ variables:
 
 # Code changed rules for backend
 # Rule to detect changes in backend directory
-# This will be used to build/deploy pipeline for backend code
+# This will be used to build pipeline for backend code
 .be-rules: &be-code-change-rules
   rules:
     - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "main"'
       changes:
         - backend/**/*
+      when: always
+
+# Code and config changed rules for backend
+# Rule to detect changes in backend directory and k8s
+# This will be used for the deploy pipeline for backend code
+.be-deploy-rules: &be-code-or-config-change-rules
+  rules:
+    - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "main"'
+      changes:
+        - backend/**/*
+        - k8s/backend/*
       when: always
 
 # Code changed rules for frontend
@@ -120,7 +131,7 @@ Build:FE:Assets:
 Deploy:BE:RC:
   extends: .deploy-be-template
   stage: deploy_rc
-  <<: *be-code-change-rules
+  <<: *be-code-or-config-change-rules
   environment:
     name: development
   variables:
@@ -164,9 +175,10 @@ QA:BE:
 # Deploy backend to live environment
 # This is manual step it explicitly needs to be triggered by pressing a button in gitlab interface
 # The job is scheduled only for main branch and when deploy freeze is not in place
+# I have kept the be-code-or-config-change-rules in but it looks like it is overwritten by the rules below
 Deploy:BE:Live:
   extends: .deploy-be-template
-  <<: *be-code-change-rules
+  <<: *be-code-or-config-change-rules
   stage: deploy
   environment:
     name: production
@@ -177,6 +189,7 @@ Deploy:BE:Live:
     - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "main"'
       changes:
         - backend/**/*
+        - k8s/backend/*
       when: manual
 
 # Publish static assets to live environment
