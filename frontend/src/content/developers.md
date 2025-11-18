@@ -1,12 +1,12 @@
 ---
-title: Programmatic access to AMR portal data
-header_title: Programmatic access
+title: Download and developer access to AMR portal data
+header_title: Download and developer access to AMR portal data
 layout: "layouts/documentation.njk"
 tags: usage
 
 ---
 
-# Programmatic access to the AMR portal data
+# Download and developer access to AMR portal data
 
 ## Accessing and using parquet data views
 

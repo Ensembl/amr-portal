@@ -29,17 +29,18 @@ CABBAGE has catalogued an immense collection of antibiograms in a standardised f
 
 AMR Genotypes is a resource recording the detection and annotation of resistance-associated genes and mutations. All annotated genomes have been processed using the mettannotator workflow from EMBL-EBI's MGnify team and generates an exhaustive annotation of prokaryotic genomes using existing tools. We have currently run [AMRFinderPlus](https://www.ncbi.nlm.nih.gov/pathogens/antimicrobial-resistance/AMRFinder/) from NCBI against these genomes. [UniProt's UniFIRE functional annotation system](https://gitlab.ebi.ac.uk/uniprot-public/unifire) will provide additional annotations. Results from these tools are normalised according to the same rules as our phenotype data.
 
-## EMBL-EBI
+## Portal contributors
 
-The AMR portal is a collaboration between the following EMBL-EBI teams:
+The AMR portal is a collaboration between the following Imperial College London and EMBL-EBI teams and groups:
 
-- European Nucleotide Archive
-- Genomics Technology Infrastructure
-- Lees Group
-- Microbiome Informatics
-- Protein Function Development
-- Protein Sequence Resources
-- Samples, Phenotypes, and Ontologies
+- Chindelevitch Team (IC)
+- European Nucleotide Archive (EMBL-EBI)
+- Genomics Technology Infrastructure (EMBL-EBI)
+- Lees Group (EMBL-EBI)
+- Microbiome Informatics (EMBL-EBI)
+- Protein Function Development (EMBL-EBI)
+- Protein Sequence Resources (EMBL-EBI)
+- Samples, Phenotypes, and Ontologies (EMBL-EBI)
 
 ## Future goals
 
