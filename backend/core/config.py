@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     Application settings loaded from environment variable or .env file.
     Requires DUCKDB_PATH to point to an existing DuckDB file.
     """
-    duckdb_path: Path = Field(validation_alias="DUCKDB_PATH", description="Path to the DuckDB database file")
+    duckdb_path: str = Field(validation_alias="DUCKDB_PATH", description="Path to the DuckDB database file")
 
     model_config = SettingsConfigDict(
         # load from .env if present, or .env.test when running pytest
@@ -22,13 +22,15 @@ class Settings(BaseSettings):
 
     @field_validator("duckdb_path", mode="after")  # type: ignore[misc]
     @classmethod
-    def _validate_duckdb_path(cls, v: Path) -> Path:
-        if not str(v).strip():
+    def _validate_duckdb_path(cls, v: str) -> str:
+        if not v.strip():
             raise ValueError("DUCKDB_PATH cannot be empty.")
-        if not v.exists():
-            raise ValueError(f"DUCKDB_PATH points to a non-existent path: {v}")
-        if not v.is_file():
-            raise ValueError(f"DUCKDB_PATH must be a file, not a directory: {v}")
+        if "https://" not in v:
+            path = Path(v)
+            if not path.exists():
+                raise ValueError(f"DUCKDB_PATH points to a non-existent path: {path}")
+            if not path.is_file():
+                raise ValueError(f"DUCKDB_PATH must be a file, not a directory: {path}")
         return v
 
 

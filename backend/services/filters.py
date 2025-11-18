@@ -207,6 +207,9 @@ def _build_filter_query_context(payload: Payload, db: duckdb.DuckDBPyConnection)
     # not all valid columns are eventually displayed
     # We need to keep only the ones we are interested
     columns_to_display = get_display_column_details(selected_view_id, db)
+    # Filter columns only if we asked to return a subset of them. Also filter on the name alone
+    if payload.selected_columns:
+        columns_to_display = columns_to_display[columns_to_display['name'].isin(payload.selected_columns)]
 
     # This will be used below in the SQL query to select only columns we are interested in
     # Properly quote column names for SQL query
@@ -229,6 +232,7 @@ def _build_filter_query_context(payload: Payload, db: duckdb.DuckDBPyConnection)
     logger.info(f"selected_dataset: {selected_dataset}")
     logger.info(f"grouped_filters: {grouped_filters}")
     logger.info(f"quoted_columns: {quoted_columns}")
+    logger.info(f"distinct: {payload.distinct}")
 
     if not are_filters_valid:
         raise HTTPException(
@@ -250,8 +254,9 @@ def _build_filter_query_context(payload: Payload, db: duckdb.DuckDBPyConnection)
         where_clauses.append(f"{category} IN {tuple_clause}")
 
     where_sql = " AND ".join(where_clauses)
-    base_query = f"SELECT {columns_to_display_str} FROM {selected_dataset}"
-    count_query = f"SELECT COUNT(*) AS count FROM {selected_dataset}"
+    distinct = "DISTINCT" if payload.distinct else ""
+    base_query = f"SELECT { distinct } {columns_to_display_str} FROM {selected_dataset}"
+    count_query = f"SELECT { distinct} if payload.distinct else "" } COUNT(*) AS count FROM {selected_dataset}"
     if where_sql:
         base_query += f" WHERE {where_sql}"
         count_query += f" WHERE {where_sql}"

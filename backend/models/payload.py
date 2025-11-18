@@ -15,3 +15,5 @@ class Payload(BaseModel):
     page: Optional[int] = 1
     per_page: Optional[int] = 100
     order_by: Optional[OrderBy] = None
+    selected_columns: Optional[str] = None
+    distinct: Optional[bool] = False
