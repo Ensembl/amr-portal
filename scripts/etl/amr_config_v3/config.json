@@ -156,7 +156,7 @@
       			{ "name": "species", "enabled":true, "rank":10},
       			{ "name": "organism", "enabled":true, "rank":11},
       			{ "name": "host", "enabled":true, "rank":12},
-      			{ "name": "INSDC_secondary_accession", "enabled":true, "rank":13},
+      			{ "name": "SRA_accession", "enabled":true, "rank":13},
       			{ "name": "gen_antibiotic_ontology", "enabled":true, "rank":14}
       		],
       		"other_columns":["phenotype"]
@@ -222,7 +222,7 @@
       			{ "name": "organism", "enabled":true, "rank":8},
 				{ "name": "taxon_id", "enabled":true, "rank":9},
       			{ "name": "host", "enabled":true, "rank":10},
-      			{ "name": "INSDC_secondary_accession", "enabled":true, "rank":11},
+      			{ "name": "SRA_accession", "enabled":true, "rank":11},
       			{ "name": "laboratory_typing_method", "enabled":true, "rank":12},
       			{ "name": "platform", "enabled":true, "rank":13},
       			{ "name": "ast_standard", "enabled":true, "rank":14},
