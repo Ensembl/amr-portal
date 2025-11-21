@@ -80,7 +80,7 @@ It is also important to note, that due to differences in how this data is captur
 
 ### BioSamples
 
-The BioSamples archive stores AMR antibiogram data differently. Here it is represented directly in the BioSample record as a structured data table. See an example record [here.](https://www.ebi.ac.uk/biosamples/samples/SAMEA116133960)
+The BioSamples archive stores AMR antibiogram data differently. Here it is represented directly in the BioSample record as a structured data table. [See an example record here.](https://www.ebi.ac.uk/biosamples/samples/SAMEA116133960)
 
 The AMR antibiogram data stored in BioSamples comes from 2 sources:
 
