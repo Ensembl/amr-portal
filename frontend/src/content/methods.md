@@ -9,7 +9,7 @@ layout: "layouts/documentation.njk"
 
 ## Antibiotic lookup
 
-Each compound is queried against the Ontology Lookup Service first aganinst the [Antibiotic Resistance Ontology (ARO)][ARO] and then against [Chemical Entities of Biological Interest (ChEBI)][ChEBI] should no record be found. ARO queries are restricted to all children of **[ARO:1000003 antibiotic molecule][aroantib]**. ChEBI queries are similar restricted to all children of **[CHEBI:33281 antimicrobial agent][chebiantib]**. Should no record be found we omit any details.
+Each compound is queried against the Ontology Lookup Service first against the [Antibiotic Resistance Ontology (ARO)][ARO] and then against [Chemical Entities of Biological Interest (ChEBI)][ChEBI] should no record be found. ARO queries are restricted to all children of **[ARO:1000003 antibiotic molecule][aroantib]**. ChEBI queries are similar restricted to all children of **[CHEBI:33281 antimicrobial agent][chebiantib]**. Should no record be found we omit any details.
 
 ## Phenotype data generation
 
